@@ -1,11 +1,13 @@
 from django.conf.urls import url
 from django.core.urlresolvers import reverse_lazy
-from django.contrib.auth.views import password_change, password_change_done
+from django.contrib.auth.views import (password_change, password_change_done,
+                                       login)
 from .views import (UserProfileView, UserEditView, SelfProfileView,
                     UserCreateView, PasswordChangeView, CodeUseView)
 
 urlpatterns = [
     url(r'^$', SelfProfileView.as_view(), name='user-profile-view'),
+    url(r'^login$', login, name='login'),
     url(r'^edit$', UserEditView.as_view(), name='user-profile-edit'),
     url(r'^create$', UserCreateView.as_view(), name='user-create'),
     url(r'^password/$', password_change, name='user-password',

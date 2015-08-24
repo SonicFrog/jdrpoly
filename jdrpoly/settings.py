@@ -107,4 +107,4 @@ STATIC_URL = '/static/'
 # Login URLs
 
 LOGIN_REDIRECT_URL = '/members/'
-LOGIN_URL = '/login'
+LOGIN_URL = '/members/login'

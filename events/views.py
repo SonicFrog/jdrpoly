@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from .models import Event
 from .forms import EventParticipationForm
-from login.views import LoginRequiredMixin
+from members.views import LoginRequiredMixin
 
 
 class EventListView(ListView, LoginRequiredMixin):

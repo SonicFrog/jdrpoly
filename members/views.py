@@ -1,12 +1,9 @@
 # coding: utf-8
 
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import permission_required, login_required
 from django.views.generic import (DetailView, CreateView, UpdateView, FormView,
                                   View)
-from django.http.response import HttpResponseRedirect
-from django.shortcuts import render_to_response
-
 from django.forms import ModelForm
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.models import User
@@ -17,7 +14,13 @@ from django.utils.timezone import datetime
 import datetime as dt
 
 from .models import Member, Code
-from login.views import LoginRequiredMixin
+
+
+class LoginRequiredMixin:
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(view)
 
 
 class UserEditForm(UserChangeForm):
