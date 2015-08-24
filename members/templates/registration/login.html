@@ -1,0 +1,17 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+
+{% block title %}
+    Connexion
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        <label>Connexion à votre espace JDR-poly</label>
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="submit" value="Se connecter" />
+        <a href="{% url 'password_reset' %}">Mot de passe perdu ?</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,14 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="event-form">
+        <form action="" method="post">
+            <label>Information de l'évenement</label>
+            {% csrf_token %}
+            {% form.as_p %}
+            <input type="submit" value="Valider" />
+        </form>
+    </div>
+{% endblock %}

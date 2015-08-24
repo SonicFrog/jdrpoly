@@ -1,0 +1,18 @@
+{# -*- engine:django -*- #}
+
+<!-- Template for user creation -->
+
+{% extends "base.html" %}
+
+{% block title %}
+    Inscription
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        <label></label>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Créer mon compte" />
+    </form>
+{% endblock %}

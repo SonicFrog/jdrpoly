@@ -1,0 +1,66 @@
+{# -*- engine:django -*- #}
+
+<!-- Experimental template for the profile viewing -->
+
+{% extends "base.html" %}
+
+{% block title %}
+    {{ user.profile }}
+{% endblock %}
+
+{% block content %}
+    {% if member %}
+        <div class="row">
+            <header>
+                <h2>{{ user.profile }}</h2>
+            </header>
+            <div class="6u 12u(mobile)">
+                <div class="image row 50%">
+                    {% if user.profile.image %}
+                        <img src="{{ user.profile.image.url }}" />
+                    {% else %}
+                        Pas d'image
+                    {% endif %}
+                </div>
+                <div class="class 6u 12u(mobile)">
+                    <strong>Nom d'utilisateur:</strong> {{ user.username }}
+                </div>
+                <div class="class 6u 12u(mobile)">
+                    <strong>Addresse mail:</strong>
+                    {% if user.email %}
+                        {{ user.email }}
+                    {% else %}
+                        Non spécifiée
+                    {% endif %}
+                </div>
+                <div class="6u 12u(mobile)">
+                    <strong>Nom:</strong>
+                    {% if user.last_name %}
+                        {{ user.last_name }}
+                    {% else %}
+                        Non spécifié
+                    {% endif %}
+                </div>
+                <div class="6u 12u(mobile)">
+                    <strong>Prénom:</strong>
+                    {% if user.first_name %}
+                        {{ user.first_name }}
+                    {% else %}
+                        Non spécifié
+                    {% endif %}
+                </div>
+                <div class="6u 12u(mobile)">
+                    <strong>Localisation:</strong>
+                    {% if user.profile.location %}
+                        {{ user.profile.location }}
+                    {% else %}
+                        Non spécifiée
+                    {% endif %}
+                </div>
+            </div>
+            <a href="{% url 'user-profile-edit' %}" class="button icon fa-file">Modifier mon profil</a>
+        </div>
+    {% else %}
+        <h1>A fatal error occured ! Please contact website administrator !</h1>
+    {% endif %}
+{% endblock %}
