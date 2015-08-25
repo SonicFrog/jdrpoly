@@ -9,7 +9,7 @@
 {% block content %}
     <form action="" method="post">
         <label>Entrez votre code de membre JDRPoly</label>
-        <p>Fin de la période membre actuel le {{ user.member.until }}</p>
+        <p>Fin de la période membre actuel le {{ user.profile.until }}</p>
         {{ form.as_p }}
         <input type="submit" value="Utiliser le code" />
     </form>
