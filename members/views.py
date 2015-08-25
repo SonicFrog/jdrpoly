@@ -140,9 +140,9 @@ class CodeUseView(FormView, LoginRequiredMixin):
 
         until_date = start + delta
 
-        self.get_object().member.until = until_date
+        self.get_object().profile.until = until_date
 
-        self.get_object().member.save()
+        self.get_object().profile.save()
 
         return super(CodeUseView, self).form_valid(form)
 
