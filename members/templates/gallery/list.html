@@ -1,0 +1,24 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+
+{% block title %}
+    Galleries photo
+{% endblock %}
+
+{% block content %}
+    <div class="row 100%">
+        <h1>Galleries photo :</h1>
+        <div class="6u 12u(mobile)">
+            <ul>
+                {% for gallery in gallery_list %}
+                    <li>
+                        <a class="icon fa-file" href="{% url 'gallery-detail' gallery.pk %}">
+                            <span>{{ gallery.name }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
