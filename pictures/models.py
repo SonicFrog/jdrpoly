@@ -18,7 +18,7 @@ class Gallery(models.Model):
 
     class Meta:
         verbose_name = _("Gallerie")
-        verbose_name = _("Galleries")
+        verbose_name_plural = _("Galleries")
         ordering = ('-date',)
 
 
@@ -33,7 +33,8 @@ class Picture(models.Model):
                               verbose_name=_("Uploadeur"))
     gallery = models.ForeignKey(Gallery, verbose_name=_("Gallerie"),
                                 related_name='pictures')
-    date = models.DateTimeField(default=timezone.now)
+    date = models.DateTimeField(default=timezone.now,
+                                verbose_name=_("Mise en ligne"))
 
     class Meta:
         verbose_name = _("Photo")
