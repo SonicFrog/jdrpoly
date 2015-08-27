@@ -11,10 +11,11 @@ class News(models.Model):
     """
     Modèle pour les articles de news publiés sur la page principale
     """
-    author = models.ForeignKey(User)
-    title = models.CharField(max_length=200, default='Nouvelle news')
-    content = models.TextField(max_length=10000)
-    date = models.DateField(default=timezone.now)
+    author = models.ForeignKey(User, verbose_name=_("Auteur"))
+    title = models.CharField(max_length=200, default='Nouvelle news',
+                             verbose_name=_("Titre"))
+    content = models.TextField(max_length=10000, verbose_name=_("Contenu"))
+    date = models.DateField(default=timezone.now, verbose_name=_("Date"))
 
     def get_absolute_url(self):
         return reverse('news-detail', kwargs={'pk': self.pk})

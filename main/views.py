@@ -1,6 +1,5 @@
 from django.views.generic import ListView, DetailView
 
-from members.views import LoginRequiredMixin
 from .models import News
 
 
