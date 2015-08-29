@@ -16,7 +16,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
         <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
         <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
     </head>
-    <body class="left-sidebar">
+    <body class="{% block sidebar %}left-sidebar{% endblock %}">
         <div id="page-wrapper">
 
             <!-- Header -->
@@ -65,8 +65,10 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
             <!-- Main -->
             <div id="main-wrapper">
                 <div id="main" class="container">
-                    {% block content %}
-                    {% endblock %}
+                    <div id="content">
+                        {% block content %}
+                        {% endblock %}
+                    </div>
                 </div>
             </div>
 
