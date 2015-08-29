@@ -6,19 +6,21 @@
     Galleries photo
 {% endblock %}
 
+{% block sidebar %}no-sidebar{% endblock %}
+
 {% block content %}
-    <div class="row 100%">
-        <h1>Galleries photo :</h1>
-        <div class="6u 12u(mobile)">
-            <ul>
-                {% for gallery in gallery_list %}
-                    <li>
-                        <a class="icon fa-file" href="{% url 'gallery-detail' gallery.pk %}">
-                            <span>{{ gallery.name }}</span>
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
+    <article class="box post">
+        <header>
+            <h2>Galleries photo :</h2>
+        </header>
+        <ul>
+            {% for gallery in gallery_list %}
+                <li>
+                    <a class="icon fa-file" href="{% url 'gallery-detail' gallery.pk %}">
+                        <span>{{ gallery.name }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </article>
 {% endblock %}

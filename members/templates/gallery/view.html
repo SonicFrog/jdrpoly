@@ -1,0 +1,41 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title  %}
+    {{ gallery.name }}
+{% endblock %}
+
+{% block sidebar %}no-sidebar{% endblock %}
+
+{% block content %}
+    <article class="box post">
+        <header>
+            <h2>{{ gallery.name }}</h2>
+            <span class="image featured">
+                {% if gallery.pictures_set.0 %}
+                    <img src="{% static gallery.pictures_set.url %}" />
+                    <!-- TODO: print a default image if there are none -->
+                {% else %}
+                    <img src="{% static 'default.png' %}" height="300" />
+                {% endif %}
+            </span>
+            {% with photo_count=gallery.pictures_set %}
+                <h3>{{ photo_count | length }} photo{{ photo_count | length | pluralize }}</h3>
+            {% endwith %}
+        </header>
+        <p>
+            {{ gallery.description | linebreaksbr }}
+        </p>
+    </article>
+    <article class="box post">
+        {% for picture in gallery.pictures_set.all %}
+            <span class="image featured">
+                <a href="{{ picture.get_absolute_url }}">
+                    <img src="{% static picture.url %}" />
+                </a>
+            </span>
+        {% endfor %}
+    </article>
+{% endblock %}
