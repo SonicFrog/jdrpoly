@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
@@ -20,6 +21,9 @@ class Gallery(models.Model):
         verbose_name = _("Gallerie")
         verbose_name_plural = _("Galleries")
         ordering = ('-date',)
+
+    def get_absolute_url(self):
+        return reverse('gallery-detail', kwargs={'pk': self.pk})
 
 
 class Picture(models.Model):
