@@ -9,6 +9,12 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)$', views.EventParticipateView.as_view(),
         name='event-detail'),
 
+    url(r'^date$', views.EventListByDateView.as_view(), name='event-by-date'),
+    url(r'^owner$', views.EventListByOwnerView.as_view(),
+        name='event-by-owner'),
+    url(r'^place$', views.EventListByPlaceView.as_view(),
+        name='event-by-place'),
+
     url(r'^(?P<pk>\d+)/delete$', views.EventDeleteView.as_view(),
         name='event-delete'),
 
