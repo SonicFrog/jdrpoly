@@ -4,6 +4,8 @@
 
 {% extends "base.html" %}
 
+{% load staticfiles %}
+
 {% block title %}
     {{ user.profile }}
 {% endblock %}
@@ -12,53 +14,55 @@
     {% if member %}
         <div class="row">
             <header>
-                <h2>{{ user.profile }}</h2>
+                <h2>{{ member.profile }}</h2>
             </header>
             <div class="6u 12u(mobile)">
-                <div class="image row 50%">
-                    {% if user.profile.image %}
-                        <img src="{{ user.profile.image.url }}" />
+                <span class="image row 50%">
+                    {% if member.profile.image %}
+                        <img src="{{ member.profile.image.url }}" />
                     {% else %}
-                        Pas d'image
+                        <img src="{% static 'images/default.jpg' %}" height="200" />
                     {% endif %}
+                </span>
+                <div class="class 6u 12u(mobile)">
+                    <strong>Nom d'utilisateur :</strong> {{ member.username }}
                 </div>
                 <div class="class 6u 12u(mobile)">
-                    <strong>Nom d'utilisateur:</strong> {{ user.username }}
-                </div>
-                <div class="class 6u 12u(mobile)">
-                    <strong>Addresse mail:</strong>
-                    {% if user.email %}
-                        {{ user.email }}
+                    <strong>Addresse mail :</strong>
+                    {% if member.email %}
+                        {{ member.email }}
                     {% else %}
                         Non spécifiée
                     {% endif %}
                 </div>
                 <div class="6u 12u(mobile)">
                     <strong>Nom:</strong>
-                    {% if user.last_name %}
-                        {{ user.last_name }}
+                    {% if member.last_name %}
+                        {{ member.last_name }}
                     {% else %}
                         Non spécifié
                     {% endif %}
                 </div>
                 <div class="6u 12u(mobile)">
                     <strong>Prénom:</strong>
-                    {% if user.first_name %}
-                        {{ user.first_name }}
+                    {% if member.first_name %}
+                        {{ member.first_name }}
                     {% else %}
                         Non spécifié
                     {% endif %}
                 </div>
                 <div class="6u 12u(mobile)">
                     <strong>Localisation:</strong>
-                    {% if user.profile.location %}
-                        {{ user.profile.location }}
+                    {% if member.profile.location %}
+                        {{ member.profile.location }}
                     {% else %}
                         Non spécifiée
                     {% endif %}
                 </div>
             </div>
-            <a href="{% url 'user-profile-edit' %}" class="button icon fa-file">Modifier mon profil</a>
+            {% if request.user == member %}
+                <a href="{% url 'user-profile-edit' %}" class="button icon fa-file">Modifier mon profil</a>
+            {% endif %}
         </div>
     {% else %}
         <h1>A fatal error occured ! Please contact website administrator !</h1>
