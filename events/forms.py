@@ -2,12 +2,15 @@
 
 from django import forms
 
+from .models import Event
 
-class EventCreationForm(forms.Form):
-    image = forms.FileField(required=False, widget=forms.FileInput)
-    date = forms.DateTimeField()
-    description = forms.Textarea()
-    place = forms.TextInput()
+
+class EventCreationForm(forms.ModelForm):
+    model = Event
+
+    class Meta:
+        fields = ['name', 'place', 'datetime', 'description', 'max_players']
+
 
 
 class EventParticipationForm(forms.Form):
