@@ -5,14 +5,32 @@ from django.views.generic import (CreateView, ListView, DeleteView, FormView,
 from django.core.urlresolvers import reverse_lazy
 
 from .models import Event
-from .forms import EventParticipationForm
+from .forms import EventParticipationForm, EventCreationForm
 from members.views import LoginRequiredMixin
 
 
 class EventListView(ListView, LoginRequiredMixin):
+    template_name = 'events/list.html'
     name = 'event-list'
     context_object_name = 'event_list'
     model = Event
+
+    def get_queryset(self):
+        return Event.objects.order_by('-datetime')[:10]
+
+
+class EventListByDateView(EventListView):
+    pass
+
+
+class EventListByOwnerView(EventListView):
+    def get_queryset(self):
+        return Event.objects.order_by('-owner')[:10]
+
+
+class EventListByPlaceView(EventListView):
+    def get_queryset(self):
+        return Event.objects.order_by('-place')[:10]
 
 
 class EventParticipateView(FormView, LoginRequiredMixin):
@@ -35,6 +53,7 @@ class EventCreateView(CreateView, LoginRequiredMixin):
     model = Event
     success_url = reverse_lazy('event-list')
     name = 'event-new'
+    form_class = EventCreationForm
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
