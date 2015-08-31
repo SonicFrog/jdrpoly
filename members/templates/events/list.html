@@ -1,0 +1,35 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+
+{% block title %}
+    Evenements
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="row 100%">
+            <span class="icon fa-calendar"><a href="{% url 'event-by-date' %}">Par date</a></span>
+            <span class="icon fa-calendar"><a href="{% url 'event-by-owner' %}">Par organisateur</a></span>
+            <span class="icon fa-calendar"><a href="{% url 'event-by-place' %}">Par endroit</a></span>
+        </div>
+    </section>
+    <section>
+        <article>
+            <header>
+                <h2>Prochains évenements :</h2>
+            </header>
+            <p>
+                <ul>
+                    {% for event in event_list %}
+                        <li>
+                            <span class="icon fa-file">
+                                ;
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </p>
+        </article>
+    </section>
+{% endblock %}
