@@ -9,18 +9,22 @@
 {% block sidebar %}no-sidebar{% endblock %}
 
 {% block content %}
-    <article class="box post">
-        <header>
-            <h2>Galleries photo :</h2>
-        </header>
-        <ul>
-            {% for gallery in gallery_list %}
-                <li>
-                    <a class="icon fa-file" href="{% url 'gallery-detail' gallery.pk %}">
-                        <span>{{ gallery.name }}</span>
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    </article>
+    <section>
+        <article class="box post">
+            <header>
+                <h2>Galleries photo :</h2>
+            </header>
+            <ul>
+                {% for gallery in gallery_list %}
+                    <li>
+                        <a class="icon fa-file" href="{{ gallery.get_absolute_url }}">
+                            <span>{{ gallery.name }} créé le {{ gallery.date }}
+                                ( {{ gallery.picture_set | length }}
+                                photo{{gallery.picture_set.all | length | pluralize}})</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </article>
+    </section>
 {% endblock %}
