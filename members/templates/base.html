@@ -9,7 +9,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
 -->
 <html>
     <head>
-        <title>{% block title %}JDRpoly{% endblock %}</title>
+        <title>{% block title %}Accueil{% endblock %} | JDRpoly</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
@@ -24,7 +24,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 <div id="header" class="container">
 
                     <!-- Logo -->
-                    <h1 id="logo"><a href="index.html">JDRpoly</a></h1>
+                    <h1 id="logo"><a href="{% url 'mainpage' %}">JDRpoly</a></h1>
                     <p>Le jeu de rôle à l'EPFL</p>
 
                     <!-- Nav -->
@@ -34,7 +34,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                                 <span>Accueil</span>
                             </a></li>
                             <li>
-                                <a href="#" class="icon fa-cog"><span>Evenements</span></a>
+                                <a href="{% url 'event-list' %}" class="icon fa-cog"><span>Evenements</span></a>
                                 <ul>
                                     <li><a href="#">SvZ</a></li>
                                     <li><a href="#">Week-ends</a></li>
@@ -109,24 +109,17 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                                 <div class="row">
                                     <div class="6u 12u(mobile)">
                                         <ul class="icons">
-                                            <li class="icon fa-home">
-                                                1234 Somewhere Road<br />
-                                                Nashville, TN 00000<br />
-                                                USA
-                                            </li>
-                                            <li class="icon fa-phone">
-                                                (000) 000-0000
-                                            </li>
                                             <li class="icon fa-envelope">
                                                 <a href="mailto:jdrpoly@agepoly.ch">jdrpoly@agepoly.ch</a>
                                             </li>
+                                            <li class="icon fa-facebook">
+                                                <a href="#">facebook.com/untitled-tld</a>
+                                            </li>
+
                                         </ul>
                                     </div>
                                     <div class="6u 12u(mobile)">
                                         <ul class="icons">
-                                            <li class="icon fa-facebook">
-                                                <a href="#">facebook.com/untitled-tld</a>
-                                            </li>
                                         </ul>
                                     </div>
                                 </div>
