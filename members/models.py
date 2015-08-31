@@ -24,8 +24,8 @@ class Member(models.Model):
     until = models.DateField(default=timezone.now,
                              verbose_name=_("Membre jusqu'à"))
 
-    image = models.ImageField(default=None, verbose_name=_("Avatar"))
-    location = models.CharField(default=None, max_length=200,
+    image = models.ImageField(default=None, null=True, verbose_name=_("Avatar"))
+    location = models.CharField(default=None, null=True, max_length=200,
                                 verbose_name=_("Localisation"))
 
     def get_absolute_url(self):
