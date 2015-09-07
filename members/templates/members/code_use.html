@@ -3,13 +3,14 @@
 {% extends "base.html"%}
 
 {% block title %}
-    Utilisation du code - JDRPoly
+    Utilisation du code
 {% endblock %}
 
 {% block content %}
     <form action="" method="post">
         <label>Entrez votre code de membre JDRPoly</label>
         <p>Fin de la période membre actuel le {{ user.profile.until }}</p>
+        {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Utiliser le code" />
     </form>

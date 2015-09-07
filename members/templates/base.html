@@ -24,7 +24,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 <div id="header" class="container">
 
                     <!-- Logo -->
-                    <h1 id="logo"><a href="{% url 'mainpage' %}">JDRpoly</a></h1>
+                    <h1 id="logo"><a href="{% url 'mainpage' %}">JDR-poly</a></h1>
                     <p>Le jeu de rôle à l'EPFL</p>
 
                     <!-- Nav -->
@@ -36,16 +36,16 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                             <li>
                                 <a href="{% url 'event-list' %}" class="icon fa-cog"><span>Evenements</span></a>
                                 <ul>
-                                    <li><a href="#">SvZ</a></li>
-                                    <li><a href="#">Week-ends</a></li>
-                                    <li><a href="#">Murders</a></li>
+                                    <li><a href="{% url 'event-detail' 2 %}">SvZ</a></li>
+                                    <li><a href="{% url 'event-detail' 1 %}">Nocturnes</a></li>
+                                    <li><a href="{% url 'event-detail' 3 %}">Soirées libres</a></li>
                                 </ul>
                             </li>
                             <li>
                                 <a href="{% url 'gallery-list' %}" class="icon fa-cog"><span>Photos</span></a>
                             </li>
                             <li>
-                                <a href="#" class="icon fa-cog"><span>Espace utilisateur</span></a>
+                                <a href="#" class="icon fa-cog"><span>Espace membre</span></a>
                                 <ul>
                                     {% if user.is_authenticated %}
                                         <li><a href="{% url 'use-code'%}">Utiliser un code membre</a></li>
@@ -81,7 +81,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                     <div class="row">
                         <div class="6u 12u(mobile)">
                             <section>
-                                <form method="post" action="#">
+                                <form method="post" action="{% url 'contact-handle' %}">
                                     <div class="row 50%">
                                         <div class="6u 12u(mobile)">
                                             <input name="name" placeholder="Nom" type="text" />
@@ -113,7 +113,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                                                 <a href="mailto:jdrpoly@agepoly.ch">jdrpoly@agepoly.ch</a>
                                             </li>
                                             <li class="icon fa-facebook">
-                                                <a href="#">facebook.com/untitled-tld</a>
+                                                <a href="https://www.facebook.com/JDRPoly">facebook.com/JDRPoly</a>
                                             </li>
 
                                         </ul>

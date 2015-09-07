@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, View
 
 from .models import News
 
@@ -23,4 +23,11 @@ class NewsDetailView(DetailView):
 
     model = News
     context_object_name = 'news'
-    template_name = 'news.html'
+    template_name = 'news/view.html'
+
+
+class ContactFormHandleView(View):
+    """
+    View pour traiter le contenu du formulaire de contact
+    """
+    pass

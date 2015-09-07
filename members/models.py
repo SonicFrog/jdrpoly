@@ -18,15 +18,13 @@ class Member(models.Model):
                                 verbose_name=_("Utilisateur"),
                                 parent_link=True)
 
-    is_member = models.BooleanField(default=False,
-                                    verbose_name=_("Membre actif ?"))
-
     until = models.DateField(default=timezone.now,
                              verbose_name=_("Membre jusqu'à"))
 
-    image = models.ImageField(default=None, null=True, verbose_name=_("Avatar"))
-    location = models.CharField(default=None, null=True, max_length=200,
-                                verbose_name=_("Localisation"))
+    image = models.ImageField(default=None, null=True, blank=True,
+                              verbose_name=_("Avatar"))
+    location = models.CharField(default=None, null=True, blank=True,
+                                max_length=200, verbose_name=_("Localisation"))
 
     def get_absolute_url(self):
         return reverse('other-user-profile', kwargs={'pk': self.pk})
@@ -43,7 +41,8 @@ class Member(models.Model):
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_member_for_new_user(sender, created, instance, **kwargs):
     if created:
-        member = Member(user=instance)
+        member = Member(user=instance, image=None, location=None,
+                        until=timezone.now())
         member.save()
 
 
@@ -52,8 +51,8 @@ class Code(models.Model):
     One-time use code for validating membership on the website
     """
 
-    CHOICES = (('Annuelle', 2),
-               ('Semestrielle', 1))
+    CHOICES = ((2, 'Annuelle'),
+               (1, 'Semestrielle'))
 
     content = models.CharField(max_length=30, unique=True,
                                verbose_name=_("Code"))

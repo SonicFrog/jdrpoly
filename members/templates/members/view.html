@@ -18,11 +18,7 @@
             </header>
             <div class="6u 12u(mobile)">
                 <span class="image row 50%">
-                    {% if member.profile.image %}
-                        <img src="{{ member.profile.image.url }}" />
-                    {% else %}
-                        <img src="{% static 'images/default.jpg' %}" height="200" />
-                    {% endif %}
+                    <img src="{% static 'images/default.jpg' %}" height="200" />
                 </span>
                 <div class="class 6u 12u(mobile)">
                     <strong>Nom d'utilisateur :</strong> {{ member.username }}
