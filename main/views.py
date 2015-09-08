@@ -1,6 +1,8 @@
 from django.views.generic import ListView, DetailView, View
 
+from random import randint
 from .models import News
+from events.models import Event
 
 
 class MainPageView(ListView):
@@ -14,6 +16,13 @@ class MainPageView(ListView):
 
     def get_queryset(self):
         return News.objects.order_by('-date')[:5]
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(MainPageView, self).get_context_data(*args, **kwargs)
+        pk = randint(1, Event.objects.all().count() - 1)
+        rng = (pk, pk + 1)
+        context['notes'] = Event.objects.filter(pk__in=rng)
+        return context
 
 
 class NewsDetailView(DetailView):

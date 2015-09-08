@@ -31,44 +31,22 @@
 
                 <!-- Highlights -->
                 <section>
-                    <ul class="divided">
-                        <li>
+                    {% for event in notes %}
+                        <ul class="divided">
+                            <li>
+                                <article class="box highlight">
+                                    <header>
+                                        <h3><a href="#">{{ event.name }}</a></h3>
+                                    </header>
+                                    <p>{{ event.description }}</p>
+                                    <ul class="actions">
+                                        <li><a href="{{ event.get_absolute_url }}" class="button icon fa-file">En savoir plus</a></li>
+                                    </ul>
+                                </article>
 
-                            <!-- Highlight -->
-                            <article class="box highlight">
-                                <header>
-                                    <h3><a href="#">Something of note</a></h3>
-                                </header>
-                                <a href="#" class="image left"><img src="images/pic06.jpg" alt="" /></a>
-                                <p>Phasellus  sed laoreet massa id justo mattis pharetra. Fusce suscipit ligula vel quam
-                                    viverra sit amet mollis tortor congue magna lorem ipsum dolor et quisque ut odio facilisis
-                                    convallis. Etiam non nunc vel est suscipit convallis non id orci. Ut interdum tempus
-                                    facilisis convallis. Etiam non nunc vel est suscipit convallis non id orci.</p>
-                                <ul class="actions">
-                                    <li><a href="#" class="button icon fa-file">En savoir plus</a></li>
-                                </ul>
-                            </article>
-
-                        </li>
-                        <li>
-
-                            <!-- Highlight -->
-                            <article class="box highlight">
-                                <header>
-                                    <h3><a href="#">Something of less note</a></h3>
-                                </header>
-                                <a href="#" class="image left"><img src="images/pic07.jpg" alt="" /></a>
-                                <p>Phasellus  sed laoreet massa id justo mattis pharetra. Fusce suscipit ligula vel quam
-                                    viverra sit amet mollis tortor congue magna lorem ipsum dolor et quisque ut odio facilisis
-                                    convallis. Etiam non nunc vel est suscipit convallis non id orci. Ut interdum tempus
-                                    facilisis convallis. Etiam non nunc vel est suscipit convallis non id orci.</p>
-                                <ul class="actions">
-                                    <li><a href="#" class="button icon fa-file">En savoir plus</a></li>
-                                </ul>
-                            </article>
-
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
+                    {% endfor %}
                 </section>
 
             </div>
