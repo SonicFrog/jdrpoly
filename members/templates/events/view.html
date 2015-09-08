@@ -23,7 +23,9 @@
             {% if editions %}
             <ul>
                 {% for edition in editions %}
-                    <li>{{ edition.date }} ({{edition.place}})</li>
+                    <li>
+                        <a href="{% url 'edition-detail' edition.pk %}">{{ edition.date }} ({{edition.place}})</a>
+                    </li>
                 {% endfor %}
             </ul>
             {% else %}

@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 from pictures.models import Gallery
@@ -42,6 +43,11 @@ class Edition(models.Model):
                                 blank=True, null=True)
     event = models.ForeignKey(Event, verbose_name=_("Evenement"),
                               related_name='editions')
+
+    participants = models.ManyToManyField(User, related_name='events')
+
+    def __str__(self):
+        return "%s du %s" % (self.event.name, self.date)
 
     class Meta:
         verbose_name = _("Edition")

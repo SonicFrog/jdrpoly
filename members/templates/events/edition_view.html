@@ -1,0 +1,30 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+
+{% block sidebar %}no-sidebar{% endblock %}
+
+{% block content %}
+    <div class="row 100%">
+        <article>
+            <header>
+                <h2>{{ edition.event.name }}</h2>
+            </header>
+            le {{ edition.date }} {% if edition.place %} à {{ edition.place }} {% endif %}
+        </article>
+        <article>
+            <p>
+                Il y a actuellement {{ edition.participants.count }} joueur{{ edition.participants.count | pluralize }} inscrit{{ edition.participants.count | pluralize }} pour cet événement.
+            </p>
+            <p>
+            {% if attending %}
+                Vous êtes enregistré pour cet événement. <br />
+                <a class="button icon fa-file" href="{% url 'edition-unregister' edition.pk %}">Me désinscrire</a>
+            {% else %}
+                Vous n'êtes pas enregistré pour cet événement. <br />
+                <a class="button icon fa-file" href="{% url 'edition-register' edition.pk %}">M'inscrire</a>
+            {% endif %}
+            </p>
+        </article>
+    </div>
+{% endblock %}

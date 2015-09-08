@@ -1,7 +1,10 @@
 from django.conf.urls import url
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.views import (password_change, password_change_done,
-                                       login, logout, password_reset)
+                                       login, logout, password_reset,
+                                       password_reset_complete,
+                                       password_reset_done,
+                                       password_reset_confirm)
 from .views import (UserProfileView, UserEditView, SelfProfileView,
                     UserCreateView, PasswordChangeView, CodeUseView)
 
@@ -13,6 +16,10 @@ urlpatterns = [
     url(r'^password_reset/$', password_reset, name='password_reset',
         kwargs={'post_reset_redirect': reverse_lazy('login'),
                 'template_name': 'members/password_reset.html'}),
+    url(r'^password_reset_confirm/(?P<token>.+)/(?P<uidb64>.+)/$',
+        password_reset_confirm, name='password_reset_confirm'),
+    url(r'^password_reset_done/$', password_reset_done,
+        name='password_reset_done'),
     url(r'^password/$', password_change, name='user-password',
         kwargs={'template_name': 'members/password_change.html',
                 'post_change_redirect': reverse_lazy('user-password-ok')}),
