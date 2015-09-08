@@ -55,6 +55,14 @@ class EventDetailView(DetailView):
         return context
 
 
+class AttendingView(ListView, LoginRequiredMixin):
+    template_name = 'events/attending.html'
+    context_object_name = 'events'
+
+    def get_queryset(self):
+        return self.request.user.events.all()
+
+
 class EditionDetailView(DetailView):
     model = Edition
     template_name = 'events/edition_view.html'

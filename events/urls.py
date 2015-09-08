@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from .views import (EventListView, EventDetailView, RegisterEditionView,
-                    UnregisterEditionView, EditionDetailView)
+                    UnregisterEditionView, EditionDetailView, AttendingView)
 
 urlpatterns = [
     url(r'^$', EventListView.as_view(), name='event-list'),
@@ -11,5 +11,7 @@ urlpatterns = [
     url(r'^register/(?P<pk>\d+)$', RegisterEditionView.as_view(),
         name='edition-register'),
     url(r'^unregister/(?P<pk>\d+)$', UnregisterEditionView.as_view(),
-        name='edition-unregister')
+        name='edition-unregister'),
+
+    url(r'^my/$', AttendingView.as_view(), name='my-events'),
 ]

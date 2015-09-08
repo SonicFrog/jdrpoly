@@ -1,0 +1,26 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+
+{% block sidebar %}no-sidebar{% endblock %}
+
+{% block content %}
+    <div class="row 100%">
+        <article>
+            <header>
+                <h2>Mes événements :</h2>
+            </header>
+            {% if events %}
+                <ul>
+                    {% for edition in events %}
+                        <li><a href="{{ edition.get_absolute_url }}">
+                            {{ edition.event.name }} le {{ edition.date }}
+                        </a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                Vous ne participez à aucun événement pour l'instant !
+            {% endif %}
+        </article>
+    </div>
+{% endblock %}

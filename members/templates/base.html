@@ -48,6 +48,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                                 <a href="#" class="icon fa-cog"><span>Espace membre</span></a>
                                 <ul>
                                     {% if user.is_authenticated %}
+                                        <li><a href="{% url 'my-events' %}">Mes événements</a></li>
                                         <li><a href="{% url 'use-code'%}">Utiliser un code membre</a></li>
                                         <li><a href="{% url 'user-profile-view' %}">Mon profil</a></li>
                                         <li><a href="{% url 'logout' %}">Déconnexion</a></li>
