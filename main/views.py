@@ -1,7 +1,9 @@
+# coding: utf-8
+
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
-from django.core.mail import send_mail, send_mass_mail
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils import timezone
@@ -12,7 +14,7 @@ from django.forms import (Form, CharField, EmailField, Textarea, TextInput,
                           BooleanField)
 
 from random import randint
-from .models import News, MainPageSection
+from .models import News, MainPageSection, ComityMember
 from members.views import LoginRequiredMixin
 from members.models import user_is_staff
 from events.models import Event
@@ -113,3 +115,12 @@ class ContactFormHandleView(FormView):
 
 class ContactSuccessView(TemplateView):
     template_name = 'contact_success.html'
+
+
+class ComityListView(ListView):
+    """
+    Vue pour les membres actuels du comité
+    """
+    model = ComityMember
+    template_name = 'comity.html'
+    context_object_name = 'comity'

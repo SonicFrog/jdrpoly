@@ -1,0 +1,32 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+
+{% block sidebar %}no-sidebar{% endblock %}
+
+{% block title %}Le comité{% endblock %}
+
+{% block content %}
+    <ul class="divided">
+        {% for member in comity %}
+            <li>
+                <div class="row 100%">
+                    <div class="12u 24u(mobile)">
+                        <article>
+                            <header>
+                                <h2>{{ member.first_name }} {{ member.last_name }}</h2>
+                                <h3>{{ member.post }}</h3>
+                            </header>
+                            <p>
+                                {{ member.description }}
+                            </p>
+                            <p>
+                                Contact : {{ member.email }}
+                            </p>
+                        </article>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

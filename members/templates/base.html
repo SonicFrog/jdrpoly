@@ -87,6 +87,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                             <section>
                                 <form method="post" action="{% url 'contact-handle' %}">
                                     <div class="row 50%">
+                                        {% csrf_token %}
                                         <div class="6u 12u(mobile)">
                                             <input name="name" placeholder="Nom" type="text" />
                                         </div>
@@ -101,7 +102,9 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                                     </div>
                                     <div class="row 50%">
                                         <div class="12u">
-                                            <a href="#" class="form-button-submit button icon fa-envelope">Envoyer le message</a>
+                                            <input type="submit"
+                                                   class="form-submit-button button icon fa-envelope"
+                                                   value="Envoyer le message" />
                                         </div>
                                     </div>
                                 </form>

@@ -44,7 +44,8 @@ class Edition(models.Model):
     event = models.ForeignKey(Event, verbose_name=_("Evenement"),
                               related_name='editions')
 
-    participants = models.ManyToManyField(User, related_name='events')
+    participants = models.ManyToManyField(User, related_name='events',
+                                          verbose_name=_("Participants"))
 
     def __str__(self):
         return "%s du %s" % (self.event.name, self.date)

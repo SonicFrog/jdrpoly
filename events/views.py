@@ -60,7 +60,7 @@ class AttendingView(ListView, LoginRequiredMixin):
     context_object_name = 'events'
 
     def get_queryset(self):
-        return self.request.user.events.all()
+        return self.request.user.events.filter(date__gt=timezone.now())
 
 
 class EditionDetailView(DetailView):
