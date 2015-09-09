@@ -26,7 +26,7 @@ urlpatterns = [
     url(r'^password_done/$', password_change_done, name='user-password-ok',
         kwargs={'template_name': 'members/password_change_ok.html'}),
     url(r'^logout$', logout, name='logout',
-        kwargs={'success_url': reverse_lazy('login')}),
+        kwargs={'next_page': reverse_lazy('login')}),
     url(r'^(?P<pk>\d+)$', UserProfileView.as_view(),
         name='other-user-profile'),
     url(r'^code$', CodeUseView.as_view(), name='use-code'),

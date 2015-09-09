@@ -47,6 +47,9 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                             <li>
                                 <a href="#" class="icon fa-cog"><span>Espace membre</span></a>
                                 <ul>
+                                    {% if user.is_staff %}
+                                        <li><a href="{% url 'newsletter-send' %}">Envoyer une newsletter</a></li>
+                                    {% endif %}
                                     {% if user.is_authenticated %}
                                         <li><a href="{% url 'my-events' %}">Mes événements</a></li>
                                         <li><a href="{% url 'use-code'%}">Utiliser un code membre</a></li>

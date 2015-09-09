@@ -109,3 +109,5 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/members/'
 LOGIN_URL = '/members/login'
+
+CONTACT_EMAIL = 'jdrpoly@agepoly.ch'

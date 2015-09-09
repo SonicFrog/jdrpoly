@@ -1,8 +1,13 @@
 from django.conf.urls import url
-from .views import MainPageView, NewsDetailView, ContactFormHandleView
+from .views import (MainPageView, NewsDetailView, ContactFormHandleView,
+                    ContactSuccessView, NewsletterSendView)
 
 urlpatterns = [
     url(r'^$', MainPageView.as_view(), name='mainpage'),
     url(r'^(?P<pk>\d+)$', NewsDetailView.as_view(), name='news-detail'),
     url(r'^contact$', ContactFormHandleView.as_view(), name='contact-handle'),
+    url(r'^contact_success$', ContactSuccessView.as_view(),
+        name='contact-success'),
+    url(r'^newsletter/$', NewsletterSendView.as_view(),
+        name='newsletter-send'),
 ]

@@ -1,0 +1,44 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+
+{% block sidebar %}no-sidebar{% endblock %}
+
+{% block title %}Newsletter{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <section>
+            <header>
+                <h2>Nouvelle newsletter</h2>
+            </header>
+        <div class="row 100%">
+            <div class="12u 24u(mobile)">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="row 100%">
+                    <div class="12u 24u(mobile)">
+                        {{ form.subject }}
+                    </div>
+                </div>
+                <div class="row 100%">
+                    <div class="12u 24u(mobile)">
+                        {{ form.content }}
+                    </div>
+                </div>
+                <div class="row 100%">
+                    <div class="12u 24u(mobile)">
+                        {{ form.member_only }} Membres uniquement
+                    </div>
+                </div>
+                <div class="row 100%">
+                    <div class="12u 24u(mobile)">
+                        <input type="submit" class="icon fa-envelope" value="Envoyer" />
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+        </section>
+    </div>
+{% endblock %}

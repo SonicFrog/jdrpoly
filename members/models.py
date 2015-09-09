@@ -10,6 +10,10 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 
+def user_is_staff(user):
+    return user.is_staff
+
+
 class Member(models.Model):
     """
     Extended user model with subscription informations added
@@ -25,6 +29,9 @@ class Member(models.Model):
                               verbose_name=_("Avatar"))
     location = models.CharField(default=None, null=True, blank=True,
                                 max_length=200, verbose_name=_("Localisation"))
+
+    wants_newsletter = models.BooleanField(default=True,
+                                           verbose_name=_("Newsletter"))
 
     def get_absolute_url(self):
         return reverse('other-user-profile', kwargs={'pk': self.pk})

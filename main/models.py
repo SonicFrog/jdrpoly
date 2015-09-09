@@ -24,3 +24,17 @@ class News(models.Model):
         verbose_name = _("News")
         verbose_name_plural = _("News")
         ordering = ('date',)
+
+
+class MainPageSection(models.Model):
+    """
+    Modèle pour une section sur la page d'accueil
+    """
+    title = models.CharField(max_length=200, verbose_name=_("Titre"))
+    content = models.TextField(verbose_name=_("Contenu"))
+    order = models.IntegerField(verbose_name=_("Position"))
+
+    class Meta:
+        verbose_name = _("Section page d'acceuil")
+        verbose_name_plural = _("Sections page d'accueil")
+        ordering = ('order', 'pk')
