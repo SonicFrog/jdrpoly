@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, DetailView, FormView, TemplateView
 
 from django.forms import (Form, CharField, EmailField, Textarea, TextInput,
-                          BooleanField)
+                          NullBooleanField)
 
 from random import randint
 from .models import News, MainPageSection, ComityMember
@@ -34,7 +34,11 @@ class MainPageView(ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(MainPageView, self).get_context_data(*args, **kwargs)
-        pk = randint(1, Event.objects.all().count() - 1)
+        evt_count = Event.objects.all().count() - 1
+        if evt_count is -1:
+            pk = 1
+        else:
+            pk = randint(1, evt_count)
         rng = (pk, pk + 1)
         context['notes'] = Event.objects.filter(pk__in=rng)
         context['latest_news'] = News.objects.order_by('-date')[:5]
@@ -63,12 +67,13 @@ class ContactForm(Form):
         sender = "%s <%s>" % (self.cleaned_data['name'],
                               self.cleaned_data['email'])
         send_mail(subject, content, sender, to)
+        return to
 
 
 class NewsletterForm(Form):
     subject = CharField(widget=TextInput(attrs={'placeholder': _("Sujet")}))
     content = CharField(widget=Textarea(attrs={'placeholder': _("Contenu")}))
-    member_only = BooleanField()
+    member_only = NullBooleanField()
 
     def send_mail(self):
         to = []
@@ -78,17 +83,19 @@ class NewsletterForm(Form):
                    if member_only
                    else User.objects.all())
 
-        userset = userset.filter(profile__wants_newsletter=True)
+        userset = userset.filter(profile__wants_newsletter__exact=True)
 
         to = [user.email for user in userset]
         subject = self.cleaned_data['subject']
         content = self.cleaned_data['content']
         send_mail(subject, content, settings.CONTACT_EMAIL, to)
+        return to
 
 
 class NewsletterSendView(FormView, LoginRequiredMixin):
     form_class = NewsletterForm
     template_name = 'news/letter.html'
+    success_url = reverse_lazy('newsletter-success')
 
     @method_decorator(user_passes_test(user_is_staff))
     def dispatch(self, request, *args, **kwargs):
@@ -98,6 +105,10 @@ class NewsletterSendView(FormView, LoginRequiredMixin):
     def form_valid(self, form):
         form.send_mail()
         return super(NewsletterSendView, self).form_valid(form)
+
+
+class NewsletterSuccessView(TemplateView, LoginRequiredMixin):
+    template_name = 'news/letter_ok.html'
 
 
 class ContactFormHandleView(FormView):
