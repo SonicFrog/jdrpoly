@@ -14,20 +14,24 @@
                 <!-- Excerpts -->
                 <section>
                     <ul class="divided">
-                        {% for news in latest_news %}
-                            <li>
-                                <!-- Excerpt -->
-                                <article class="box excerpt">
-                                    <header>
-                                        <span class="date">{{ news.date }}</span>
-                                        <h3><a href="{{ news.get_absolute_url }}">
-                                            {{ news.title }}
-                                        </a></h3>
-                                    </header>
-                                    <p>{{ news.content }}</p>
-                                </article>
-                            </li>
-                        {% endfor %}
+                        {% if latest_news %}
+                            {% for news in latest_news %}
+                                <li>
+                                    <!-- Excerpt -->
+                                    <article class="box excerpt">
+                                        <header>
+                                            <span class="date">{{ news.date }}</span>
+                                            <h3><a href="{{ news.get_absolute_url }}">
+                                                {{ news.title }}
+                                            </a></h3>
+                                        </header>
+                                        <p>{{ news.content }}</p>
+                                    </article>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            Aucune news postées pour l'instant !
+                        {% endif %}
                     </ul>
                 </section>
 
