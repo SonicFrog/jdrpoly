@@ -24,8 +24,13 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                 <div id="header" class="container">
 
                     <!-- Logo -->
+                    {% comment %}
                     <h1 id="logo"><a href="{% url 'mainpage' %}">JDR-poly</a></h1>
                     <p>Le jeu de rôle à l'EPFL</p>
+                    {% endcomment %}
+                    <span class="image featured"><a href="{% url 'mainpage' %}">
+                        <img src="{% static "images/banner.png" %}" alt="" />
+                    </a></span>
 
                     <!-- Nav -->
                     <nav id="nav">
