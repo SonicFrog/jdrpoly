@@ -16,7 +16,7 @@ from django.forms import (Form, CharField, EmailField, Textarea, TextInput,
 from random import randint
 from .models import News, MainPageSection, ComityMember
 from members.views import LoginRequiredMixin
-from members.models import user_is_staff
+from members.models import user_is_staff, user_is_authenticated
 from events.models import Event
 
 
@@ -24,8 +24,6 @@ class MainPageView(ListView):
     """
     View responsible for fetching latest news and displaying them
     """
-
-    model = News
     context_object_name = 'sections'
     template_name = 'mainpage.html'
 
