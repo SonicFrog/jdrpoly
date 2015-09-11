@@ -5,77 +5,76 @@
 {% load staticfiles %}
 
 {% block content %}
-    <div id="main" class="container">
-        <div class="row">
+    <div class="row">
 
-            <!-- Sidebar -->
-            <div id="sidebar" class="4u 12u(mobile)">
+        <!-- Sidebar -->
+        <div id="sidebar" class="4u 12u(mobile)">
 
-                <!-- Excerpts -->
-                <section>
+            <!-- Excerpts -->
+            <section>
+
+                {% if latest_news %}
                     <ul class="divided">
-                        {% if latest_news %}
-                            {% for news in latest_news %}
-                                <li>
-                                    <!-- Excerpt -->
-                                    <article class="box excerpt">
-                                        <header>
-                                            <span class="date">{{ news.date }}</span>
-                                            <h3><a href="{{ news.get_absolute_url }}">
-                                                {{ news.title }}
-                                            </a></h3>
-                                        </header>
-                                        <p>{{ news.content }}</p>
-                                    </article>
-                                </li>
-                            {% endfor %}
-                        {% else %}
-                            Aucune news postées pour l'instant !
-                        {% endif %}
-                    </ul>
-                </section>
-
-                <!-- Highlights -->
-                <section>
-                    {% for event in notes %}
-                        <ul class="divided">
+                        {% for news in latest_news %}
                             <li>
-                                <article class="box highlight">
+                                <!-- Excerpt -->
+                                <article class="box excerpt">
                                     <header>
-                                        <h3><a href="#">{{ event.name }}</a></h3>
+                                        <span class="date">{{ news.date }}</span>
+                                        <h3><a href="{{ news.get_absolute_url }}">
+                                            {{ news.title }}
+                                        </a></h3>
                                     </header>
-                                    <p>{{ event.description }}</p>
-                                    <ul class="actions">
-                                        <li><a href="{{ event.get_absolute_url }}" class="button icon fa-file">En savoir plus</a></li>
-                                    </ul>
+                                    <p>{{ news.content }}</p>
                                 </article>
-
                             </li>
-                        </ul>
-                    {% endfor %}
-                </section>
-
-            </div>
-
-            <!-- Content -->
-            <div id="content" class="8u 12u(mobile) important(mobile)">
-
-                <!-- Post -->
-                <article class="box post">
-                    <header>
-                        <h2>Bienvenue sur le site web de <strong>JDRpoly</strong></h2>
-                    </header>
-                    <span class="image featured"><img src="{% static "images/banner.png"" %}" alt="" /></span>
-                    {% if sections %}
-                        {% for section in sections %}
-                            <h3>{{ section.title }}</h3>
-                            <p>{{ section.content | linebreaksbr }}</p>
                         {% endfor %}
-                    {% else %}
-                        <p>Il semble que cette page est vide pour l'instant!</p>
-                    {% endif %}
-                </article>
-            </div>
+                    </ul>
+                {% else %}
+                    Aucune news postées pour l'instant !
+                {% endif %}
+            </section>
+
+            <!-- Highlights -->
+            <section>
+                {% for event in notes %}
+                    <ul class="divided">
+                        <li>
+                            <article class="box highlight">
+                                <header>
+                                    <h3><a href="#">{{ event.name }}</a></h3>
+                                </header>
+                                <p>{{ event.description }}</p>
+                                <ul class="actions">
+                                    <li><a href="{{ event.get_absolute_url }}" class="button icon fa-file">En savoir plus</a></li>
+                                </ul>
+                            </article>
+
+                        </li>
+                    </ul>
+                {% endfor %}
+            </section>
+
+        </div>
+
+        <!-- Content -->
+        <div id="content" class="8u 12u(mobile) important(mobile)">
+
+            <!-- Post -->
+            <article class="box post">
+                <header>
+                    <h2>Bienvenue sur le site web de <strong>JDRpoly</strong></h2>
+                </header>
+                <span class="image featured"><img src="{% static "images/banner.png"" %}" alt="" /></span>
+                {% if sections %}
+                    {% for section in sections %}
+                        <h3>{{ section.title }}</h3>
+                        <p>{{ section.content | linebreaksbr }}</p>
+                    {% endfor %}
+                {% else %}
+                    <p>Il semble que cette page est vide pour l'instant!</p>
+                {% endif %}
+            </article>
         </div>
     </div>
 {% endblock %}
