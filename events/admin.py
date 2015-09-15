@@ -9,6 +9,10 @@ class ParticipantInline(admin.TabularInline):
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'member_only')
+    fieldsets = [
+        (None, {'fields': ['name', 'description']}),
+        ('Membres', {'fields': ['member_only']}),
+    ]
 
 
 class EditionAdmin(admin.ModelAdmin):
