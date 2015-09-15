@@ -69,6 +69,21 @@ class CodeUseFormTestCase(TestCase):
         self.assertFalse(form.is_valid())
 
 
+class CodeUseBehaviorTestCase(TestCase):
+    """
+    TODO: implement this test case
+    """
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_one_semester_code_correct(self):
+        pass
+
+
 class CodeUseViewTestCase(TestCase):
     CODE_CONTENT = 'fowenoifwneoifnewoigbewfbsakj'
     CODE_CONTENT2 = 'fnwiunfoiewfoiewbfew'
