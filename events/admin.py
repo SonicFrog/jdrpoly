@@ -23,5 +23,5 @@ class EditionAdmin(admin.ModelAdmin):
         ParticipantInline,
     ]
 
-admin.site.register(Event)
+admin.site.register(Event, EventAdmin)
 admin.site.register(Edition, EditionAdmin)
