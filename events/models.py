@@ -16,6 +16,8 @@ class Event(models.Model):
                             verbose_name=_("Nom"))
     description = models.TextField(default=_("Evenement"),
                                    verbose_name=_("Description"))
+    member_only = models.BooleanField(default=False,
+                                      verbose_name=_("Membres seulement"))
 
     def get_absolute_url(self):
         return reverse('event-detail', kwargs={'pk': self.pk})

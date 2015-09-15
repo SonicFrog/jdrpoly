@@ -1,7 +1,6 @@
 from django.contrib import admin
 
 from .models import Event, Edition
-from members.models import Member
 
 
 class ParticipantInline(admin.TabularInline):
@@ -9,7 +8,7 @@ class ParticipantInline(admin.TabularInline):
 
 
 class EventAdmin(admin.ModelAdmin):
-    fields = ['name', 'description']
+    fields = ['name', 'description', 'member_only']
     list_display = ('name', 'description')
 
 
