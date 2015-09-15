@@ -15,7 +15,17 @@
                 <header>
                     <h2>{{ event.name }}</h2>
                 </header>
+                <p>
                 {{ event.description | linebreaksbr }}
+                </p>
+                <p>
+                    Accès:
+                    {% if event.member_only %}
+                        <strong style="color:green">Membres seulement</strong>
+                    {% else %}
+                        <strong style="color:red">Tout le monde</strong>
+                    {% endif %}
+                </p>
             </article>
         </section>
         <section>
