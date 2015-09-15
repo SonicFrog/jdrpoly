@@ -14,6 +14,10 @@ def user_is_staff(user):
     return user.is_staff
 
 
+def user_is_authenticated(user):
+    return user.is_authenticated
+
+
 class Member(models.Model):
     """
     Extended user model with subscription informations added
