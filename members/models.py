@@ -18,6 +18,10 @@ def user_is_authenticated(user):
     return user.is_authenticated
 
 
+def user_is_member(user):
+    return user.profile.until > timezone.now()
+
+
 class Member(models.Model):
     """
     Extended user model with subscription informations added
