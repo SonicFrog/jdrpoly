@@ -9,7 +9,7 @@ class ParticipantInline(admin.TabularInline):
 
 class EventAdmin(admin.ModelAdmin):
     fields = ['name', 'description', 'member_only']
-    list_display = ('name', 'description')
+    list_display = ('name', 'description', 'member_only')
 
 
 class EditionAdmin(admin.ModelAdmin):
