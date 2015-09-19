@@ -2,8 +2,8 @@
 
 from django.contrib.auth.decorators import login_required
 from django.views.generic import (DetailView, CreateView, FormView,
-                                  View)
-from django.forms import (Form, CharField, MultipleChoiceField, ModelForm)
+                                  View, UpdateView)
+from django.forms import (Form, CharField, MultipleChoiceField, )
 
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.models import User
@@ -20,12 +20,6 @@ class LoginRequiredMixin:
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
         return login_required(view)
-
-
-class ProfileEditForm(ModelForm):
-    class Meta:
-        model = User
-        fields = ('email', 'first_name', 'last_name')
 
 
 class CodeCreationForm(Form):
@@ -80,21 +74,14 @@ class SelfProfileView(UserProfileView):
         return self.request.user
 
 
-class UserEditView(FormView, LoginRequiredMixin):
-    """
-    View pour l'édition d'un profil utilisateur
-    """
-    form_class = ProfileEditForm
+class UserUpdateView(UpdateView, LoginRequiredMixin):
+    model = User
+    fields = ['email', 'first_name', 'last_name']
     success_url = reverse_lazy('user-profile-view')
     template_name = 'members/edit.html'
-    context_object_name = 'user_form'
 
-    def get_form(self):
-        return ProfileEditForm(instance=self.request.user)
-
-    def form_valid(self, form):
-        form.save()
-        return super(UserEditView, self).form_valid(form)
+    def get_object(self):
+        return self.request.user
 
 
 class UserCreateView(CreateView):
@@ -120,13 +107,19 @@ class CodeUseView(FormView, LoginRequiredMixin):
         until_date = None
         year = now.year
 
-        if now.month < 9:
-            month = 10
-            day = 1
+        if code.semesters == 1:
+            if now.month < 9:
+                month = 10
+                day = 1
+            else:
+                month = 2
+                day = 28
+                year = year + 1
         else:
-            month = 2
-            day = 28
-            year = year + 1
+            if now.month < 9:
+                pass
+            else:
+                pass
 
         until_date = dt.date(year, month, day)
 

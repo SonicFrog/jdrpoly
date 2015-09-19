@@ -5,13 +5,14 @@ from django.contrib.auth.views import (password_change, password_change_done,
                                        password_reset_complete,
                                        password_reset_done,
                                        password_reset_confirm)
-from .views import (UserProfileView, UserEditView, SelfProfileView,
-                    UserCreateView, PasswordChangeView, CodeUseView)
+from .views import (UserProfileView, SelfProfileView,
+                    UserCreateView, PasswordChangeView, CodeUseView,
+                    UserUpdateView, )
 
 urlpatterns = [
     url(r'^$', SelfProfileView.as_view(), name='user-profile-view'),
     url(r'^login$', login, name='login'),
-    url(r'^edit$', UserEditView.as_view(), name='user-profile-edit'),
+    url(r'^edit$', UserUpdateView.as_view(), name='user-profile-edit'),
     url(r'^create$', UserCreateView.as_view(), name='user-create'),
     url(r'^password_reset/$', password_reset, name='password_reset',
         kwargs={'post_reset_redirect': reverse_lazy('login'),
