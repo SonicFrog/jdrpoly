@@ -48,12 +48,7 @@
                     {% endif %}
                 </div>
                 <div class="6u 12u(mobile)">
-                    <strong>Localisation:</strong>
-                    {% if member.profile.location %}
-                        {{ member.profile.location }}
-                    {% else %}
-                        Non spécifiée
-                    {% endif %}
+                    <strong>Membre jusqu'au</strong> {{ member.profile.until }}
                 </div>
             </div>
             {% if request.user == member %}
