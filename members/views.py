@@ -1,26 +1,18 @@
 # coding: utf-8
 
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import permission_required, login_required
+from django.contrib.auth.decorators import login_required
 from django.views.generic import (DetailView, CreateView, FormView,
                                   View)
-from django.forms import (Form, CharField, MultipleChoiceField,
-                          EmailField, ImageField)
-from django.forms.models import model_to_dict
+from django.forms import (Form, CharField, MultipleChoiceField, ModelForm)
+
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import (UserCreationForm, PasswordChangeForm)
 from django.utils.timezone import datetime
 
 import datetime as dt
-import logging
 
 from .models import Member, Code
-
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-logger.addHandler(logging.FileHandler("error.log"))
 
 
 class LoginRequiredMixin:
@@ -30,29 +22,10 @@ class LoginRequiredMixin:
         return login_required(view)
 
 
-class ProfileEditForm(Form):
-    location = CharField(max_length=100, required=False)
-    first_name = CharField(max_length=60, required=False)
-    last_name = CharField(max_length=60, required=False)
-    email = EmailField(max_length=255, required=True)
-    image = ImageField(required=False)
-
-    def __init__(self, instance=None):
-        _initial = model_to_dict(instance) if instance is not None else {}
-        if instance is not None:
-            _initial.update(model_to_dict(instance.profile))
-        super(ProfileEditForm, self).__init__(initial=_initial)
-
-    def save(self, user):
-        if not self.is_valid():
-            return
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        user.email = self.cleaned_data['email']
-        user.profile.location = self.cleaned_data['location']
-        user.profile.image = self.cleaned_data['image']
-        user.save()
-        user.profile.save()
+class ProfileEditForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name')
 
 
 class CodeCreationForm(Form):
@@ -70,6 +43,9 @@ class CodeUseForm(Form):
         except:
             return False
         return True
+
+    def save(self):
+        pass
 
 
 class PasswordChangeView(FormView, LoginRequiredMixin):
@@ -117,7 +93,7 @@ class UserEditView(FormView, LoginRequiredMixin):
         return ProfileEditForm(instance=self.request.user)
 
     def form_valid(self, form):
-        form.save(self.request.user)
+        form.save()
         return super(UserEditView, self).form_valid(form)
 
 
@@ -136,48 +112,26 @@ class CodeUseView(FormView, LoginRequiredMixin):
     template_name = 'members/code_use.html'
     form_class = CodeUseForm
 
-    def get_object(self):
-        return self.request.user
-
-    def form_invalid(self, form):
-        logger.error("Form invalid!")
-        return super(CodeUseView, self).form_invalid(form)
-
     def form_valid(self, form):
         now = datetime.now()
         code = Code.objects.get(content=form.cleaned_data['content'])
+        user = self.request.user
 
         until_date = None
         year = now.year
 
-        if now.month >= 2 and now.month < 9:
+        if now.month < 9:
             month = 10
             day = 1
-        elif now.month >= 9:
+        else:
             month = 2
             day = 28
             year = year + 1
-        elif now.month < 2:
-            month = 10
 
         until_date = dt.date(year, month, day)
 
-        logger.info("Subscription now valid until ", until_date)
-
-        self.get_object().profile.until = until_date
-
-        self.get_object().profile.save()
-
+        user.profile.until = until_date
+        user.profile.save()
         code.delete()
 
         return super(CodeUseView, self).form_valid(form)
-
-
-class CodeCreationView(CreateView, LoginRequiredMixin):
-    form_class = CodeCreationForm
-
-    template_name = 'members/code.html'
-
-    @method_decorator(permission_required('members.can_make_code'))
-    def dispatch(self, *args, **kwargs):
-        return super(CodeCreationView, self).dispatch(*args, **kwargs)

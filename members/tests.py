@@ -1,48 +1,60 @@
-from django.test import TestCase, Client
+from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 from django.utils import timezone
 
+import datetime
+import hashlib
+import random
+import string
+
 from .models import Code
-from .views import ProfileEditForm, CodeUseForm
+from .views import ProfileEditForm, CodeUseForm, UserEditView, CodeUseView
 
 
-class ProfileEditFormTestCase(TestCase):
+class AuthenticatedTestCase(TestCase):
     USERNAME = 'hello'
     PASSWORD = 'haha'
     FIRST_NAME = 'Ogier'
     EMAIL = 'aaaaa@bbbbbb.ch'
     LAST_NAME = 'Bouvier'
-    LOCATION = 'Somewhere'
+
+    CURRENT_END_DATE = datetime.date(2015, 4, 12)
 
     def setUp(self):
-        self.user = User(username=self.USERNAME)
+        self.user = User(username=self.USERNAME, first_name=self.FIRST_NAME,
+                         email=self.EMAIL, last_name=self.LAST_NAME)
         self.user.set_password(self.PASSWORD)
-        self.user.first_name = self.FIRST_NAME
-        self.user.last_name = self.LAST_NAME
-        self.user.save()
-        self.user.profile.location = None
         self.user.save()
 
     def tearDown(self):
         self.user.delete()
 
-    def test_valid_data(self):
-        form = ProfileEditForm(instance=self.user)
-        form.fields['location'] = self.LOCATION
-        form.fields['email'] = self.EMAIL
+    def makeAuthRequest(self, path, method, data={}):
+        request = method(path, data)
+        request.user = self.user
+        return request
 
+    def reset_user(self):
+        self.user.profile.until = self.CURRENT_END_DATE
+
+
+class ProfileEditFormTestCase(AuthenticatedTestCase):
+    def test_valid_data(self):
+        form = ProfileEditForm({'email': self.EMAIL,
+                                'first_name': self.FIRST_NAME,
+                                'last_name': self.LAST_NAME},
+                               instance=self.user, )
         if not form.is_valid():
             print(form.errors)
             self.fail(msg='form is not valid!')
-        form.save(self.user)
-        self.assertEqual(self.user.profile.location, self.LOCATION)
+
+        form.save()
         self.assertEqual(self.user.email, self.EMAIL)
 
     def test_no_email(self):
-        form = ProfileEditForm({'location': self.LOCATION,
-                                'first_name': self.FIRST_NAME,
-                                'last_name': self.LAST_NAME})
+        form = ProfileEditForm(instance=self.user)
+        form.fields['first_name'] = self.FIRST_NAME
+        form.fields['last_name'] = self.LAST_NAME
         self.assertFalse(form.is_valid())
 
     def test_blank_data(self):
@@ -84,39 +96,75 @@ class CodeUseBehaviorTestCase(TestCase):
         pass
 
 
-class CodeUseViewTestCase(TestCase):
-    CODE_CONTENT = 'fowenoifwneoifnewoigbewfbsakj'
-    CODE_CONTENT2 = 'fnwiunfoiewfoiewbfew'
-    USER = 'ars3nic'
-    PASSWORD = 'test_password'
-    CLIENT = Client()
+def setup_view(view, request, *args, **kwargs):
+    view.request = request
+    view.args = args
+    view.kwargs = kwargs
+    return view
 
-    def setUp(self):
-        self.code1 = Code(content=self.CODE_CONTENT, semesters=1)
-        self.code2 = Code(content=self.CODE_CONTENT2, semesters=2)
-        self.code1.save()
-        self.code2.save()
-        self.user = User(username=self.USER)
-        self.user.set_password(self.PASSWORD)
-        self.user.save()
-        self.client.login(user=self.USER, password=self.PASSWORD)
 
-    def tearDown(self):
-        self.code1.delete()
-        self.code2.delete()
+def randomchr():
+    return chr(random.randint(0, 255))
+
+
+def randomword(length):
+    return ''.join([randomchr() for i in range(0, length)])
+
+
+class CodeUseViewTestCase(AuthenticatedTestCase):
+    def makeCode(self):
+        content = randomword(30)
+        code = Code(content=content, semesters=1)
+        code.save()
+        return content
+
+    def test_invalid_code(self):
+        self.reset_user()
+        request = self.makeAuthRequest('fake', RequestFactory().post,
+                                       {'content': 'ewfoewfiwbegiewbg'})
+        view = CodeUseView.as_view()
+        response = view(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.user.profile.until, self.CURRENT_END_DATE)
+
+    def test_form_valid(self):
+        now = timezone.now()
+        code = self.makeCode()
+        self.reset_user()
+        view = CodeUseView()
+        view.request = self.makeAuthRequest('dummy', RequestFactory().post,
+                                            {'content': code})
+        form = CodeUseForm({'content': code})
+        self.assertTrue(form.is_valid())
+        view.form_valid(form)
+
+        if now.month < 9:
+            self.assertEqual(self.user.profile.until.month, 10)
+            self.assertEqual(self.user.profile.until.year, now.year)
+        else:
+            self.assertGreater(self.user.profile.until.year, now.year)
+            self.assertEqual(self.user.profile.until.month, 2)
 
     def test_valid_code_1_semester(self):
-        self.user.profile.until = now = timezone.now()
-        response = self.CLIENT.post(reverse('use-code'),
-                                    data={'content': self.CODE_CONTENT})
-        self.assertEqual(response.status_code, 200)
+        code = self.makeCode()
+        self.reset_user()
+        now = timezone.now()
 
-        if now.month >= 9:
-            self.assertGreater(self.user.profile.until.year, now.year)
-        else:
-            self.assertEqual(self.user.profile.until.year, now.year)
+        self.assertEqual(Code.objects.filter(content=code).count(), 1)
 
-        if now.month >= 9:
+        view = CodeUseView.as_view()
+        request = self.makeAuthRequest('dummy', RequestFactory().post,
+                                       data={'content': code})
+        response = view(request)
+
+        # The view should redirect to success_url
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Code.objects.filter(content=code).count(), 0)
+
+        if now.month < 9:
             self.assertEqual(self.user.profile.until.month, 10)
+            self.assertEqual(self.user.profile.until.year, now.year)
         else:
+            self.assertGreater(self.user.profile.until.year, now.year)
             self.assertEqual(self.user.profile.until.month, 2)
