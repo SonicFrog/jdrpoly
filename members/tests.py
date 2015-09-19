@@ -1,65 +1,9 @@
 from django.test import TestCase, RequestFactory
-from django.contrib.auth.models import User
 from django.utils import timezone
 
-import datetime
-import hashlib
-import random
-import string
-
+from jdrpoly.tests.utils import AuthenticatedTestCase, randomword
 from .models import Code
-from .views import ProfileEditForm, CodeUseForm, UserEditView, CodeUseView
-
-
-class AuthenticatedTestCase(TestCase):
-    USERNAME = 'hello'
-    PASSWORD = 'haha'
-    FIRST_NAME = 'Ogier'
-    EMAIL = 'aaaaa@bbbbbb.ch'
-    LAST_NAME = 'Bouvier'
-
-    CURRENT_END_DATE = datetime.date(2015, 4, 12)
-
-    def setUp(self):
-        self.user = User(username=self.USERNAME, first_name=self.FIRST_NAME,
-                         email=self.EMAIL, last_name=self.LAST_NAME)
-        self.user.set_password(self.PASSWORD)
-        self.user.save()
-
-    def tearDown(self):
-        self.user.delete()
-
-    def makeAuthRequest(self, path, method, data={}):
-        request = method(path, data)
-        request.user = self.user
-        return request
-
-    def reset_user(self):
-        self.user.profile.until = self.CURRENT_END_DATE
-
-
-class ProfileEditFormTestCase(AuthenticatedTestCase):
-    def test_valid_data(self):
-        form = ProfileEditForm({'email': self.EMAIL,
-                                'first_name': self.FIRST_NAME,
-                                'last_name': self.LAST_NAME},
-                               instance=self.user, )
-        if not form.is_valid():
-            print(form.errors)
-            self.fail(msg='form is not valid!')
-
-        form.save()
-        self.assertEqual(self.user.email, self.EMAIL)
-
-    def test_no_email(self):
-        form = ProfileEditForm(instance=self.user)
-        form.fields['first_name'] = self.FIRST_NAME
-        form.fields['last_name'] = self.LAST_NAME
-        self.assertFalse(form.is_valid())
-
-    def test_blank_data(self):
-        form = ProfileEditForm()
-        self.assertFalse(form.is_valid())
+from .views import CodeUseForm, CodeUseView, UserUpdateView
 
 
 class CodeUseFormTestCase(TestCase):
@@ -81,34 +25,32 @@ class CodeUseFormTestCase(TestCase):
         self.assertFalse(form.is_valid())
 
 
-class CodeUseBehaviorTestCase(TestCase):
-    """
-    TODO: implement this test case
-    """
+class UserUpdateViewTestCase(AuthenticatedTestCase):
+    def test_updates_user_profile(self):
+        self.reset_user()
+        request = self.makeAuthRequest('dummy', RequestFactory().post,
+                                       data={'email': self.EMAIL,
+                                             'first_name': self.FIRST_NAME,
+                                             'last_name': self.LAST_NAME})
+        view = UserUpdateView.as_view()
+        response = view(request)
 
-    def setUp(self):
-        pass
+        # Thew view should redirect to profile view
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.user.first_name, self.FIRST_NAME)
+        self.assertEqual(self.user.last_name, self.LAST_NAME)
+        self.assertEqual(self.user.email, self.EMAIL)
 
-    def tearDown(self):
-        pass
+    def test_requires_email(self):
+        self.reset_user()
+        request = self.makeAuthRequest('dummy', RequestFactory().post,
+                                       data={'first_name': self.FIRST_NAME,
+                                             'last_name': self.LAST_NAME})
+        view = UserUpdateView.as_view()
+        response = view(request)
 
-    def test_one_semester_code_correct(self):
-        pass
-
-
-def setup_view(view, request, *args, **kwargs):
-    view.request = request
-    view.args = args
-    view.kwargs = kwargs
-    return view
-
-
-def randomchr():
-    return chr(random.randint(0, 255))
-
-
-def randomword(length):
-    return ''.join([randomchr() for i in range(0, length)])
+        self.assertEqual(response.status_code, 200)
+        self.assertNotEqual(self.user.first_name, self.FIRST_NAME)
 
 
 class CodeUseViewTestCase(AuthenticatedTestCase):
