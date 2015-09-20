@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from jdrpoly.tests.utils import AuthenticatedTestCase, randomword
 from .models import Code
-from .views import CodeUseForm, CodeUseView, UserUpdateView
+from .views import CodeUseForm, CodeUseView, UserUpdateView, SelfProfileView
 
 
 class CodeUseFormTestCase(TestCase):
@@ -23,6 +23,16 @@ class CodeUseFormTestCase(TestCase):
     def test_invalid_code_is_invalid_form(self):
         form = CodeUseForm({'content': 'random_string'})
         self.assertFalse(form.is_valid())
+
+
+class SelfProfileViewTestCase(AuthenticatedTestCase):
+    def test_displays_correct_user(self):
+        request = self.makeAuthRequest('dummy', RequestFactory().get)
+        view = SelfProfileView.as_view()
+        response = view(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context_data['object'], self.user)
 
 
 class UserUpdateViewTestCase(AuthenticatedTestCase):

@@ -19,6 +19,8 @@ class AuthenticatedTestCase(TestCase):
                          email=self.EMAIL, last_name=self.LAST_NAME)
         self.user.set_password(self.PASSWORD)
         self.user.save()
+        self.user.profile.until = self.CURRENT_END_DATE
+        self.user.profile.save()
 
     def tearDown(self):
         self.user.delete()

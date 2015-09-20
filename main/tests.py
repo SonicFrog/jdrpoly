@@ -4,8 +4,22 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.test import TestCase, Client
 
+from jdrpoly.tests.utils import randomword
+
+from random import randint
+
 from datetime import timedelta
+
+from .models import News
 from .views import NewsletterForm, ContactForm
+
+
+def create_news(author):
+    content = ' '.join([randomword(50) for i in range(0, randint(5, 25))])
+    title = randomword(40)
+    news = News(content=content, title=title, author=author)
+    news.save()
+    return news
 
 
 class NewsletterFormTestCase(TestCase):
@@ -124,3 +138,23 @@ class ContactFormTestCase(TestCase):
         self.assertIn(self.CONTACT_EMAIL, mail.outbox[0].from_email)
         self.assertIn(self.CONTACT_NAME, mail.outbox[0].from_email)
         self.assertEqual(self.CONTACT_CONTENT, mail.outbox[0].body)
+
+
+class MainPageTestCase(TestCase):
+    NEWS_TEST_COUNT = 4
+
+    def setUp(self):
+        self.user = User(username='test')
+        self.user.save()
+        self.news = [create_news(self.user)
+                     for i in range(0, self.NEWS_TEST_COUNT)]
+
+    def tearDown(self):
+        for n in self.news:
+            n.delete()
+
+    def test_correct_news_displayed(self):
+        response = Client().get(reverse('mainpage'))
+
+        for n in self.news:
+            self.assertIn(n, response.context_data['latest_news'])
