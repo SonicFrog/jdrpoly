@@ -35,34 +35,34 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                     <!-- Nav -->
                     <nav id="nav">
                         <ul>
-                            <li><a class="icon fa-home" href="{% url 'mainpage' %}">
+                            <li><a class="icon fa-home" href="{% url 'mainpage' %}#main">
                                 <span>Accueil</span>
                             </a></li>
                             <li>
-                                <a href="{% url 'event-list' %}" class="icon fa-cog"><span>Evenements</span></a>
+                                <a href="{% url 'event-list' %}#main" class="icon fa-cog"><span>Evenements</span></a>
                                 <ul>
-                                    <li><a href="{% url 'event-detail' 5 %}">Murder</a></li>
-                                    <li><a href="{% url 'event-detail' 1 %}">Nocturnes</a></li>
-                                    <li><a href="{% url 'event-detail' 2 %}">Soirées libres</a></li>
+                                    <li><a href="{% url 'event-detail' 5 %}#main">Murder</a></li>
+                                    <li><a href="{% url 'event-detail' 1 %}#main">Nocturnes</a></li>
+                                    <li><a href="{% url 'event-detail' 2 %}#main">Soirées libres</a></li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="{% url 'gallery-list' %}" class="icon fa-cog"><span>Photos</span></a>
+                                <a href="{% url 'gallery-list' %}#main" class="icon fa-cog"><span>Photos</span></a>
                             </li>
                             <li>
                                 <a href="#" class="icon fa-cog"><span>Espace membre</span></a>
                                 <ul>
                                     {% if user.is_staff %}
-                                        <li><a href="{% url 'newsletter-send' %}">Envoyer une newsletter</a></li>
+                                        <li><a href="{% url 'newsletter-send' %}#main">Envoyer une newsletter</a></li>
                                     {% endif %}
                                     {% if user.is_authenticated %}
-                                        <li><a href="{% url 'my-events' %}">Mes événements</a></li>
-                                        <li><a href="{% url 'use-code'%}">Utiliser un code membre</a></li>
-                                        <li><a href="{% url 'user-profile-view' %}">Mon profil</a></li>
-                                        <li><a href="{% url 'logout' %}">Déconnexion</a></li>
+                                        <li><a href="{% url 'my-events' %}#main">Mes événements</a></li>
+                                        <li><a href="{% url 'use-code'%}#main">Utiliser un code membre</a></li>
+                                        <li><a href="{% url 'user-profile-view' %}#main">Mon profil</a></li>
+                                        <li><a href="{% url 'logout' %}#main">Déconnexion</a></li>
                                     {% else %}
-                                        <li><a href="{% url 'user-create' %}">Inscription</a></li>
-                                        <li><a href="{% url 'login' %}">Connexion</a></li>
+                                        <li><a href="{% url 'user-create' %}#main">Inscription</a></li>
+                                        <li><a href="{% url 'login' %}#main">Connexion</a></li>
                                     {% endif %}
                                 </ul>
                             </li>
