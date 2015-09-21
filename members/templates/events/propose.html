@@ -1,0 +1,19 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="12u 24u(mobile)">
+        <form action="" method="post">
+            <label>Proposer un thème de soirée membre</label>
+            {% csrf_token %}
+            <p>
+                {{ form.name }}
+            </p>
+            <p>
+                {{ form.description }}
+            </p>
+            <input class="icon fa-envelope" type="submit" value="Envoyer" />
+        </form>
+    </div>
+{% endblock %}
