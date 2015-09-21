@@ -64,7 +64,11 @@
             <article class="box post">
                 <header>
                     <h2>Bienvenue sur le site web de <strong>JDRpoly</strong></h2>
+                    <span class="image featured"><a href="{% url 'mainpage' %}">
+                        <img src="{% static "images/banner.png" %}" alt="" />
+                    </a></span>
                 </header>
+
                 <!-- <span class="image featured"><img src="{% static "images/banner.png"" %}" alt="" /></span> -->
                 {% if sections %}
                     {% for section in sections %}
