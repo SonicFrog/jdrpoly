@@ -1,7 +1,8 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from .views import (EventListView, EventDetailView, RegisterEditionView,
-                    UnregisterEditionView, EditionDetailView, AttendingView)
+                    UnregisterEditionView, EditionDetailView, AttendingView,
+                    EventPropositionView)
 
 
 urlpatterns = [
@@ -17,4 +18,5 @@ urlpatterns = [
         name='edition-unregister'),
 
     url(r'^my/$', AttendingView.as_view(), name='my-events'),
+    url(r'^propose/$', EventPropositionView.as_view(), name='propose-theme'),
 ]

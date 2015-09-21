@@ -31,6 +31,7 @@ class NewsletterFormTestCase(TestCase):
     TEST_CONTENT = """ Haha this is the newsletter
     multiline!
     """
+
     TEST_TO = 'test@example.com'
 
     TEST_TO_MEMBER = 'test@test.com'
@@ -54,7 +55,8 @@ class NewsletterFormTestCase(TestCase):
         form = NewsletterForm({'subject': self.TEST_SUBJECT,
                                'content': self.TEST_CONTENT,
                                'member_only': True})
-        member_cnt = User.objects.filter(profile__until__gt=timezone.now()).count()
+        members = User.objects.filter(profile__until__gt=timezone.now())
+        member_cnt = members.count()
         self.assertTrue(form.is_valid())
         to = form.send_mail()
         self.assertEqual(len(to),
