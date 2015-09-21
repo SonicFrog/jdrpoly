@@ -51,7 +51,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                                         <li><a href="{% url 'newsletter-send' %}#main">Envoyer une newsletter</a></li>
                                     {% endif %}
                                     {% if user.profile.is_member %}
-                                        <li><a href="{% url 'propose-them' %}#main">Proposer une soirée membre</a></li>
+                                        <li><a href="{% url 'propose-theme' %}#main">Proposer une soirée membre</a></li>
                                     {% endif %}
                                     {% if user.is_authenticated %}
                                         <li><a href="{% url 'my-events' %}#main">Mes événements</a></li>
