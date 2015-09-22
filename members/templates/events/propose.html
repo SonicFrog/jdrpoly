@@ -7,12 +7,7 @@
         <form action="" method="post">
             <label>Proposer un thème de soirée membre</label>
             {% csrf_token %}
-            <p>
-                {{ form.name }}
-            </p>
-            <p>
-                {{ form.description }}
-            </p>
+            {{ form.as_p }}
             <input class="icon fa-envelope" type="submit" value="Envoyer" />
         </form>
     </div>

@@ -19,18 +19,24 @@ def redirect_to_edition(pk):
 
 
 class EventPropositionForm(Form):
-    name = CharField(max_length=100,
-                     widget=TextInput(attrs={'placeholder': _('Nom')}))
+    name = CharField(max_length=100, label=False,
+                     widget=TextInput(attrs={'placeholder':
+                                             _('Nom de l\'évenement')}))
     description = CharField(widget=Textarea(attrs={'placeholder':
-                                                   _('Description')}))
+                                                   _('Description')}),
+                            label=False,)
 
-    def __init__(self, user):
+    def __init__(self, user, *args, **kwargs):
+        super(EventPropositionForm, self).__init__(*args, **kwargs)
         self.user = user
 
     def is_valid(self):
         if not super(EventPropositionForm, self).is_valid():
             return False
-        return self.user.profile.is_member()
+        if not self.user.profile.is_member():
+            self._errors = ['Vous ne pouvez pas proposer de soirées membres sans être membre']
+            return False
+        return True
 
 
 class EventPropositionView(FormView, LoginRequiredMixin):

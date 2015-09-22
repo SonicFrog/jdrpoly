@@ -45,7 +45,7 @@ class Member(models.Model):
         return reverse('other-user-profile', kwargs={'pk': self.pk})
 
     def is_member(self):
-        return self.until > timezone.now()
+        return self.until > timezone.now().date()
 
     def __str__(self):
         return _("Profil utilisateur de %s") % self.user.username
