@@ -3,6 +3,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from pictures.models import Gallery
@@ -55,7 +56,69 @@ class Edition(models.Model):
     def get_absolute_url(self):
         return reverse('edition-detail', kwargs={'pk': self.pk})
 
+    def register_user(self, user):
+        if self.event.member_only:
+            allowed = user.profile.is_member()
+            if not allowed:
+                return False
+        self.participants.add(user)
+        self.save()
+        return True
+
+    def unregister_user(self, user):
+        self.participants.remove(user)
+        self.save()
+
     class Meta:
         verbose_name = _("Edition")
         verbose_name_plural = _("Editions")
         ordering = ('-date',)
+
+
+class Campaign(models.Model):
+    """
+    Campagne pour les soirées membres
+    """
+    max_players = models.IntegerField(verbose_name=_("Maximum de joueurs"))
+
+    open_for_registration = models.BooleanField(default=True,
+                                                verbose_name=_("Accepte les nouveaux joueurs"))
+
+    running = models.BooleanField(default=True, verbose_name=_("En cours"))
+
+    description = models.TextField(verbose_name=_("Description"))
+    name = models.TextField(max_length=200, verbose_name=_("Nom"))
+
+    participants = models.ManyToManyField(User, related_name='campaigns',
+                                          verbose_name=_("Participants"))
+    owner = models.OneToOneField(User, verbose_name=_("Créateur"))
+
+    start = models.DateField(default=timezone.now, verbose_name=_("Début"))
+
+    def __str__(self):
+        return "Campagne %s à la %s" % (self.name, self.edition.__str__())
+
+    def register_user(self, user):
+        allowed = user.profile.is_member()
+        if allowed:
+            if self.participants.count() < self.max_players and self.open_for_registration:
+                self.participants.add(user)
+                self.save()
+            else:
+                return False
+        return allowed
+
+    def unregister_user(self, user):
+        self.participants.remove(user)
+        self.save()
+
+    def send_mail_to_participants(self, user, content):
+        pass
+
+    def get_absolute_url(self):
+        return reverse('campaign-detail', kwargs={'pk': self.pk})
+
+    class Meta:
+        verbose_name = _("Campagne")
+        verbose_name_plural = _("Campagnes")
+        ordering = ('-start',)
