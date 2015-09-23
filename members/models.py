@@ -11,6 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 
 import datetime as dt
 
+
 def user_is_staff(user):
     return user.is_staff
 

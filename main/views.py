@@ -16,8 +16,9 @@ from django.forms import (Form, CharField, EmailField, Textarea, TextInput,
 from random import randint
 from .models import News, MainPageSection, ComityMember
 from members.views import LoginRequiredMixin
-from members.models import user_is_staff, user_is_authenticated
 from events.models import Event
+
+from members.models import user_is_staff
 
 
 class MainPageView(ListView):
