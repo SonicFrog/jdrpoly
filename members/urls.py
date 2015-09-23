@@ -7,10 +7,11 @@ from django.contrib.auth.views import (password_change, password_change_done,
                                        password_reset_confirm)
 from .views import (UserProfileView, SelfProfileView,
                     UserCreateView, PasswordChangeView, CodeUseView,
-                    UserUpdateView, )
+                    UserUpdateView, MainMemberView)
 
 urlpatterns = [
-    url(r'^$', SelfProfileView.as_view(), name='user-profile-view'),
+    url(r'^$', MainMemberView.as_view(), name='user-main'),
+    url(r'^profile/$', SelfProfileView.as_view(), name='user-profile-view'),
     url(r'^login$', login, name='login'),
     url(r'^edit$', UserUpdateView.as_view(), name='user-profile-edit'),
     url(r'^create$', UserCreateView.as_view(), name='user-create'),
