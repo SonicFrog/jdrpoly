@@ -2,7 +2,8 @@ from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from .views import (EventListView, EventDetailView, RegisterEditionView,
                     UnregisterEditionView, EditionDetailView, AttendingView,
-                    EventPropositionView)
+                    EventPropositionView, CampaignPropositionView,
+                    CampaignDetailView)
 
 
 urlpatterns = [
@@ -19,4 +20,8 @@ urlpatterns = [
 
     url(r'^my/$', AttendingView.as_view(), name='my-events'),
     url(r'^propose/$', EventPropositionView.as_view(), name='propose-theme'),
+    url(r'^post-campaign/$', CampaignPropositionView.as_view(),
+        name='propose-campaign'),
+    url(r'campaign/(?P<pk>\d+)$', CampaignDetailView.as_view(),
+        name='campaign-detail'),
 ]
