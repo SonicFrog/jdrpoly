@@ -7,11 +7,20 @@
 {% endblock %}
 
 {% block content %}
-    <form action="" method="post">
-        <label>Entrez votre code de membre JDRPoly</label>
-        <p>Fin de la période membre actuel le {{ user.profile.until }}</p>
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Utiliser le code" />
-    </form>
+    <div class="row 100%">
+        <div class="6u 12u(mobile)">
+            <p>Sur cette page vous pouvez entrer un code de membre JDRPoly pour activer votre statut membre sur le site. Ces codes vous sont fournis par les membres du comité JDRPoly lors des nocturnes en l'échange d'une modeste contribution monétaire.</p>
+            <p>Fin de la période membre actuel le <strong>{{ user.profile.until }}</strong></p>
+        </div>
+
+        <div class="6u 12u(mobile)">
+            <form action="" method="post">
+                <label>Entrez votre code de membre JDRPoly</label>
+
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Utiliser le code" />
+            </form>
+        </div>
+    </div>
 {% endblock %}
