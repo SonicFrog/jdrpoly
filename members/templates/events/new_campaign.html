@@ -1,0 +1,19 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+
+{% block title %}
+    Proposition de campagne
+{% endblock %}
+
+{% block content %}
+    <div class="row 100%">
+        <div class="12u 24u(mobile)">
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Proposer" />
+            </form>
+        </div>
+    </div>
+{% endblock %}

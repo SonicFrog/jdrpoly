@@ -1,0 +1,20 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+
+{% block content %}
+    {{ campaign.name }}
+{% endblock %}
+
+{% block content %}
+    <div class="row 100%">
+        <article>
+            <header>
+                <h2>Information détaillé pour la campagne {{ campaign.name }}</h2>
+            </header>
+            <div class="12u 24u(mobile)">
+                {{ campaign.description }}
+            </div>
+        </article>
+    </div>
+{% endblock %}
