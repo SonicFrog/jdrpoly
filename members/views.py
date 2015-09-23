@@ -2,7 +2,7 @@
 
 from django.contrib.auth.decorators import login_required
 from django.views.generic import (DetailView, CreateView, FormView,
-                                  View, UpdateView)
+                                  View, UpdateView, TemplateView)
 from django.forms import (Form, CharField, MultipleChoiceField, )
 
 from django.core.urlresolvers import reverse_lazy
@@ -27,7 +27,7 @@ class CodeCreationForm(Form):
 
 
 class CodeUseForm(Form):
-    content = CharField(max_length=30)
+    content = CharField(max_length=30, label=False)
 
     def is_valid(self):
         if not super(CodeUseForm, self).is_valid():
@@ -40,6 +40,10 @@ class CodeUseForm(Form):
 
     def save(self):
         pass
+
+
+class MainMemberView(TemplateView, LoginRequiredMixin):
+    template_name = 'members/main.html'
 
 
 class PasswordChangeView(FormView, LoginRequiredMixin):
@@ -100,31 +104,9 @@ class CodeUseView(FormView, LoginRequiredMixin):
     form_class = CodeUseForm
 
     def form_valid(self, form):
-        now = datetime.now()
         code = Code.objects.get(content=form.cleaned_data['content'])
         user = self.request.user
 
-        until_date = None
-        year = now.year
-
-        if code.semesters == 1:
-            if now.month < 9:
-                month = 10
-                day = 1
-            else:
-                month = 2
-                day = 28
-                year = year + 1
-        else:
-            if now.month < 9:
-                pass
-            else:
-                pass
-
-        until_date = dt.date(year, month, day)
-
-        user.profile.until = until_date
-        user.profile.save()
-        code.delete()
+        code.use_for(user)
 
         return super(CodeUseView, self).form_valid(form)

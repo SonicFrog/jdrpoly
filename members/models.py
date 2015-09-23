@@ -9,6 +9,7 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
+import datetime as dt
 
 def user_is_staff(user):
     return user.is_staff
@@ -79,6 +80,34 @@ class Code(models.Model):
 
     def __str__(self):
         return _("Code valide pour %s semestre(s)") % self.semesters
+
+    def use_for(self, user):
+        now = timezone.now()
+        until_date = None
+        year = now.year
+
+        if self.semesters == 1:
+            if now.month < 9:
+                month = 10
+                day = 1
+            else:
+                month = 2
+                day = 28
+                year = year + 1
+        else:
+            year = year + 1
+            if 2 <= now.month and now.month < 7:
+                month = 2
+                day = 28
+            else:
+                month = 10
+                day = 2
+
+        until_date = dt.date(year, month, day)
+
+        user.profile.until = until_date
+        user.profile.save()
+        self.delete()
 
     class Meta:
         verbose_name = _("Code")
