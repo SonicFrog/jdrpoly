@@ -45,13 +45,14 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                                 <a href="{% url 'gallery-list' %}#main" class="icon fa-cog"><span>Photos</span></a>
                             </li>
                             <li>
-                                <a href="#" class="icon fa-cog"><span>Espace membre</span></a>
+                                <a href="{% url 'user-main' %}#main" class="icon fa-cog"><span>Espace membre</span></a>
                                 <ul>
                                     {% if user.is_staff %}
                                         <li><a href="{% url 'newsletter-send' %}#main">Envoyer une newsletter</a></li>
                                     {% endif %}
                                     {% if user.profile.is_member %}
                                         <li><a href="{% url 'propose-theme' %}#main">Proposer une soirée membre</a></li>
+                                        <li><a href="{% url 'propose-campaign' %}#main">Proposer une campagne</a></li>
                                     {% endif %}
                                     {% if user.is_authenticated %}
                                         <li><a href="{% url 'my-events' %}#main">Mes événements</a></li>
