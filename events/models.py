@@ -101,7 +101,10 @@ class Campaign(models.Model):
     def register_user(self, user):
         allowed = user.profile.is_member()
         if allowed:
-            if self.participants.count() < self.max_players and self.open_for_registration:
+            if (
+                    self.participants.count() < self.max_players and
+                    self.open_for_registration
+            ):
                 self.participants.add(user)
                 self.save()
             else:
