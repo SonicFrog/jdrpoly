@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.utils import timezone
 
 import datetime
 import random
@@ -21,14 +22,27 @@ class AuthenticatedTestCase(TestCase):
         self.user.save()
         self.user.profile.until = self.CURRENT_END_DATE
         self.user.profile.save()
+        self.users = []
 
     def tearDown(self):
         self.user.delete()
+
+        # Deleting users created by child TestCases
+        for user in self.users:
+            user.delete()
 
     def makeAuthRequest(self, path, method, data={}):
         request = method(path, data)
         request.user = self.user
         return request
+
+    def makeMemberUser(self):
+        user = User(username=randomword(20))
+        user.set_password(self.PASSWORD)
+        user.save()
+        user.profile.until = (timezone.now() + datetime.timedelta(1)).date()
+        self.users.append(user)
+        return user
 
     def reset_user(self):
         self.user.profile.until = self.CURRENT_END_DATE
