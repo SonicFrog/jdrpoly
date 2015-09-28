@@ -51,17 +51,6 @@ class UserUpdateViewTestCase(AuthenticatedTestCase):
         self.assertEqual(self.user.last_name, self.LAST_NAME)
         self.assertEqual(self.user.email, self.EMAIL)
 
-    def test_requires_email(self):
-        self.reset_user()
-        request = self.makeAuthRequest('dummy', RequestFactory().post,
-                                       data={'first_name': self.FIRST_NAME,
-                                             'last_name': self.LAST_NAME})
-        view = UserUpdateView.as_view()
-        response = view(request)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertNotEqual(self.user.first_name, self.FIRST_NAME)
-
 
 class CodeUseViewTestCase(AuthenticatedTestCase):
     def makeCode(self):
