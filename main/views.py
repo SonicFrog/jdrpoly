@@ -91,7 +91,7 @@ class NewsletterForm(Form):
         return to
 
 
-class NewsletterSendView(FormView, LoginRequiredMixin):
+class NewsletterSendView(LoginRequiredMixin, FormView):
     form_class = NewsletterForm
     template_name = 'news/letter.html'
     success_url = reverse_lazy('newsletter-success')
@@ -106,7 +106,7 @@ class NewsletterSendView(FormView, LoginRequiredMixin):
         return super(NewsletterSendView, self).form_valid(form)
 
 
-class NewsletterSuccessView(TemplateView, LoginRequiredMixin):
+class NewsletterSuccessView(LoginRequiredMixin, TemplateView):
     template_name = 'news/letter_ok.html'
 
 

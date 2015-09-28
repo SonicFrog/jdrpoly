@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.core.mail import send_mail
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import HttpResponseRedirect
 from django.forms import Form, ModelForm, CharField, Textarea, TextInput
 from django.views.generic import (DetailView, ListView, UpdateView, FormView,
@@ -11,7 +12,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Event, Edition, Campaign
-from members.views import LoginRequiredMixin
+from members.views import LoginRequiredMixin, user_is_member_decorator
 
 
 def redirect_to_edition(pk):
@@ -29,12 +30,12 @@ class CampaignCreateForm(ModelForm):
         if not super(CampaignCreateForm, self).is_valid():
             return False
         out = True
-        if not self.start > timezone.now():
-            self._errors.append('Votre campagne ne peut pas démarrer dans le passé !')
+        if not self.cleaned_data['start'] > timezone.now().date():
+            self._errors["start"] = 'Votre campagne ne peut pas démarrer dans le passé !'
             out = False
 
-        if not self.max_players > 0:
-            self._errors.append('Votre campagne ne peut pas avoir un nombre négatif de joueurs !')
+        if not self.cleaned_data['max_players'] > 0:
+            self._errors["max_players"] = 'Votre campagne ne peut pas avoir un nombre négatif de joueurs !'
             out = False
         return out
 
@@ -43,32 +44,37 @@ class CampaignCreateForm(ModelForm):
         fields = ['name', 'description', 'max_players', 'start', ]
 
 
-class CampaignPropositionView(CreateView, LoginRequiredMixin):
+class CampaignPropositionView(LoginRequiredMixin, CreateView):
     model = Campaign
     template_name = 'events/new_campaign.html'
     form_class = CampaignCreateForm
+
+    @user_passes_test(user_is_member_decorator)
+    def dispatch(self, *args, **kwargs):
+        return super(CampaignPropositionView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         return super(CampaignPropositionView, self).form_valid(form)
 
 
-class CampaignDetailView(DetailView, LoginRequiredMixin):
+class CampaignDetailView(LoginRequiredMixin, DetailView):
     model = Campaign
     template_name = 'events/campaign_detail.html'
     context_object_name = 'campaign'
 
 
-class CampaignListView(ListView, LoginRequiredMixin):
+class CampaignListView(LoginRequiredMixin, ListView):
     model = Campaign
     template_name = 'events/campaign_list.html'
     context_object_name = 'campaign_list'
 
     def get_queryset(self):
-        return Campaign.objects.filter(running=True).filter(open_for_registration=True).order_by('-start')
+        cset = Campaign.objects.filter(running=True)
+        return cset.filter(open_for_registration=True).order_by('-start')
 
 
-class CampaignRegisterView(UpdateView, LoginRequiredMixin):
+class CampaignRegisterView(LoginRequiredMixin, UpdateView):
     model = Campaign
     template_name = 'events/register_campaign.html'
 
@@ -83,7 +89,7 @@ class CampaignRegisterView(UpdateView, LoginRequiredMixin):
         return context
 
 
-class CampaignUnregisterView(UpdateView, LoginRequiredMixin):
+class CampaignUnregisterView(LoginRequiredMixin, UpdateView):
     model = Campaign
 
     def get(self, request, *args, **kwargs):
@@ -129,7 +135,7 @@ class EventPropositionView(FormView, LoginRequiredMixin):
             return super(EventPropositionView, self).form_valid(form)
 
 
-class RegisterEditionView(UpdateView, LoginRequiredMixin):
+class RegisterEditionView(LoginRequiredMixin, UpdateView):
     model = Edition
 
     def get(self, request, *args, **kwargs):
@@ -137,7 +143,7 @@ class RegisterEditionView(UpdateView, LoginRequiredMixin):
         return redirect_to_edition(self.get_object().pk)
 
 
-class UnregisterEditionView(UpdateView, LoginRequiredMixin):
+class UnregisterEditionView(LoginRequiredMixin, UpdateView):
     model = Edition
 
     def get(self, request, *args, **kwargs):
@@ -166,7 +172,7 @@ class EventDetailView(DetailView):
         return context
 
 
-class AttendingView(ListView, LoginRequiredMixin):
+class AttendingView(LoginRequiredMixin, ListView):
     template_name = 'events/attending.html'
     context_object_name = 'events'
 
@@ -187,6 +193,6 @@ class EditionDetailView(DetailView):
         return context
 
 
-class RegisterParticipationView(UpdateView, LoginRequiredMixin):
+class RegisterParticipationView(LoginRequiredMixin, UpdateView):
     model = Event
     template_name = 'events/register.html'

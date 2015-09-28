@@ -8,11 +8,19 @@ from django.forms import (Form, CharField, MultipleChoiceField, )
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import (UserCreationForm, PasswordChangeForm)
-from django.utils.timezone import datetime
-
-import datetime as dt
 
 from .models import Member, Code
+
+
+def user_is_member_decorator(user):
+    return user.is_member()
+
+
+class MemberOnlyMixin:
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(MemberOnlyMixin, cls).as_view(**initkwargs)
+        return view
 
 
 class LoginRequiredMixin:
@@ -42,11 +50,11 @@ class CodeUseForm(Form):
         pass
 
 
-class MainMemberView(TemplateView, LoginRequiredMixin):
+class MainMemberView(LoginRequiredMixin, TemplateView):
     template_name = 'members/main.html'
 
 
-class PasswordChangeView(FormView, LoginRequiredMixin):
+class PasswordChangeView(LoginRequiredMixin, FormView):
     """
     View pour changer le mot de passe de l'utilisateur actif
     """
@@ -57,11 +65,11 @@ class PasswordChangeView(FormView, LoginRequiredMixin):
         return PasswordChangeForm(self.request.user)
 
 
-class PasswordChangeOkView(View, LoginRequiredMixin):
+class PasswordChangeOkView(LoginRequiredMixin, View):
     template_name = 'members/password_change_ok.html'
 
 
-class UserProfileView(DetailView, LoginRequiredMixin):
+class UserProfileView(LoginRequiredMixin, DetailView):
     """
     View pour voir le profil d'un utilisateur arbitraire
     """
@@ -78,7 +86,7 @@ class SelfProfileView(UserProfileView):
         return self.request.user
 
 
-class UserUpdateView(UpdateView, LoginRequiredMixin):
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     fields = ['email', 'first_name', 'last_name']
     success_url = reverse_lazy('user-profile-view')
@@ -95,7 +103,7 @@ class UserCreateView(CreateView):
     form_class = UserCreationForm
 
 
-class CodeUseView(FormView, LoginRequiredMixin):
+class CodeUseView(LoginRequiredMixin, FormView):
     """
     View pour utiliser un code sur un compte utilisateur
     """
