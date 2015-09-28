@@ -3,8 +3,11 @@ from django.utils import timezone
 from django.test import RequestFactory, Client, TestCase
 from jdrpoly.tests.utils import AuthenticatedTestCase, randomword
 
-from .models import Event, Edition
-from .views import RegisterEditionView, UnregisterEditionView
+import datetime
+
+from .models import Event, Edition, Campaign
+from .views import (RegisterEditionView, UnregisterEditionView,
+                    CampaignCreateForm, CampaignPropositionView)
 
 
 def create_event_and_edition(member_only=False):
@@ -18,6 +21,88 @@ def create_event_and_edition(member_only=False):
 
 def extract_edition(event, pk):
     return event.editions.all()[pk]
+
+
+class CampaignCreateFormTestCase(AuthenticatedTestCase):
+    def test_empty_form_invalid(self):
+        form = CampaignCreateForm()
+        self.assertFalse(form.is_valid())
+
+    def test_form_validates_correctly(self):
+        form = CampaignCreateForm({'max_players': 10,
+                                   'open_for_registration': True,
+                                   'description': randomword(40),
+                                   'running': True,
+                                   'name': randomword(10),
+                                   'owner': self.user,
+                                   'start': (timezone.now() +
+                                             datetime.timedelta(1)).date()})
+        self.assertTrue(form.is_valid())
+
+    def test_negative_max_players_invalid(self):
+        form = CampaignCreateForm({'max_players': -1,
+                                   'open_for_registration': True,
+                                   'description': randomword(40),
+                                   'running': True,
+                                   'name': randomword(10),
+                                   'owner': self.user,
+                                   'start': (timezone.now() +
+                                             datetime.timedelta(1)).date()})
+        self.assertFalse(form.is_valid())
+
+    def test_start_date_in_the_past(self):
+        form = CampaignCreateForm({'max_players': -1,
+                                   'open_for_registration': True,
+                                   'description': randomword(40),
+                                   'running': True,
+                                   'name': randomword(10),
+                                   'owner': self.user,
+                                   'start': (timezone.now() -
+                                             datetime.timedelta(1)).date()})
+        self.assertFalse(form.is_valid())
+
+
+class CampaignPropositionViewTestCase(AuthenticatedTestCase):
+    CORRECT_DATA = {'max_players': 10,
+                    'open_for_registration': True,
+                    'description': randomword(40),
+                    'running': True,
+                    'name': randomword(10),
+                    'start': (timezone.now() +
+                              datetime.timedelta(1)).date()}
+
+    def setUp(self):
+        super(CampaignPropositionViewTestCase, self).setUp()
+        self.view = CampaignPropositionView.as_view()
+
+    def test_creates_with_correct_user(self):
+        request = self.makeAuthRequest(RequestFactory().post,
+                                       self.CORRECT_DATA)
+        self.assertEqual(Campaign.objects.all().count(), 0)
+
+        response = self.view(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Campaign.objects.all().count(), 1)
+        self.assertEqual(Campaign.objects.get(pk=1).owner, self.user)
+        Campaign.objects.get(pk=1).delete()
+
+    def test_creates_correctly(self):
+        client = Client()
+        client.login(username=self.user.username, password=self.PASSWORD)
+        response = client.post(reverse('propose-campaign'),
+                               data=self.CORRECT_DATA)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Campaign.objects.all().count(), 1)
+        Campaign.objects.all().delete()
+
+    def test_no_creation_when_not_logged_in(self):
+        client = Client()
+
+        response = client.post(reverse('propose-campaign'), self.CORRECT_DATA)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Campaign.objects.all().count(), 0)
 
 
 class EventListViewTestCase(TestCase):
@@ -69,12 +154,39 @@ class RegisterEditionViewTestCase(AuthenticatedTestCase):
     def setUp(self):
         super(RegisterEditionViewTestCase, self).setUp()
         self.event = create_event_and_edition()
+        self.event_mbr = create_event_and_edition(member_only=True)
+        self.event_mbr.save()
 
     def tearDown(self):
         super(RegisterEditionViewTestCase, self).tearDown()
         self.event.delete()
+        self.event_mbr.delete()
 
-    def test_registers_correctly(self):
+    def test_registers_member_only_when_member(self):
+        edition = extract_edition(self.event_mbr, 0)
+        user = self.makeMemberUser()
+
+        view = RegisterEditionView.as_view()
+        request = RequestFactory().get('dummy')
+        request.user = user
+
+        response = view(request, pk=edition.pk)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(edition.participants.count(), 1)
+        edition.participants.remove(user)
+
+    def test_registers_member_only_fails_when_not_member(self):
+        edition = extract_edition(self.event_mbr, 0)
+        view = RegisterEditionView.as_view()
+        request = RequestFactory().get('dummy')
+        request.user = self.user
+
+        response = view(request, pk=edition.pk)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(edition.participants.count(), 0)
+
+    def test_registers_correctly_when_logged_in(self):
         view = RegisterEditionView.as_view()
         request = self.makeAuthRequest('dummy', RequestFactory().get)
 
