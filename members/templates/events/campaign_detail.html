@@ -2,7 +2,7 @@
 
 {% extends "base.html" %}
 
-{% block content %}
+{% block title %}
     {{ campaign.name }}
 {% endblock %}
 
@@ -12,9 +12,43 @@
             <header>
                 <h2>Information détaillé pour la campagne {{ campaign.name }}</h2>
             </header>
-            <div class="12u 24u(mobile)">
-                {{ campaign.description }}
+            <div class="row 50%">
+                <div class="12u 24u(mobile)">
+                    {{ campaign.description }}
+                </div>
+                <div class="12u 24u(mobile)">
+                    Cet évenement est prévu pour {{ campaign.start }}
+                </div>
+                <div class="12u 24u(mobile)">
+                    <strong>{{ campaign.participants.all | length }}</strong>/{{ campaign.max_players }}
+                    joueur{{campaign.participants | length | pluralize}}
+                </div>
+                <div class="12u 24u(mobile)">
+                    {% if request.user in campaign.participants.all %}
+                        <span style="color:green">
+                            Vous participez à cet événement. <br />
+                            <a class="button" href="{% url 'campaign-unenroll' campaign.pk %}">Se retirer</a>
+                        </span>
+                    {% else %}
+                        <span style="color:red">
+                            Vous ne participez pas à cet événement. <br />
+                            <a class="button" href="{% url 'campaign-enroll' campaign.pk %}">S'enregistrer</a>
+                        </span>
+                    {% endif %}
+                </div>
             </div>
+        </article>
+        <article>
+            <header>
+                Participants
+            </header>
+            <ul id="members">
+                {% for member in campaign.participants.all %}
+                    <li>
+                        <a href="{{ member.profile.get_absolute_url }}">{{ member.username }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
         </article>
     </div>
 {% endblock %}

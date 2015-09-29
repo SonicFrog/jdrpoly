@@ -2,6 +2,8 @@
 
 {% extends "base.html" %}
 
+{% load bbcode %}
+
 {% block title %}
     {{ event.name }}
 {% endblock %}
@@ -16,7 +18,7 @@
                     <h2>{{ event.name }}</h2>
                 </header>
                 <p>
-                {{ event.description | linebreaksbr }}
+                    {% bbcode event.description %}
                 </p>
                 <p>
                     Accès:
