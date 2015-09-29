@@ -3,7 +3,6 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.core.mail import send_mail
-from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import HttpResponseRedirect
 from django.forms import Form, ModelForm, CharField, Textarea, TextInput
 from django.views.generic import (DetailView, ListView, UpdateView, FormView,
@@ -12,7 +11,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Event, Edition, Campaign
-from members.views import LoginRequiredMixin, user_is_member_decorator
+from members.views import LoginRequiredMixin
 
 
 def redirect_to_edition(pk):
@@ -26,14 +25,12 @@ def redirect_to_campaign(pk):
 
 
 class CampaignCreateForm(ModelForm):
+    name = CharField(widget=TextInput)
+
     def is_valid(self):
         if not super(CampaignCreateForm, self).is_valid():
             return False
         out = True
-        if not self.cleaned_data['start'] > timezone.now().date():
-            self._errors["start"] = 'Votre campagne ne peut pas démarrer dans le passé !'
-            out = False
-
         if not self.cleaned_data['max_players'] > 0:
             self._errors["max_players"] = 'Votre campagne ne peut pas avoir un nombre négatif de joueurs !'
             out = False
@@ -48,10 +45,6 @@ class CampaignPropositionView(LoginRequiredMixin, CreateView):
     model = Campaign
     template_name = 'events/new_campaign.html'
     form_class = CampaignCreateForm
-
-    @user_passes_test(user_is_member_decorator)
-    def dispatch(self, *args, **kwargs):
-        return super(CampaignPropositionView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -78,9 +71,9 @@ class CampaignRegisterView(LoginRequiredMixin, UpdateView):
     model = Campaign
     template_name = 'events/register_campaign.html'
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         self.get_object().register_user(request.user)
-        return super(CampaignRegisterView, self).post(request, *args, **kwargs)
+        return redirect_to_campaign(self.get_object().pk)
 
     def get_context_data(self):
         context = super(UpdateView, self).get_context_data()

@@ -16,13 +16,6 @@ def user_is_member_decorator(user):
     return user.is_member()
 
 
-class MemberOnlyMixin:
-    @classmethod
-    def as_view(cls, **initkwargs):
-        view = super(MemberOnlyMixin, cls).as_view(**initkwargs)
-        return view
-
-
 class LoginRequiredMixin:
     @classmethod
     def as_view(cls, **initkwargs):
