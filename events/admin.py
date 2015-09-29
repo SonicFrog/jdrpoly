@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Event, Edition
+from .models import Event, Edition, Campaign
 
 
 class ParticipantInline(admin.TabularInline):
@@ -23,5 +23,12 @@ class EditionAdmin(admin.ModelAdmin):
         ParticipantInline,
     ]
 
+
+class CampaignAdmin(admin.ModelAdmin):
+    fields = ['name', 'description', 'start', 'owner', 'open_for_registration']
+    list_display = ('name', 'start', 'owner')
+
+
+admin.site.register(Campaign, CampaignAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Edition, EditionAdmin)

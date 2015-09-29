@@ -51,7 +51,7 @@ class Edition(models.Model):
                                           verbose_name=_("Participants"))
 
     def __str__(self):
-        return "%s du %s" % (self.event.name, self.date)
+        return "%s du %s" % (self.event.name, self.date.__format__("%d/%m/%y"))
 
     def get_absolute_url(self):
         return reverse('edition-detail', kwargs={'pk': self.pk})
@@ -77,7 +77,7 @@ class Edition(models.Model):
 
 class Campaign(models.Model):
     """
-    Campagne pour les soirées membres
+    Animation pour les soirées membres
     """
     max_players = models.IntegerField(verbose_name=_("Maximum de joueurs"))
 
@@ -87,16 +87,19 @@ class Campaign(models.Model):
     running = models.BooleanField(default=True, verbose_name=_("En cours"))
 
     description = models.TextField(verbose_name=_("Description"))
-    name = models.TextField(max_length=200, verbose_name=_("Nom"))
+    name = models.CharField(max_length=200, verbose_name=_("Nom"))
 
     participants = models.ManyToManyField(User, related_name='campaigns',
                                           verbose_name=_("Participants"))
-    owner = models.OneToOneField(User, verbose_name=_("Créateur"))
+    owner = models.ForeignKey(User, verbose_name=_("Créateur"))
 
-    start = models.DateField(default=timezone.now, verbose_name=_("Début"))
+    start = models.ForeignKey(Edition, related_name='animations',
+                              verbose_name=_("Evénement"))
+
+    start.queryset = Edition.objects.all().filter(date__gt=timezone.now())
 
     def __str__(self):
-        return "Campagne %s à la %s" % (self.name, self.edition.__str__())
+        return "%s à la %s" % (self.name, self.start)
 
     def register_user(self, user):
         allowed = user.profile.is_member()
