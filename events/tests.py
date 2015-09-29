@@ -1,13 +1,16 @@
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.test import RequestFactory, Client, TestCase
-from jdrpoly.tests.utils import AuthenticatedTestCase, randomword
+from jdrpoly.tests.utils import (AuthenticatedTestCase, randomword,
+                                 randomsentence)
 
 import datetime
+from random import randint
 
 from .models import Event, Edition, Campaign
 from .views import (RegisterEditionView, UnregisterEditionView,
-                    CampaignCreateForm, CampaignPropositionView)
+                    CampaignCreateForm, CampaignPropositionView,
+                    )
 
 
 def create_event_and_edition(member_only=False):
@@ -21,6 +24,58 @@ def create_event_and_edition(member_only=False):
 
 def extract_edition(event, pk):
     return event.editions.all()[pk]
+
+
+def create_campaign(user):
+    campaign = Campaign(max_players=randint(1, 12), open_for_registration=True,
+                        running=True, description=randomsentence(15),
+                        start=(timezone.now() + datetime.timedelta(1)).date(),
+                        owner=user, name=randomword(20))
+    campaign.save()
+    return campaign
+
+
+class CampaignUnregisterViewTestCase(AuthenticatedTestCase):
+    def test_unregisters(self):
+        user = self.makeMemberUser()
+        campaign = create_campaign(user)
+        campaign.register_user(user)
+        self.client.login(username=user.username, password=self.PASSWORD)
+        self.client.get(reverse('campaign-unenroll',
+                                kwargs={'pk': campaign.pk}))
+        self.assertEqual(campaign.participants.all().count(), 0)
+        campaign.delete()
+
+
+class CampaignRegisterViewTestCase(AuthenticatedTestCase):
+    def setUp(self):
+        super(CampaignRegisterViewTestCase, self).setUp()
+        self.campaign = create_campaign(self.user)
+
+    def tearDown(self):
+        super(CampaignRegisterViewTestCase, self).tearDown()
+        self.campaign.delete()
+
+    def test_registers_correctly(self):
+        user = self.makeMemberUser()
+        self.client.login(username=user.username, password=self.PASSWORD)
+        response = self.client.post(reverse('campaign-enroll',
+                                            kwargs={'pk': self.campaign.pk}))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.campaign.participants.all().count(), 1)
+        self.campaign.unregister_user(user)
+
+    def test_register_fails_when_not_member(self):
+        self.client.login(username=self.user, password=self.PASSWORD)
+        self.client.post(reverse('campaign-enroll',
+                                 kwargs={'pk': self.campaign.pk}))
+        self.assertEqual(self.campaign.participants.all().count(), 0)
+
+    def test_register_fails_when_not_logged_in(self):
+        self.client.logout()
+        self.client.post(reverse('campaign-enroll',
+                                 kwargs={'pk': self.campaign.pk}))
+        self.assertEqual(self.campaign.participants.all().count(), 0)
 
 
 class CampaignCreateFormTestCase(AuthenticatedTestCase):
@@ -51,7 +106,7 @@ class CampaignCreateFormTestCase(AuthenticatedTestCase):
         self.assertFalse(form.is_valid())
 
     def test_start_date_in_the_past(self):
-        form = CampaignCreateForm({'max_players': -1,
+        form = CampaignCreateForm({'max_players': 10,
                                    'open_for_registration': True,
                                    'description': randomword(40),
                                    'running': True,
@@ -74,9 +129,16 @@ class CampaignPropositionViewTestCase(AuthenticatedTestCase):
     def setUp(self):
         super(CampaignPropositionViewTestCase, self).setUp()
         self.view = CampaignPropositionView.as_view()
+        self.client = Client()
+
+    def fails_without_member_user(self):
+        user = self.makeUser()
+        self.client.login(username=user.username, password=self.PASSWORD)
+        self.client.post(reverse('propose-campaign'), self.CORRECT_DATA)
+        self.assertEqual(Campaign.objects.all().count(), 0)
 
     def test_creates_with_correct_user(self):
-        request = self.makeAuthRequest(RequestFactory().post,
+        request = self.makeAuthRequest('dummy', RequestFactory().post,
                                        self.CORRECT_DATA)
         self.assertEqual(Campaign.objects.all().count(), 0)
 
@@ -87,19 +149,17 @@ class CampaignPropositionViewTestCase(AuthenticatedTestCase):
         Campaign.objects.get(pk=1).delete()
 
     def test_creates_correctly(self):
-        client = Client()
-        client.login(username=self.user.username, password=self.PASSWORD)
-        response = client.post(reverse('propose-campaign'),
-                               data=self.CORRECT_DATA)
+        self.client.login(username=self.user.username, password=self.PASSWORD)
+        response = self.client.post(reverse('propose-campaign'),
+                                    data=self.CORRECT_DATA)
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Campaign.objects.all().count(), 1)
         Campaign.objects.all().delete()
 
     def test_no_creation_when_not_logged_in(self):
-        client = Client()
-
-        response = client.post(reverse('propose-campaign'), self.CORRECT_DATA)
+        response = self.client.post(reverse('propose-campaign'),
+                                    self.CORRECT_DATA)
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Campaign.objects.all().count(), 0)
@@ -193,7 +253,8 @@ class RegisterEditionViewTestCase(AuthenticatedTestCase):
         response = view(request, pk=self.event.pk)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(extract_edition(self.event, 0).participants.count(), 1)
+        self.assertEqual(extract_edition(self.event, 0).participants.count(),
+                         1)
         self.event.editions.all()[0].participants.remove(self.user)
 
     def test_registers_fail_not_logged_in(self):
@@ -202,7 +263,8 @@ class RegisterEditionViewTestCase(AuthenticatedTestCase):
                                       kwargs={'pk': self.event.pk}))
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(extract_edition(self.event, 0).participants.count(), 0)
+        self.assertEqual(extract_edition(self.event, 0).participants.count(),
+                         0)
 
 
 class UnregisterEditionViewTestCase(AuthenticatedTestCase):
