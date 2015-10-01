@@ -24,4 +24,4 @@ urlpatterns = [
     url(r'^events/', include('events.urls')),
     url(r'^members/', include('members.urls')),
     url(r'^pictures/', include('pictures.urls')),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
