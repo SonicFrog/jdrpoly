@@ -32,7 +32,9 @@ class CampaignCreateForm(ModelForm):
             return False
         out = True
         if not self.cleaned_data['max_players'] > 0:
-            self._errors["max_players"] = 'Votre campagne ne peut pas avoir un nombre négatif de joueurs !'
+            self._errors["max_players"] = (
+                'Votre campagne doit avoir un nombre positif de joueurs !'
+            )
             out = False
         return out
 
@@ -69,14 +71,14 @@ class CampaignListView(LoginRequiredMixin, ListView):
 
 class CampaignRegisterView(LoginRequiredMixin, UpdateView):
     model = Campaign
-    template_name = 'events/register_campaign.html'
+    fields = []
 
     def get(self, request, *args, **kwargs):
         self.get_object().register_user(request.user)
         return redirect_to_campaign(self.get_object().pk)
 
-    def get_context_data(self):
-        context = super(UpdateView, self).get_context_data()
+    def get_context_data(self, *args, **kwargs):
+        context = super(UpdateView, self).get_context_data(*args, **kwargs)
         object = self.get_object()
         context['registered'] = self.request.user in object.participants.all()
         return context
@@ -86,9 +88,8 @@ class CampaignUnregisterView(LoginRequiredMixin, UpdateView):
     model = Campaign
 
     def get(self, request, *args, **kwargs):
-        obj = self.get_object()
-        obj.unregister_user(request.user)
-        return redirect_to_campaign(obj.pk)
+        self.get_object().unregister_user(request.user)
+        return redirect_to_campaign(self.get_object().pk)
 
 
 class EventPropositionForm(Form):

@@ -4,13 +4,12 @@ from django.test import RequestFactory, Client, TestCase
 from jdrpoly.tests.utils import (AuthenticatedTestCase, randomword,
                                  randomsentence)
 
-import datetime
 from random import randint
 
 from .models import Event, Edition, Campaign
 from .views import (RegisterEditionView, UnregisterEditionView,
                     CampaignCreateForm, CampaignPropositionView,
-                    )
+                    CampaignListView)
 
 
 def create_event_and_edition(member_only=False):
@@ -27,12 +26,32 @@ def extract_edition(event, pk):
 
 
 def create_campaign(user):
+    edition = extract_edition(create_event_and_edition(), 0)
     campaign = Campaign(max_players=randint(1, 12), open_for_registration=True,
                         running=True, description=randomsentence(15),
-                        start=(timezone.now() + datetime.timedelta(1)).date(),
-                        owner=user, name=randomword(20))
+                        start=edition, owner=user, name=randomword(20))
     campaign.save()
     return campaign
+
+
+class CampaignListViewTestCase(AuthenticatedTestCase):
+    TEST_CAMPAIGN_COUNT = 10
+
+    def setUp(self):
+        super(CampaignListViewTestCase, self).setUp()
+        self.campaigns = [create_campaign(self.user)
+                          for i in range(0, self.TEST_CAMPAIGN_COUNT)]
+
+    def tearDown(self):
+        super(CampaignListViewTestCase, self).setUp()
+        for c in self.campaigns:
+            c.delete()
+
+    def test_displays_correct_campaigns(self):
+        response = self.client.get(reverse('campaign-list'))
+
+        for c in self.campaigns:
+            self.assertIn(c, response.context_data['campaign_list'])
 
 
 class CampaignUnregisterViewTestCase(AuthenticatedTestCase):
@@ -79,6 +98,14 @@ class CampaignRegisterViewTestCase(AuthenticatedTestCase):
 
 
 class CampaignCreateFormTestCase(AuthenticatedTestCase):
+    def setUp(self):
+        super(CampaignCreateFormTestCase, self).setUp()
+        self.event = create_event_and_edition()
+
+    def tearDown(self):
+        super(CampaignCreateFormTestCase, self).tearDown()
+        self.event.delete()
+
     def test_empty_form_invalid(self):
         form = CampaignCreateForm()
         self.assertFalse(form.is_valid())
@@ -90,8 +117,7 @@ class CampaignCreateFormTestCase(AuthenticatedTestCase):
                                    'running': True,
                                    'name': randomword(10),
                                    'owner': self.user,
-                                   'start': (timezone.now() +
-                                             datetime.timedelta(1)).date()})
+                                   'start': extract_edition(self.event, 0).pk})
         self.assertTrue(form.is_valid())
 
     def test_negative_max_players_invalid(self):
@@ -101,19 +127,7 @@ class CampaignCreateFormTestCase(AuthenticatedTestCase):
                                    'running': True,
                                    'name': randomword(10),
                                    'owner': self.user,
-                                   'start': (timezone.now() +
-                                             datetime.timedelta(1)).date()})
-        self.assertFalse(form.is_valid())
-
-    def test_start_date_in_the_past(self):
-        form = CampaignCreateForm({'max_players': 10,
-                                   'open_for_registration': True,
-                                   'description': randomword(40),
-                                   'running': True,
-                                   'name': randomword(10),
-                                   'owner': self.user,
-                                   'start': (timezone.now() -
-                                             datetime.timedelta(1)).date()})
+                                   'start': extract_edition(self.event, 0).pk})
         self.assertFalse(form.is_valid())
 
 
@@ -123,45 +137,39 @@ class CampaignPropositionViewTestCase(AuthenticatedTestCase):
                     'description': randomword(40),
                     'running': True,
                     'name': randomword(10),
-                    'start': (timezone.now() +
-                              datetime.timedelta(1)).date()}
+                    'start': extract_edition(create_event_and_edition(), 0).pk}
 
     def setUp(self):
         super(CampaignPropositionViewTestCase, self).setUp()
         self.view = CampaignPropositionView.as_view()
-        self.client = Client()
 
     def fails_without_member_user(self):
         user = self.makeUser()
         self.client.login(username=user.username, password=self.PASSWORD)
-        self.client.post(reverse('propose-campaign'), self.CORRECT_DATA)
+        self.client.get(reverse('propose-campaign'), self.CORRECT_DATA)
         self.assertEqual(Campaign.objects.all().count(), 0)
 
     def test_creates_with_correct_user(self):
-        request = self.makeAuthRequest('dummy', RequestFactory().post,
+        request = self.makeAuthRequest('dummy', RequestFactory().get,
                                        self.CORRECT_DATA)
         self.assertEqual(Campaign.objects.all().count(), 0)
 
-        response = self.view(request)
-        self.assertEqual(response.status_code, 302)
+        self.view(request)
         self.assertEqual(Campaign.objects.all().count(), 1)
         self.assertEqual(Campaign.objects.get(pk=1).owner, self.user)
         Campaign.objects.get(pk=1).delete()
 
     def test_creates_correctly(self):
         self.client.login(username=self.user.username, password=self.PASSWORD)
-        response = self.client.post(reverse('propose-campaign'),
-                                    data=self.CORRECT_DATA)
+        self.client.get(reverse('propose-campaign'),
+                        data=self.CORRECT_DATA)
 
-        self.assertEqual(response.status_code, 302)
         self.assertEqual(Campaign.objects.all().count(), 1)
         Campaign.objects.all().delete()
 
     def test_no_creation_when_not_logged_in(self):
-        response = self.client.post(reverse('propose-campaign'),
-                                    self.CORRECT_DATA)
-
-        self.assertEqual(response.status_code, 302)
+        self.client.get(reverse('propose-campaign'),
+                        self.CORRECT_DATA)
         self.assertEqual(Campaign.objects.all().count(), 0)
 
 

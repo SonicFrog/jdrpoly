@@ -4,7 +4,7 @@ from .views import (EventListView, EventDetailView, RegisterEditionView,
                     UnregisterEditionView, EditionDetailView, AttendingView,
                     EventPropositionView, CampaignPropositionView,
                     CampaignDetailView, CampaignRegisterView,
-                    CampaignUnregisterView)
+                    CampaignUnregisterView, CampaignListView)
 
 
 urlpatterns = [
@@ -21,6 +21,7 @@ urlpatterns = [
 
     url(r'^my/$', AttendingView.as_view(), name='my-events'),
     url(r'^propose/$', EventPropositionView.as_view(), name='propose-theme'),
+    url(r'^campaign/$', CampaignListView.as_view(), name='campaign-list'),
     url(r'^campaign/new$', CampaignPropositionView.as_view(),
         name='propose-campaign'),
     url(r'^campaign/(?P<pk>\d+)$', CampaignDetailView.as_view(),
