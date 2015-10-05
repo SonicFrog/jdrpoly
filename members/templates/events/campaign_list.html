@@ -2,12 +2,21 @@
 
 {% extends "base.html" %}
 
-{% block content %}
-    {{ campaign.name }}
+{% block title %}
+    Les campagnes
 {% endblock %}
 
 {% block content %}
-    <div class="row 100%">
-
-    </div>
+    <article class="box post">
+        <header>
+            <h2>Voici les campagnes en cours qui acceptent encore de nouveaux joueurs</h2>
+        </header>
+        <div class="row 100%">
+            <ul>
+                {% for campaign in campaign_list %}
+                    <li><a href="{{ campaign.get_absolute_url }}">{{ campaign.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </article>
 {% endblock %}

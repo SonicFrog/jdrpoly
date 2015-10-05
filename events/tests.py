@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.test import RequestFactory, Client, TestCase
@@ -8,8 +9,7 @@ from random import randint
 
 from .models import Event, Edition, Campaign
 from .views import (RegisterEditionView, UnregisterEditionView,
-                    CampaignCreateForm, CampaignPropositionView,
-                    CampaignListView)
+                    CampaignCreateForm, CampaignPropositionView,)
 
 
 def create_event_and_edition(member_only=False):
@@ -54,46 +54,39 @@ class CampaignListViewTestCase(AuthenticatedTestCase):
             self.assertIn(c, response.context_data['campaign_list'])
 
 
-class CampaignUnregisterViewTestCase(AuthenticatedTestCase):
-    def test_unregisters(self):
-        user = self.makeMemberUser()
-        campaign = create_campaign(user)
-        campaign.register_user(user)
-        self.client.login(username=user.username, password=self.PASSWORD)
-        self.client.get(reverse('campaign-unenroll',
-                                kwargs={'pk': campaign.pk}))
-        self.assertEqual(campaign.participants.all().count(), 0)
-        campaign.delete()
-
-
-class CampaignRegisterViewTestCase(AuthenticatedTestCase):
+class CampaignToggleEnrollViewTestCase(AuthenticatedTestCase):
     def setUp(self):
-        super(CampaignRegisterViewTestCase, self).setUp()
+        super(CampaignToggleEnrollViewTestCase, self).setUp()
+        self.user = self.makeMemberUser()
+        self.user.save()
         self.campaign = create_campaign(self.user)
+        self.login(self.user)
 
     def tearDown(self):
-        super(CampaignRegisterViewTestCase, self).tearDown()
+        super(CampaignToggleEnrollViewTestCase, self).tearDown()
+        self.user.delete()
         self.campaign.delete()
 
-    def test_registers_correctly(self):
-        user = self.makeMemberUser()
-        self.client.login(username=user.username, password=self.PASSWORD)
-        response = self.client.post(reverse('campaign-enroll',
-                                            kwargs={'pk': self.campaign.pk}))
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.campaign.participants.all().count(), 1)
-        self.campaign.unregister_user(user)
+    def test_unregisters(self):
+        self.campaign.register_user(self.user)
+        self.client.get(reverse('campaign-enroll',
+                                kwargs={'pk': self.campaign.pk}))
 
-    def test_register_fails_when_not_member(self):
-        self.client.login(username=self.user, password=self.PASSWORD)
-        self.client.post(reverse('campaign-enroll',
-                                 kwargs={'pk': self.campaign.pk}))
         self.assertEqual(self.campaign.participants.all().count(), 0)
+        self.campaign.delete()
 
-    def test_register_fails_when_not_logged_in(self):
-        self.client.logout()
-        self.client.post(reverse('campaign-enroll',
-                                 kwargs={'pk': self.campaign.pk}))
+    def test_registers(self):
+        self.client.get(reverse('campaign-enroll',
+                                kwargs={'pk': self.campaign.pk}))
+        self.assertEqual(self.campaign.participants.all().count(), 1)
+        self.campaign.unregister_user(self.user)
+
+    def test_registers_then_unregisters(self):
+        self.client.get(reverse('campaign-enroll',
+                                kwargs={'pk': self.campaign.pk}))
+        self.assertEqual(self.campaign.participants.all().count(), 1)
+        self.client.get(reverse('campaign-enroll',
+                                kwargs={'pk': self.campaign.pk}))
         self.assertEqual(self.campaign.participants.all().count(), 0)
 
 
@@ -292,3 +285,28 @@ class UnregisterEditionViewTestCase(AuthenticatedTestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.event.editions.all()[0].participants.count(), 0)
+
+
+class CampaignModelTestCase(AuthenticatedTestCase):
+    def setUp(self):
+        self.good_user = self.makeMemberUser()
+        self.bad_user = self.makeUser()
+        self.campaign = create_campaign(self.good_user)
+
+    def tearDown(self):
+        self.good_user.delete()
+        self.bad_user.delete()
+        self.campaign.delete()
+
+    def test_registers_member_user(self):
+        self.campaign.register_user(self.good_user)
+        self.assertEqual(self.campaign.participants.all().count(), 1)
+
+    def test_does_not_register_non_member_user(self):
+        self.campaign.register_user(self.bad_user)
+        self.assertEqual(self.campaign.participants.all().count(), 0)
+
+    def test_registers_then_unregisters(self):
+        self.campaign.register_user(self.good_user)
+        self.campaign.unregister_user(self.good_user)
+        self.assertEqual(self.campaign.participants.all().count(), 0)

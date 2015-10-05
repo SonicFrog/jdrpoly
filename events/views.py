@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from django.shortcuts import HttpResponseRedirect
 from django.forms import Form, ModelForm, CharField, Textarea, TextInput
 from django.views.generic import (DetailView, ListView, UpdateView, FormView,
-                                  CreateView)
+                                  CreateView, DeleteView)
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
@@ -43,6 +43,28 @@ class CampaignCreateForm(ModelForm):
         fields = ['name', 'description', 'max_players', 'start', ]
 
 
+class CampaignToggleEnrollView(LoginRequiredMixin, UpdateView):
+    model = Campaign
+
+    def get(self, request, *args, **kwargs):
+        camp = self.get_object()
+        if request.user.profile.is_enrolled_in(camp):
+            camp.unregister_user(request.user)
+        else:
+            camp.register_user(request.user)
+        return redirect_to_campaign(camp.pk)
+
+
+class CampaignDeleteView(LoginRequiredMixin, DeleteView):
+    model = Campaign
+    template_name = 'events/campaign_delete.html'
+    success_url = reverse_lazy('campaign-list')
+
+    def form_valid(self, form):
+        if self.get_object().owner is self.request.user:
+            super(CampaignDeleteView, self).form_valid(form)
+
+
 class CampaignPropositionView(LoginRequiredMixin, CreateView):
     model = Campaign
     template_name = 'events/new_campaign.html'
@@ -67,29 +89,6 @@ class CampaignListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         cset = Campaign.objects.filter(running=True)
         return cset.filter(open_for_registration=True).order_by('-start')
-
-
-class CampaignRegisterView(LoginRequiredMixin, UpdateView):
-    model = Campaign
-    fields = []
-
-    def get(self, request, *args, **kwargs):
-        self.get_object().register_user(request.user)
-        return redirect_to_campaign(self.get_object().pk)
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(UpdateView, self).get_context_data(*args, **kwargs)
-        object = self.get_object()
-        context['registered'] = self.request.user in object.participants.all()
-        return context
-
-
-class CampaignUnregisterView(LoginRequiredMixin, UpdateView):
-    model = Campaign
-
-    def get(self, request, *args, **kwargs):
-        self.get_object().unregister_user(request.user)
-        return redirect_to_campaign(self.get_object().pk)
 
 
 class EventPropositionForm(Form):

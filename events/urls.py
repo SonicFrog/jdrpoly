@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from .views import (EventListView, EventDetailView, RegisterEditionView,
                     UnregisterEditionView, EditionDetailView, AttendingView,
                     EventPropositionView, CampaignPropositionView,
-                    CampaignDetailView, CampaignRegisterView,
-                    CampaignUnregisterView, CampaignListView)
+                    CampaignDetailView, CampaignListView,
+                    CampaignToggleEnrollView, CampaignDeleteView)
 
 
 urlpatterns = [
@@ -26,8 +26,8 @@ urlpatterns = [
         name='propose-campaign'),
     url(r'^campaign/(?P<pk>\d+)$', CampaignDetailView.as_view(),
         name='campaign-detail'),
-    url(r'^campaign/(?P<pk>\d+)/enroll$', CampaignRegisterView.as_view(),
+    url(r'^campaign/(?P<pk>\d+)/enroll$', CampaignToggleEnrollView.as_view(),
         name='campaign-enroll'),
-    url(r'^campaign/(?P<pk>\d+)/unenroll$', CampaignUnregisterView,
-        name='campaign-unenroll'),
+    url(r'^campaign/(?P<pk>\d+)/delete$', CampaignDeleteView.as_view(),
+        name='campaign-delete'),
 ]

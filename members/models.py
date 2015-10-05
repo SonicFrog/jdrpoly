@@ -49,6 +49,9 @@ class Member(models.Model):
     def is_member(self):
         return self.until > timezone.now().date()
 
+    def is_enrolled_in(self, campaign):
+        return self in campaign.participants.all()
+
     def __str__(self):
         return _("Profil utilisateur de %s") % self.user.username
 

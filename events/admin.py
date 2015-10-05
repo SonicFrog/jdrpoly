@@ -25,7 +25,10 @@ class EditionAdmin(admin.ModelAdmin):
 
 
 class CampaignAdmin(admin.ModelAdmin):
-    fields = ['name', 'description', 'start', 'owner', 'open_for_registration']
+    fields = [
+        'name', 'description', 'start', 'owner', 'open_for_registration',
+        'max_players'
+    ]
     list_display = ('name', 'start', 'owner')
 
 
