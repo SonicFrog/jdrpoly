@@ -15,6 +15,8 @@ class AuthenticatedTestCase(TestCase):
 
     CURRENT_END_DATE = datetime.date(2015, 4, 12)
 
+    users = []
+
     def setUp(self):
         self.user = User(username=self.USERNAME, first_name=self.FIRST_NAME,
                          email=self.EMAIL, last_name=self.LAST_NAME)
@@ -31,6 +33,9 @@ class AuthenticatedTestCase(TestCase):
         for user in self.users:
             user.delete()
 
+    def login(self, user):
+        self.client.login(username=user.username, password=self.PASSWORD)
+
     def makeAuthRequest(self, path, method, data={}):
         request = method(path, data)
         request.user = self.user
@@ -46,6 +51,8 @@ class AuthenticatedTestCase(TestCase):
         user = User(username=randomword(20))
         user.set_password(self.PASSWORD)
         user.save()
+        user.profile.until = timezone.now().date()
+        user.profile.save()
         self.users.append(user)
         return user
 
