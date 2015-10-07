@@ -48,6 +48,8 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                                 <a href="{% url 'gallery-list' %}#main" class="icon fa-cog"><span>Photos</span></a>
                             </li>
                             <li>
+                                <a href="{% url 'comity-list' %}#main" class="icon fa-cog" ><span>Le comité</span></a>
+                            <li>
                                 <a href="{% url 'user-main' %}#main" class="icon fa-cog"><span>Espace membre</span></a>
                                 <ul>
                                     {% if user.is_staff %}
