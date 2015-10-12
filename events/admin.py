@@ -19,6 +19,10 @@ class EditionAdmin(admin.ModelAdmin):
     fields = ['date', 'place', 'gallery', 'event', 'max_players']
     list_display = ('event', 'date', 'place')
 
+    inlines = [
+        ParticipantInline,
+    ]
+
 
 class CampaignAdmin(admin.ModelAdmin):
     fields = [

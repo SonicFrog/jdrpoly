@@ -6,25 +6,43 @@
 
 {% block content %}
     <div class="row 100%">
+        <div class="6u 12u(mobile)">
         <article>
             <header>
                 <h2>{{ edition.event.name }}</h2>
             </header>
             le {{ edition.date }} {% if edition.place %} à {{ edition.place }} {% endif %}
         </article>
-        <article>
-            <p>
-                Il y a actuellement {{ edition.participants.count }} joueur{{ edition.participants.count | pluralize }} inscrit{{ edition.participants.count | pluralize }} pour cet événement.
-            </p>
-            <p>
-            {% if attending %}
-                Vous êtes enregistré pour cet événement. <br />
-                <a class="button icon fa-file" href="{% url 'edition-unregister' edition.pk %}">Me désinscrire</a>
-            {% else %}
-                Vous n'êtes pas enregistré pour cet événement. <br />
-                <a class="button icon fa-file" href="{% url 'edition-register' edition.pk %}">M'inscrire</a>
-            {% endif %}
-            </p>
-        </article>
+        </div>
+
+        <div class="6u 12u(mobile)">
+            <article>
+                <p>
+                    Il y a actuellement {{ edition.participants.count }} joueur{{ edition.participants.count | pluralize }} inscrit{{ edition.participants.count | pluralize }} pour cet événement.
+                </p>
+                <p>
+                    {% if attending %}
+                        Vous êtes enregistré pour cet événement. <br />
+                        <a class="button icon fa-file" href="{% url 'edition-unregister' edition.pk %}">Me désinscrire</a>
+                    {% else %}
+                        Vous n'êtes pas enregistré pour cet événement. <br />
+                        <a class="button icon fa-file" href="{% url 'edition-register' edition.pk %}">M'inscrire</a>
+                    {% endif %}
+                </p>
+            </article>
+        </div>
+
+        <div class="6u 12u(mobile)">
+            <article>
+                <header>
+                    <h2>Joueurs participants</h2>
+                </header>
+                <ul>
+                    {% for player in edition.participants.all %}
+                        <li><a href="player.get_absolute_url">player.username</a></li>
+                    {% endfor %}
+                </ul>
+            </article>
+        </div>
     </div>
 {% endblock %}
