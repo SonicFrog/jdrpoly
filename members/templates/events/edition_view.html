@@ -39,7 +39,7 @@
                 </header>
                 <ul>
                     {% for player in edition.participants.all %}
-                        <li><a href="player.get_absolute_url">player.username</a></li>
+                        <li><a href="{{ player.get_absolute_url }}">{{ player.username }}</a></li>
                     {% endfor %}
                 </ul>
             </article>
