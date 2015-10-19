@@ -1,15 +1,21 @@
 # coding: utf-8
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic import (DetailView, CreateView, FormView,
                                   View, UpdateView, TemplateView)
-from django.forms import (Form, CharField, MultipleChoiceField, )
+from django.forms import (Form, CharField, ChoiceField, EmailField,
+                          RadioSelect)
 
+from django.conf import settings
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import (UserCreationForm, PasswordChangeForm)
+from django.template import Context
+from django.template.loader import get_template
+from django.utils.decorators import method_decorator
 
-from .models import Member, Code
+from .models import Member, Code, user_is_staff
 
 
 def user_is_member_decorator(user):
@@ -24,7 +30,8 @@ class LoginRequiredMixin(object):
 
 
 class CodeCreationForm(Form):
-    semesters = MultipleChoiceField(choices=Code.CHOICES)
+    email = EmailField()
+    semesters = ChoiceField(choices=Code.CHOICES)
 
 
 class CodeUseForm(Form):
@@ -38,9 +45,6 @@ class CodeUseForm(Form):
         except:
             return False
         return True
-
-    def save(self):
-        pass
 
 
 class MainMemberView(LoginRequiredMixin, TemplateView):
@@ -64,7 +68,7 @@ class PasswordChangeOkView(LoginRequiredMixin, View):
 
 class UserProfileView(LoginRequiredMixin, DetailView):
     """
-    View pour voir le profil d'un utilisateur arbitraire
+    Vieow pour voir le profil d'un utilisateur arbitraire
     """
     model = User
     template_name = 'members/view.html'
@@ -111,3 +115,25 @@ class CodeUseView(LoginRequiredMixin, FormView):
         code.use_for(user)
 
         return super(CodeUseView, self).form_valid(form)
+
+
+class CodeCreateView(LoginRequiredMixin, FormView):
+    template_name = 'members/code.html'
+    form_class = CodeCreationForm
+    success_url = reverse_lazy('create-code')
+
+    @method_decorator(user_passes_test(user_is_staff))
+    def dispatch(self, *args, **kwargs):
+        return super(CodeCreateView, self).dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        title = "Inscription JDR-poly"
+        to = form.cleaned_data['email']
+        code = Code.generate(form.cleaned_data['semesters'])
+        template = get_template('members/code_mail.txt')
+        data = Context({'code': code})
+        mail_content = template.render(data)
+
+        send_mail(title, mail_content, settings.DEFAULT_FROM_EMAIL, (to, ))
+
+        return super(CodeCreateView, self).form_valid(form)

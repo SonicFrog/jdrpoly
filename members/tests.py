@@ -1,5 +1,6 @@
 from django.test import TestCase, RequestFactory
 from django.utils import timezone
+from django.core.urlresolvers import reverse
 
 from jdrpoly.tests.utils import AuthenticatedTestCase, randomword
 from .models import Code
@@ -109,3 +110,15 @@ class CodeUseViewTestCase(AuthenticatedTestCase):
         else:
             self.assertGreater(self.user.profile.until.year, now.year)
             self.assertEqual(self.user.profile.until.month, 2)
+
+
+class CodeCreateViewTestCase(AuthenticatedTestCase):
+    def test_creates_code(self):
+        user = self.makeMemberUser()
+        self.login(user)
+        response = self.client.post(reverse('create-code'),
+                                    data={'semesters': 1,
+                                          'email': 'test@test.ch'})
+        self.assertNotEqual(response.status_code, 500)
+        self.assertEqual(Code.objects.all().count(), 1)
+        Code.objects.all().delete()

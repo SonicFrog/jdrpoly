@@ -10,6 +10,8 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 import datetime as dt
+import random
+import string
 
 
 def user_is_staff(user):
@@ -84,6 +86,14 @@ class Code(models.Model):
 
     def __str__(self):
         return _("Code valide pour %s semestre(s)") % self.semesters
+
+    @classmethod
+    def generate(self, semesters):
+        content = ''.join([random.choice(string.ascii_uppercase + string.digits)
+                           for _ in range(1, 30)])
+        code = Code(content=content, semesters=semesters)
+        code.save()
+        return code.content
 
     def use_for(self, user):
         now = timezone.now()

@@ -7,7 +7,7 @@ from django.contrib.auth.views import (password_change, password_change_done,
                                        password_reset_confirm)
 from .views import (UserProfileView, SelfProfileView,
                     UserCreateView, PasswordChangeView, CodeUseView,
-                    UserUpdateView, MainMemberView)
+                    UserUpdateView, MainMemberView, CodeCreateView)
 
 urlpatterns = [
     url(r'^$', MainMemberView.as_view(), name='user-main'),
@@ -32,4 +32,5 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)$', UserProfileView.as_view(),
         name='other-user-profile'),
     url(r'^code$', CodeUseView.as_view(), name='use-code'),
+    url(r'^code-gen/$', CodeCreateView.as_view(), name='create-code'),
 ]

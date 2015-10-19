@@ -13,18 +13,27 @@
                 <h2>Evenements :</h2>
             </header>
             <p>
-                <ul>
+                <ul class="divided">
                     {% for event in event_list %}
                         <li>
-                            <span class="icon fa-file">
-                                <a href="{{ event.get_absolute_url }}">{{ event.name }}</a>
-                            </span>
+                            <div class="row">
+                                <span class="icon fa-file">
+                                    <a href="{{ event.get_absolute_url }}">{{ event.name }}</a>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <p>
+                                    {{ event.description }}
+                                </p>
+                            </div>
                         </li>
                     {% endfor %}
                 </ul>
             </p>
         </article>
         Ici vous pouvez consulter la liste des {{ event_list | length }}
-        évenement{{ event_list | length | pluralize }} organisés par JDRpoly ainsi que leurs dates.
+        évenement{{ event_list | length | pluralize }} organisé{{ event_list | length | pluralize }}
+        par JDRpoly ainsi que leur{{ event_list | length | pluralize }}
+        date{{ event_list | length | pluralize }}.
     </section>
 {% endblock %}

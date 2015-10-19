@@ -5,10 +5,10 @@
 {% block content %}
     <div class="form">
         <form action="" method="post">
-            <label>Choisisser pour combien de semestre ce code est il valide</label>
+            <label>Créer un nouveau code</label>
             {% csrf_token %}
-            {% form.as_p %}
-                <input type="submit" value="Créer un code" />
+            {{ form.as_p }}
+            <input type="submit" value="Créer un code" />
         </form>
     </div>
 {% endblock %}
