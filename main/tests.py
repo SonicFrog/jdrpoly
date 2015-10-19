@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.test import TestCase, Client
 
-from jdrpoly.tests.utils import randomword
+from jdrpoly.utils import randomword
 
 from random import randint
 

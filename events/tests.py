@@ -2,8 +2,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.test import RequestFactory, Client, TestCase
-from jdrpoly.tests.utils import (AuthenticatedTestCase, randomword,
-                                 randomsentence)
+from jdrpoly.utils import (AuthenticatedTestCase, randomword,
+                           randomsentence)
 
 from random import randint
 

@@ -2,7 +2,7 @@ from django.test import TestCase, RequestFactory
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 
-from jdrpoly.tests.utils import AuthenticatedTestCase, randomword
+from jdrpoly.utils import AuthenticatedTestCase, randomword
 from .models import Code
 from .views import CodeUseForm, CodeUseView, UserUpdateView, SelfProfileView
 
