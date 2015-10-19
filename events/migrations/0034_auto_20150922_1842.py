@@ -43,9 +43,4 @@ class Migration(migrations.Migration):
             field=models.OneToOneField(to=settings.AUTH_USER_MODEL, verbose_name='Créateur', default=0),
             preserve_default=False,
         ),
-        migrations.AddField(
-            model_name='campaign',
-            name='start',
-            field=models.DateField(verbose_name='Début', default=django.utils.timezone.now),
-        ),
     ]

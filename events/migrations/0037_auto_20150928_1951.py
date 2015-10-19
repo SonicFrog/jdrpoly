@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.AddField(
             model_name='campaign',
             name='start',
             field=models.ForeignKey(verbose_name='Evénement', related_name='animations', to='events.Edition'),
