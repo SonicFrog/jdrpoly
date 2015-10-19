@@ -1,0 +1,13 @@
+Salut rôliste en herbe,
+
+Tu viens d'être enregistré en tant que membre sur le site web de JDR-poly.
+
+Voici ton code pour valider ton inscription:
+
+{{ code }}
+
+Rends toi vite sur jdrpoly.ch pour valider ton inscription.
+
+A bientôt,
+
+Le comité JDR-poly
