@@ -18,7 +18,17 @@
         <div class="6u 12u(mobile)">
             <article>
                 <p>
-                    Il y a actuellement {{ edition.participants.count }} joueur{{ edition.participants.count | pluralize }} inscrit{{ edition.participants.count | pluralize }} pour cet événement.
+                    Il y a actuellement {{ edition.participants.count }} joueur{{ edition.participants.count | pluralize }} inscrit{{ edition.participants.count | pluralize }} pour cet événement. <br />
+                    {% if editons.event.member_only and not request.user.profile.is_member %}
+                        <span style="color:red">
+                            Vous devez être membre pour vous inscrire à cet événement !
+                        </span><br />
+                    {% endif %}
+                    {% if  edition.participants.count == edition.max_players %}
+                        <span style="color:red"">
+                            Cet événement est actuellement complet !
+                        </span>
+                    {% endif %}
                 </p>
                 <p>
                     {% if attending %}
