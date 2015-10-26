@@ -34,23 +34,24 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                                 <span>Accueil</span>
                             </a></li>
                             <li>
-                                <a href="{% url 'event-list' %}#main" class="icon fa-cog"><span>Evenements</span></a>
+                                <a href="{% url 'event-list' %}#main" class="icon fa-rebel"><span>Evenements</span></a>
                                 <ul>
+                                    <li><a href="{% url 'event-detail' 3 %}#main">Formation MJ</a></li>
+                                    <li><a href="{% url 'event-detail' 15 %}#main">JDRPoly chez les autres</a></li>
                                     <li><a href="{% url 'event-detail' 5 %}#main">Murder</a></li>
                                     <li><a href="{% url 'event-detail' 1 %}#main">Nocturnes</a></li>
                                     <li><a href="{% url 'event-detail' 2 %}#main">Soirées membres</a></li>
-                                    <li><a href="{% url 'event-detail' 3 %}#main">Formation MJ</a></li>
                                     <li><a href="{% url 'event-detail' 16 %}#main">Students vs. Zombies</a></li>
-                                    <li><a href="{% url 'event-detail' 15 %}#main">JDRPoly chez les autres</a></li>
+
                                 </ul>
                             </li>
                             <li>
-                                <a href="{% url 'gallery-list' %}#main" class="icon fa-cog"><span>Photos</span></a>
+                                <a href="{% url 'gallery-list' %}#main" class="icon fa-photo"><span>Photos</span></a>
                             </li>
                             <li>
-                                <a href="{% url 'comity-list' %}#main" class="icon fa-cog" ><span>Le comité</span></a>
+                                <a href="{% url 'comity-list' %}#main" class="icon fa-hand-spock-o" ><span>Le comité</span></a>
                             <li>
-                                <a href="{% url 'user-main' %}#main" class="icon fa-cog"><span>Espace membre</span></a>
+                                <a href="{% url 'user-main' %}#main" class="icon fa-child"><span>Espace membre</span></a>
                                 <ul>
                                     {% if user.is_staff %}
                                         <li><a href="{% url 'newsletter-send' %}#main">Envoyer une newsletter</a></li>
