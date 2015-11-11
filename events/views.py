@@ -189,3 +189,9 @@ class EditionDetailView(DetailView):
 class RegisterParticipationView(LoginRequiredMixin, UpdateView):
     model = Event
     template_name = 'events/register.html'
+
+
+class HtmlEventList(ListView):
+    model = Event
+    template_name = 'events/menu_event.html'
+    context_object_name = 'event_list'

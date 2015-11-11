@@ -50,6 +50,8 @@ class Edition(models.Model):
     participants = models.ManyToManyField(User, related_name='events',
                                           verbose_name=_("Participants"))
 
+    registration_start = models.DateField(verbose_name=_("Début des inscriptions"))
+
     def __str__(self):
         return "%s du %s" % (self.event.name, self.date.__format__("%d/%m/%y"))
 
@@ -57,6 +59,8 @@ class Edition(models.Model):
         return reverse('edition-detail', kwargs={'pk': self.pk})
 
     def register_user(self, user):
+        if timezone.now().date() < self.registration_start:
+            return False
         if self.event.member_only:
             allowed = user.profile.is_member()
             if not allowed:

@@ -35,7 +35,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                             </a></li>
                             <li>
                                 <a href="{% url 'event-list' %}#main" class="icon fa-rebel"><span>Evenements</span></a>
-                                <ul>
+                                <ul id="event-list">
                                     <li><a href="{% url 'event-detail' 3 %}#main">Formation MJ</a></li>
                                     <li><a href="{% url 'event-detail' 15 %}#main">JDRPoly chez les autres</a></li>
                                     <li><a href="{% url 'event-detail' 5 %}#main">Murder</a></li>
@@ -43,7 +43,6 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                                     <li><a href="{% url 'event-detail' 2 %}#main">Soirées membres</a></li>
                                     <li><a href="{% url 'event-detail' 16 %}#main">Students vs. Zombies</a></li>
                                     <li><a href="{% url 'event-detail' 4 %}">Week-ends jeu de rôle</a></li>
-
                                 </ul>
                             </li>
                             <li>
@@ -51,29 +50,29 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                             </li>
                             <li>
                                 <a href="{% url 'comity-list' %}#main" class="icon fa-hand-spock-o" ><span>Le comité</span></a>
-                            <li>
-                                <a href="{% url 'user-main' %}#main" class="icon fa-child"><span>Espace membre</span></a>
-                                <ul>
-                                    {% if user.is_staff %}
-                                        <li><a href="{% url 'newsletter-send' %}#main">Envoyer une newsletter</a></li>
-                                    {% endif %}
-                                    {% if user.profile.is_member %}
-                                        <!--
-                                        <li><a href="{% url 'propose-theme' %}#main">Proposer une soirée membre</a></li>
-                                        <li><a href="{% url 'propose-campaign' %}#main">Proposer une campagne</a></li>
-                                        -->
-                                    {% endif %}
-                                    {% if user.is_authenticated %}
-                                        <li><a href="{% url 'my-events' %}#main">Mes événements</a></li>
-                                        <li><a href="{% url 'use-code'%}#main">Utiliser un code membre</a></li>
-                                        <li><a href="{% url 'user-profile-view' %}#main">Mon profil</a></li>
-                                        <li><a href="{% url 'logout' %}#main">Déconnexion</a></li>
-                                    {% else %}
-                                        <li><a href="{% url 'user-create' %}#main">Inscription</a></li>
-                                        <li><a href="{% url 'login' %}#main">Connexion</a></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
+                                <li>
+                                    <a href="{% url 'user-main' %}#main" class="icon fa-child"><span>Espace membre</span></a>
+                                    <ul>
+                                        {% if user.is_staff %}
+                                            <li><a href="{% url 'newsletter-send' %}#main">Envoyer une newsletter</a></li>
+                                        {% endif %}
+                                        {% if user.profile.is_member %}
+                                            <!--
+                                            <li><a href="{% url 'propose-theme' %}#main">Proposer une soirée membre</a></li>
+                                            <li><a href="{% url 'propose-campaign' %}#main">Proposer une campagne</a></li>
+                                            -->
+                                        {% endif %}
+                                        {% if user.is_authenticated %}
+                                            <li><a href="{% url 'my-events' %}#main">Mes événements</a></li>
+                                            <li><a href="{% url 'use-code'%}#main">Utiliser un code membre</a></li>
+                                            <li><a href="{% url 'user-profile-view' %}#main">Mon profil</a></li>
+                                            <li><a href="{% url 'logout' %}#main">Déconnexion</a></li>
+                                        {% else %}
+                                            <li><a href="{% url 'user-create' %}#main">Inscription</a></li>
+                                            <li><a href="{% url 'login' %}#main">Connexion</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </li>
                         </ul>
                     </nav>
                 </div>
@@ -163,6 +162,25 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
         <script src="{% static 'assets/js/util.js' %}"></script>
         <!--[if lte IE 8]><script src="{% static 'assets/js/ie/respond.min.js' %}"></script><![endif]-->
         <script src="{% static 'assets/js/main.js' %}"></script>
+
+        <!-- Dirty hack  -->
+        <script type="text/javascript">
+         $(document).ready(function () {
+           $.get("{% url 'event-menu-content' %}", function(data) {
+             $("#event-list").html(data);
+             $('#nav > ul').dropotron({
+               mode: 'fade',
+               noOpenerFade: true,
+               hoverDelay: 150,
+               hideDelay: 350
+             });
+           })
+            .fail(function() {
+              alert("Erreur pendant le chargement des évenements !")
+            });
+         });
+        </script>
+
         <script>
          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
