@@ -28,6 +28,10 @@
                         <span style="color:red"">
                             Cet événement est actuellement complet !
                         </span>
+                    {% elif edition.registration_start > timezone.now %}
+                        <span style="color:red">
+                            Les inscriptions pour cet évenement ouvre le {{ edition.registration_start }}.
+                        </span>
                     {% endif %}
                 </p>
                 <p>
