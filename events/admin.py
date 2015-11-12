@@ -16,7 +16,8 @@ class EventAdmin(admin.ModelAdmin):
 
 
 class EditionAdmin(admin.ModelAdmin):
-    fields = ['date', 'place', 'gallery', 'event', 'max_players']
+    fields = ['date', 'place', 'gallery', 'event', 'max_players',
+              'registration_start']
     list_display = ('event', 'date', 'place')
 
     inlines = [
