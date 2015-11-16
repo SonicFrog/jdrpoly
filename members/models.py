@@ -54,7 +54,7 @@ class Member(models.Model):
     def is_enrolled_in(self, campaign):
         return self in campaign.participants.all()
 
-    def __str__(self):
+    def __unicode__(self):
         return _("Profil utilisateur de %s") % self.user.username
 
     class Meta:
@@ -84,7 +84,7 @@ class Code(models.Model):
     semesters = models.IntegerField(choices=CHOICES,
                                     verbose_name=_("Durée"))
 
-    def __str__(self):
+    def __unicode__(self):
         return _("Code valide pour %s semestre(s)") % self.semesters
 
     @classmethod

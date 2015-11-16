@@ -17,6 +17,9 @@ class Gallery(models.Model):
     date = models.DateTimeField(default=timezone.now,
                                 verbose_name=_("Création"))
 
+    def __unicode__(self):
+        return ""
+
     class Meta:
         verbose_name = _("Gallerie")
         verbose_name_plural = _("Galleries")
@@ -39,6 +42,9 @@ class Picture(models.Model):
                                 related_name='pictures')
     date = models.DateTimeField(default=timezone.now,
                                 verbose_name=_("Mise en ligne"))
+
+    def __unicode__(self):
+        return ""
 
     class Meta:
         verbose_name = _("Photo")

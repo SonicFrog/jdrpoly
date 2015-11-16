@@ -20,7 +20,7 @@ class News(models.Model):
     def get_absolute_url(self):
         return reverse('news-detail', kwargs={'pk': self.pk})
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s par %s" % (self.title, self.author)
 
     class Meta:
@@ -37,7 +37,7 @@ class MainPageSection(models.Model):
     content = models.TextField(verbose_name=_("Contenu"))
     order = models.IntegerField(verbose_name=_("Position"))
 
-    def __str__(self):
+    def __unicode__(self):
         return self.title
 
     class Meta:
@@ -56,7 +56,7 @@ class ComityMember(models.Model):
     description = models.TextField(verbose_name=_("Description du poste"))
     email = models.EmailField(verbose_name=_("Addresse de contact"))
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s %s, %s pour JDRpoly" % (self.first_name, self.last_name,
                                            self.post)
 

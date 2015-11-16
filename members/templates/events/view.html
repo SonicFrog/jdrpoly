@@ -33,15 +33,15 @@
         <section>
             <h2>Prochaines dates :</h2>
             {% if editions %}
-            <ul>
-                {% for edition in editions %}
-                    <li>
-                        <a href="{% url 'edition-detail' edition.pk %}">{{ edition.date }} ({{edition.place}})</a>
-                    </li>
-                {% endfor %}
-            </ul>
+                <ul>
+                    {% for edition in editions %}
+                        <li>
+                            <a href="{% url 'edition-detail' edition.pk %}">{{ edition.date }} ({{edition.place}})</a>
+                        </li>
+                    {% endfor %}
+                </ul>
             {% else %}
-            Aucune date prévue pour cet évenement.
+                Aucune date prévue pour cet évenement.
             {% endif %}
         </section>
     </div>

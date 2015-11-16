@@ -23,7 +23,7 @@ class Event(models.Model):
     def get_absolute_url(self):
         return reverse('event-detail', kwargs={'pk': self.pk})
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
     class Meta:
@@ -52,7 +52,7 @@ class Edition(models.Model):
 
     registration_start = models.DateField(verbose_name=_("Début des inscriptions"))
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s du %s" % (self.event.name, self.date.__format__("%d/%m/%y"))
 
     def get_absolute_url(self):
@@ -102,7 +102,7 @@ class Campaign(models.Model):
 
     start.queryset = Edition.objects.all().filter(date__gt=timezone.now())
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s à la %s" % (self.name, self.start)
 
     def register_user(self, user):

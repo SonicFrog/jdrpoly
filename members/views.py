@@ -3,9 +3,6 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic import (DetailView, CreateView, FormView,
                                   View, UpdateView, TemplateView)
-from django.forms import (Form, CharField, ChoiceField, EmailField,
-                          RadioSelect)
-
 from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse_lazy
@@ -16,6 +13,7 @@ from django.template.loader import get_template
 from django.utils.decorators import method_decorator
 
 from .models import Member, Code, user_is_staff
+from .forms import CodeCreationForm, CodeUseForm
 
 
 def user_is_member_decorator(user):
@@ -27,24 +25,6 @@ class LoginRequiredMixin(object):
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
         return login_required(view)
-
-
-class CodeCreationForm(Form):
-    email = EmailField()
-    semesters = ChoiceField(choices=Code.CHOICES)
-
-
-class CodeUseForm(Form):
-    content = CharField(max_length=30, label=False)
-
-    def is_valid(self):
-        if not super(CodeUseForm, self).is_valid():
-            return False
-        try:
-            Code.objects.get(content=self.cleaned_data['content'])
-        except:
-            return False
-        return True
 
 
 class MainMemberView(LoginRequiredMixin, TemplateView):

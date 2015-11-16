@@ -4,12 +4,13 @@ from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.core.mail import send_mail
 from django.shortcuts import HttpResponseRedirect
-from django.forms import Form, ModelForm, CharField, Textarea, TextInput
 from django.views.generic import (DetailView, ListView, UpdateView, FormView,
                                   CreateView, DeleteView)
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
 
+import datetime
+
+from .forms import EventPropositionForm, CampaignCreateForm
 from .models import Event, Edition, Campaign
 from members.views import LoginRequiredMixin
 
@@ -22,25 +23,6 @@ def redirect_to_edition(pk):
 def redirect_to_campaign(pk):
     return HttpResponseRedirect(reverse_lazy('campaign-detail',
                                              kwargs={'pk': pk}))
-
-
-class CampaignCreateForm(ModelForm):
-    name = CharField(widget=TextInput)
-
-    def is_valid(self):
-        if not super(CampaignCreateForm, self).is_valid():
-            return False
-        out = True
-        if not self.cleaned_data['max_players'] > 0:
-            self._errors["max_players"] = (
-                'Votre campagne doit avoir un nombre positif de joueurs !'
-            )
-            out = False
-        return out
-
-    class Meta:
-        model = Campaign
-        fields = ['name', 'description', 'max_players', 'start', ]
 
 
 class CampaignToggleEnrollView(LoginRequiredMixin, UpdateView):
@@ -91,27 +73,6 @@ class CampaignListView(LoginRequiredMixin, ListView):
         return cset.filter(open_for_registration=True).order_by('-start')
 
 
-class EventPropositionForm(Form):
-    name = CharField(max_length=100, label=False,
-                     widget=TextInput(attrs={'placeholder':
-                                             _('Nom de l\'évenement')}))
-    description = CharField(widget=Textarea(attrs={'placeholder':
-                                                   _('Description')}),
-                            label=False,)
-
-    def __init__(self, user, *args, **kwargs):
-        super(EventPropositionForm, self).__init__(*args, **kwargs)
-        self.user = user
-
-    def is_valid(self):
-        if not super(EventPropositionForm, self).is_valid():
-            return False
-        if not self.user.profile.is_member():
-            self._errors = ['Vous ne pouvez pas proposer de soirées membres sans être membre']
-            return False
-        return True
-
-
 class EventPropositionView(FormView, LoginRequiredMixin):
     form_class = EventPropositionForm
     template_name = 'events/propose.html'
@@ -160,7 +121,8 @@ class EventDetailView(DetailView):
         context = super(EventDetailView, self).get_context_data(*args,
                                                                 **kwargs)
         context['editions'] = kwargs['object'].editions.all()
-        context['editions'] = context['editions'].filter(date__gt=timezone.now())
+        valid_date = timezone.now() - datetime.timedelta(1)
+        context['editions'] = context['editions'].filter(date__gt=valid_date)
         context['editions'] = context['editions'].order_by('-date')[:5].reverse()
         return context
 
