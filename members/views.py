@@ -11,13 +11,14 @@ from django.contrib.auth.forms import (UserCreationForm, PasswordChangeForm)
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
 
 from .models import Member, Code, user_is_staff
 from .forms import CodeCreationForm, CodeUseForm
 
 
 def user_is_member_decorator(user):
-    return user.is_member()
+    return user.profile.is_member()
 
 
 class LoginRequiredMixin(object):
@@ -25,6 +26,12 @@ class LoginRequiredMixin(object):
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
         return login_required(view)
+
+
+class MembershipRequiredMixin(LoginRequiredMixin):
+    @method_decorator(user_passes_test(user_is_member_decorator))
+    def dispatch(self, *args, **kwargs):
+        return super(MembershipRequiredMixin, self).dispatch(*args, **kwargs)
 
 
 class MainMemberView(LoginRequiredMixin, TemplateView):
@@ -48,7 +55,7 @@ class PasswordChangeOkView(LoginRequiredMixin, View):
 
 class UserProfileView(LoginRequiredMixin, DetailView):
     """
-    Vieow pour voir le profil d'un utilisateur arbitraire
+    View pour voir le profil d'un utilisateur arbitraire
     """
     model = User
     template_name = 'members/view.html'
@@ -107,7 +114,7 @@ class CodeCreateView(LoginRequiredMixin, FormView):
         return super(CodeCreateView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
-        title = "Inscription JDR-poly"
+        title = _("Inscription JDR-poly")
         to = form.cleaned_data['email']
         code = Code.generate(form.cleaned_data['semesters'])
         template = get_template('members/code_mail.txt')
