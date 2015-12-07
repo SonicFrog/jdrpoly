@@ -20,6 +20,9 @@
                     Cet évenement est prévu pour {{ campaign.start }}
                 </div>
                 <div class="12u 24u(mobile)">
+                    Organisé par <a href="{{ campaign.owner.profile.get_absolute_url }}">{{ campaign.owner }}</a>
+                </div>
+                <div class="12u 24u(mobile)">
                     <strong>{{ campaign.participants.all | length }}</strong>/{{ campaign.max_players }}
                     joueur{{campaign.participants | length | pluralize}}
                 </div>
