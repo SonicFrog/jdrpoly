@@ -110,7 +110,7 @@ class Campaign(models.Model):
         if allowed:
             if (
                     self.participants.count() < self.max_players and
-                    self.open_for_registration
+                    self.open_for_registration and user is not self.owner
             ):
                 self.participants.add(user)
                 self.save()
