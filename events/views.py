@@ -3,16 +3,16 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.core.mail import send_mail
-from django.shortcuts import HttpResponseRedirect
+from django.shortcuts import HttpResponseRedirect, Http404
 from django.views.generic import (DetailView, ListView, UpdateView, FormView,
-                                  CreateView, DeleteView)
+                                  CreateView, DeleteView, UpdateView)
 from django.utils import timezone
 
 import datetime
 
 from .forms import EventPropositionForm, CampaignCreateForm
 from .models import Event, Edition, Campaign
-from members.views import LoginRequiredMixin
+from members.views import LoginRequiredMixin, MembershipRequiredMixin
 
 
 def redirect_to_edition(pk):
@@ -37,17 +37,19 @@ class CampaignToggleEnrollView(LoginRequiredMixin, UpdateView):
         return redirect_to_campaign(camp.pk)
 
 
-class CampaignDeleteView(LoginRequiredMixin, DeleteView):
+class CampaignDeleteView(MembershipRequiredMixin, DeleteView):
     model = Campaign
     template_name = 'events/campaign_delete.html'
     success_url = reverse_lazy('campaign-list')
 
     def form_valid(self, form):
         if self.get_object().owner is self.request.user:
-            super(CampaignDeleteView, self).form_valid(form)
+            return super(CampaignDeleteView, self).form_valid(form)
+        else:
+            return Http404()
 
 
-class CampaignPropositionView(LoginRequiredMixin, CreateView):
+class CampaignPropositionView(MembershipRequiredMixin, CreateView):
     model = Campaign
     template_name = 'events/new_campaign.html'
     form_class = CampaignCreateForm
@@ -57,13 +59,38 @@ class CampaignPropositionView(LoginRequiredMixin, CreateView):
         return super(CampaignPropositionView, self).form_valid(form)
 
 
-class CampaignDetailView(LoginRequiredMixin, DetailView):
+class MyCampaignView(MembershipRequiredMixin, ListView):
+    model = Campaign
+    template_name = 'events/campaign_list.html'
+
+    def get_queryset(self):
+        user = self.request.user
+        all_runs = Campaign.objects.filter(running=True)
+        participating = all_runs.filter(participants__contains=user)
+        organising = all_runs.filter(owner=user)
+        return participating | organising
+
+
+class CampaignUpdateView(MembershipRequiredMixin, UpdateView):
+    model = Campaign
+    template_name = 'events/campaign_edit.html'
+
+    def post(self, request, *args, **kwargs):
+        if request.user == self.get_object().owner:
+            return super(CampaignUpdateView, self).post(request, *args, **kwargs)
+        return Http404()
+
+    def get_success_url(self):
+        return reverse_lazy('campaign-detail', kwargs={'pk': self._id})
+
+
+class CampaignDetailView(MembershipRequiredMixin, DetailView):
     model = Campaign
     template_name = 'events/campaign_detail.html'
     context_object_name = 'campaign'
 
 
-class CampaignListView(LoginRequiredMixin, ListView):
+class CampaignListView(MembershipRequiredMixin, ListView):
     model = Campaign
     template_name = 'events/campaign_list.html'
     context_object_name = 'campaign_list'
@@ -154,6 +181,9 @@ class RegisterParticipationView(LoginRequiredMixin, UpdateView):
 
 
 class HtmlEventList(ListView):
+    """
+    View for dynamic event menu generation
+    """
     model = Event
     template_name = 'events/menu_event.html'
     context_object_name = 'event_list'
