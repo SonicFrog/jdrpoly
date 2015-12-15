@@ -2,6 +2,8 @@
 
 {% extends "base.html" %}
 
+{% load bbcode %}
+
 {% block title %}
     {{ campaign.name }}
 {% endblock %}
@@ -14,7 +16,7 @@
             </header>
             <div class="row 50%">
                 <div class="12u 24u(mobile)">
-                    {{ campaign.description }}
+                    {% bbcode campaign.description %}
                 </div>
                 <div class="12u 24u(mobile)">
                     Cet évenement est prévu pour {{ campaign.start }}
