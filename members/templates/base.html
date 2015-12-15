@@ -59,7 +59,7 @@ Free for personal and commercial use under the CCA 3.0 license (html5up.net/lice
                                         {% if user.profile.is_member %}
                                             <li><a href="{% url 'propose-campaign' %}#main">Proposer une campagne</a></li>
                                             <li><a href="{% url 'campaign-list' %}#main">Campagnes actives</a></li>
-                                            <li><a href="{% url 'my-campaign' %}#main">Mes campagnes</a></li>
+                                            {# <li><a href="{% url 'my-campaign' %}#main">Mes campagnes</a></li>#}
                                         {% endif %}
                                         {% if user.is_authenticated %}
                                             <li><a href="{% url 'my-events' %}#main">Mes événements</a></li>
