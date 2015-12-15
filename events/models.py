@@ -58,6 +58,9 @@ class Edition(models.Model):
     def get_absolute_url(self):
         return reverse('edition-detail', kwargs={'pk': self.pk})
 
+    def registration_open(self):
+        return self.registration_start > timezone.now().date()
+
     def register_user(self, user):
         if timezone.now().date() < self.registration_start:
             return False

@@ -5,7 +5,7 @@ from .views import (EventListView, EventDetailView, RegisterEditionView,
                     EventPropositionView, CampaignPropositionView,
                     CampaignDetailView, CampaignListView,
                     CampaignToggleEnrollView, CampaignDeleteView,
-                    HtmlEventList)
+                    HtmlEventList, MyCampaignView)
 
 
 urlpatterns = [
@@ -22,6 +22,8 @@ urlpatterns = [
 
     url(r'^my/$', AttendingView.as_view(), name='my-events'),
     url(r'^propose/$', EventPropositionView.as_view(), name='propose-theme'),
+
+    # Campaign related views
     url(r'^campaign/$', CampaignListView.as_view(), name='campaign-list'),
     url(r'^campaign/new$', CampaignPropositionView.as_view(),
         name='propose-campaign'),
@@ -31,6 +33,7 @@ urlpatterns = [
         name='campaign-enroll'),
     url(r'^campaign/(?P<pk>\d+)/delete$', CampaignDeleteView.as_view(),
         name='campaign-delete'),
+    url(r'^campaign/mine$', MyCampaignView.as_view(), name='my-campaigns'),
 
     url(r'^menu/$', HtmlEventList.as_view(), name='event-menu-content'),
 ]
