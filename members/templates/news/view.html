@@ -10,6 +10,6 @@
             <h2>{{ news.title }}</h2>
             <h3>par <a href="{{ news.author.profile.get_absolute_url }}">{{ news.author }}</a> le {{ news.date }}</h3>
         </header>
-        {{ news.content | linebreaksbr }}
+        {% bbcode news.content | linebreaksbr %}
     </article>
 {% endblock %}
