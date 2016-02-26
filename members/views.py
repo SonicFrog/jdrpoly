@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import (UserCreationForm, PasswordChangeForm)
+from django.contrib.admin.views.decorators import staff_member_required
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.decorators import method_decorator
@@ -26,6 +27,12 @@ class LoginRequiredMixin(object):
     def as_view(cls, **initkwargs):
         view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
         return login_required(view)
+
+
+class StaffRequiredMixin(object):
+    @staff_member_required
+    def dispatch(self, *args, **kwargs):
+        return super(StaffRequiredMixin, self).dispatch(*args, **kwargs)
 
 
 class MembershipRequiredMixin(LoginRequiredMixin):
