@@ -56,4 +56,4 @@ class Player(models.Model):
         return self.token_spent
 
     class Meta:
-        ordering = ('sciper', 'name')
+        ordering = ('contaminations',)
