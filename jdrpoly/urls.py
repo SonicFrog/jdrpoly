@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^events/', include('events.urls')),
     url(r'^members/', include('members.urls')),
     url(r'^pictures/', include('pictures.urls')),
+    url(r'^svz/', include('svz.urls')),
 ]
