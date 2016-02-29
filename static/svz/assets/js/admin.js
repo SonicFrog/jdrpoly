@@ -2,9 +2,9 @@ $( document ).ready(function() {
     $( "#search-form" ).submit(function( event ) {
         var name = $("#search-form-name").val();
         var sciper = $("#search-form-sciper").val();
-        $.get("/svz/json/find/"+sciper},
+        $.get("/svz/json/find/"+sciper,
                function (data) {
-                   alert("" + data);
+                   alert("" + data.name);
                })
             .fail( function () {
                 alert("Impossible de trouver le joueur " + 
