@@ -2482,7 +2482,7 @@
 		input[type="radio"]:checked + label:before {
 			background: #ffffff;
 			border-color: #ffffff;
-			color: #b74e91;
+			color: #787746;
 			content: '\f00c';
 		}
 
@@ -3249,7 +3249,7 @@
 			}
 
 		.wrapper.alt {
-			background-color: #261c3e;
+			background-color: #787746;
 		}
 
 		.wrapper.style1 {
@@ -3380,7 +3380,7 @@
 		display: -webkit-flex;
 		display: -ms-flex;
 		display: flex;
-		background-color: #5e42a6;
+		background-color: #787746;
 		cursor: default;
 		padding: 1.75em 2em;
 	}
@@ -3867,7 +3867,7 @@
 
 						#sidebar nav a:after {
 							background-image: none;
-							background-color: #b74e91;
+							background-color: #787746;
 						}
 
 		}
