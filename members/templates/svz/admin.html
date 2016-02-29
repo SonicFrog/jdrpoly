@@ -1,3 +1,6 @@
+{# -*- engine:django -*- #}
+
+{% load staticfiles %}
 <!DOCTYPE HTML>
 <!--
     Hyperspace by HTML5 UP
@@ -9,10 +12,10 @@
     <title>SvZ 16 - Admin</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-    <link rel="stylesheet" href="assets/css/main.css" />
-    <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-    <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+    <!--[if lte IE 8]><script src="{% static 'svz/assets/js/ie/html5shiv.js' %}"></script><![endif]-->
+    <link rel="stylesheet" href="{% static 'svz/assets/css/main.css' %}" />
+    <!--[if lte IE 9]><link rel="stylesheet" href="{% static 'svz/assets/css/ie9.css' %}" /><![endif]-->
+    <!--[if lte IE 8]><link rel="stylesheet" href="{% static 'svz/assets/css/ie8.css' %}" /><![endif]-->
   </head>
   <body>
 
@@ -36,55 +39,55 @@
           <h1 class="major">Administration</h1>
 
           <!-- Table --
-          <section>
-            <h2>Table</h2>
+               <section>
+                 <h2>Table</h2>
 
-            <h3>Alternate</h3>
-            <div class="table-wrapper">
-              <table class="alt">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Item One</td>
-                    <td>Ante turpis integer aliquet porttitor.</td>
-                    <td>29.99</td>
-                  </tr>
-                  <tr>
-                    <td>Item Two</td>
-                    <td>Vis ac commodo adipiscing arcu aliquet.</td>
-                    <td>19.99</td>
-                  </tr>
-                  <tr>
-                    <td>Item Three</td>
-                    <td> Morbi faucibus arcu accumsan lorem.</td>
-                    <td>29.99</td>
-                  </tr>
-                  <tr>
-                    <td>Item Four</td>
-                    <td>Vitae integer tempus condimentum.</td>
-                    <td>19.99</td>
-                  </tr>
-                  <tr>
-                    <td>Item Five</td>
-                    <td>Ante turpis integer aliquet porttitor.</td>
-                    <td>29.99</td>
-                  </tr>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td colspan="2"></td>
-                    <td>100.00</td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </section> -->
+                 <h3>Alternate</h3>
+                 <div class="table-wrapper">
+                   <table class="alt">
+                     <thead>
+                       <tr>
+                         <th>Name</th>
+                         <th>Description</th>
+                         <th>Price</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       <tr>
+                         <td>Item One</td>
+                         <td>Ante turpis integer aliquet porttitor.</td>
+                         <td>29.99</td>
+                       </tr>
+                       <tr>
+                         <td>Item Two</td>
+                         <td>Vis ac commodo adipiscing arcu aliquet.</td>
+                         <td>19.99</td>
+                       </tr>
+                       <tr>
+                         <td>Item Three</td>
+                         <td> Morbi faucibus arcu accumsan lorem.</td>
+                         <td>29.99</td>
+                       </tr>
+                       <tr>
+                         <td>Item Four</td>
+                         <td>Vitae integer tempus condimentum.</td>
+                         <td>19.99</td>
+                       </tr>
+                       <tr>
+                         <td>Item Five</td>
+                         <td>Ante turpis integer aliquet porttitor.</td>
+                         <td>29.99</td>
+                       </tr>
+                     </tbody>
+                     <tfoot>
+                       <tr>
+                         <td colspan="2"></td>
+                         <td>100.00</td>
+                       </tr>
+                     </tfoot>
+                   </table>
+                 </div>
+               </section> -->
 
           <!-- Form -->
           <section>
@@ -135,51 +138,51 @@
                 </div>
               </div>
             </form>
-                <div class="table-wrapper">
-                  <h2>Détails</h2>
-                  <table class="alt">
-                    <thead>
-                      <tr>
-                        <th>Quoi</th>
-                        <th>Combien</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Jetons dépensés</td>
-                        <td>99</td>
-                      </tr>
-                      <tr>
-                        <td>Joueurs contaminés</td>
-                        <td>42</td>
-                      </tr>
-                      <tr>
-                        <td>Récompenses de quête</td>
-                        <td>126</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+            <div class="table-wrapper">
+              <h2>Détails</h2>
+              <table class="alt">
+                <thead>
+                  <tr>
+                    <th>Quoi</th>
+                    <th>Combien</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Jetons dépensés</td>
+                    <td>99</td>
+                  </tr>
+                  <tr>
+                    <td>Joueurs contaminés</td>
+                    <td>42</td>
+                  </tr>
+                  <tr>
+                    <td>Récompenses de quête</td>
+                    <td>126</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </section>
-    </div>
+        </div>
 
-    <!-- Footer -->
-    <footer id="footer" class="wrapper alt">
-      <div class="inner">
-        <ul class="menu">
-          <li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-        </ul>
-      </div>
-    </footer>
+        <!-- Footer -->
+        <footer id="footer" class="wrapper alt">
+          <div class="inner">
+            <ul class="menu">
+              <li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+            </ul>
+          </div>
+        </footer>
 
-    <!-- Scripts -->
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/jquery.scrollex.min.js"></script>
-    <script src="assets/js/jquery.scrolly.min.js"></script>
-    <script src="assets/js/skel.min.js"></script>
-    <script src="assets/js/util.js"></script>
-    <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-    <script src="assets/js/main.js"></script>
+        <!-- Scripts -->
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/jquery.scrollex.min.js"></script>
+        <script src="assets/js/jquery.scrolly.min.js"></script>
+        <script src="assets/js/skel.min.js"></script>
+        <script src="assets/js/util.js"></script>
+        <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+        <script src="assets/js/main.js"></script>
 
   </body>
 </html>
