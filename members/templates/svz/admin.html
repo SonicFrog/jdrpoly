@@ -92,13 +92,14 @@
           <!-- Form -->
           <section>
             <h2>Trouver un joueur</h2>
-            <form method="post" action="#">
+            <form id="search-form" method="post" action="#">
+              {% csrf_token %}
               <div class="row uniform">
                 <div class="6u 12u$(xsmall)">
-                  <input type="text" name="demo-name" id="demo-name" value="" placeholder="Nom" />
+                  <input type="text" name="demo-name" id="search-form-name" value="" placeholder="Nom" />
                 </div>
                 <div class="6u$ 12u$(xsmall)">
-                  <input type="text" name="playerid" id="demo-email" value="" placeholder="SCIPER" />
+                  <input type="text" name="playerid" id="search-form-sciper" value="" placeholder="SCIPER" />
                 </div>
                 <div class="12u$">
                   <ul class="actions">
@@ -110,7 +111,8 @@
             </form>
 
             <h2>Joueur</h2>
-            <form method="post" action="#">
+            <form id="update-form" method="post" action="#">
+              {% csrf_token %}
               <div class="row uniform">
                 <div class="5u 12u$(xsmall)">
                   <input type="text" name="demo-name" id="demo-name" value="" placeholder="Nom" />
