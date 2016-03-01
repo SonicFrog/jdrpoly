@@ -1,14 +1,19 @@
 # coding: utf-8
 
+from django.db import IntegrityError
 from django.views.generic import TemplateView
-from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import get_object_or_404
+from django.utils.translation import ugettext_lazy as _
 
 from members.views import StaffRequiredMixin, LoginRequiredMixin
 from .models import Player
 
-from rest_framework import serializers, viewsets, views
-from rest_framework.generics import UpdateAPIView, RetrieveAPIView
+from rest_framework import serializers, viewsets, views, status
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
+from rest_framework.generics import (UpdateAPIView, RetrieveAPIView,
+                                     CreateAPIView)
 
 
 def get_player(pk):
@@ -41,9 +46,23 @@ class PlayerSerializer(serializers.ModelSerializer):
         fields = ('sciper', 'name', 'contaminations', 'zombie', 'token_spent')
 
 
+class PlayerCreateView(CreateAPIView):
+    model = Player
+    authentication_classes = (SessionAuthentication, )
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return super(PlayerCreateView, self).post(request, *args, **kwargs)
+        except IntegrityError:
+            content = {"detail": _("Cet sciper existe déjà !")}
+            return Response(content, status=status.HTTP_409_CONFLICT)
+
+
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
+    authentication_classes = (SessionAuthentication, )
+    permission_classes = (IsAdminUser, )
 
 
 class AdminView(LoginRequiredMixin, TemplateView):
@@ -61,6 +80,10 @@ class ContaminateView(StaffRequiredMixin, views.APIView):
     """
     View used to contaminate a player and return Json values
     """
+
+    authentication_classes = (SessionAuthentication, )
+    permission_classes = (IsAdminUser, )
+
     def post(self, request, *args, **kwargs):
         pk1 = request.POST.get('player')
         pk2 = request.POST.get('target')
@@ -78,6 +101,9 @@ class TokenView(StaffRequiredMixin, UpdateAPIView):
     """
     model = Player
 
+    authentication_classes = (SessionAuthentication, )
+    permission_classes = (IsAdminUser, )
+
     def perform_update(self, serializer):
         old_player = self.get_object()
         new_player = serializer.save()
@@ -90,6 +116,9 @@ class PlayerFindView(MultipleFieldLookupMixin, RetrieveAPIView):
     lookup_fields = ('sciper', )
 
     serializer_class = PlayerSerializer
+
+    authentication_classes = (SessionAuthentication, )
+    permission_classes = (IsAdminUser, )
 
     def get_queryset(self):
         return Player.objects.all()
