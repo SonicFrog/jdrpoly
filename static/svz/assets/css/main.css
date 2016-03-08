@@ -1721,10 +1721,10 @@
 		}
 
 			h1.major:after {
-				background-image: -moz-linear-gradient(to right, #9D5A4D, #C03000);
-				background-image: -webkit-linear-gradient(to right, #9D5A4D, #C03000);
-				background-image: -ms-linear-gradient(to right, #9D5A4D, #C03000);
-				background-image: linear-gradient(to right, #9D5A4D, #C03000);
+				background-image: -moz-linear-gradient(to right, #B4AF91, #787746);
+				background-image: -webkit-linear-gradient(to right, #B4AF91, #787746);
+				background-image: -ms-linear-gradient(to right, #B4AF91, #787746);
+				background-image: linear-gradient(to right, #B4AF91, #787746);
 				-moz-transition: max-width 0.2s ease;
 				-webkit-transition: max-width 0.2s ease;
 				-ms-transition: max-width 0.2s ease;
@@ -3775,10 +3775,10 @@
 			}
 
 			#sidebar nav a:after {
-				background-image: -moz-linear-gradient(to right, #9D5A4D, #C03000);
-				background-image: -webkit-linear-gradient(to right, #9D5A4D, #C03000);
-				background-image: -ms-linear-gradient(to right, #9D5A4D, #C03000);
-				background-image: linear-gradient(to right, #9D5A4D, #C03000);
+				background-image: -moz-linear-gradient(to right, #B4AF91, #787746);
+				background-image: -webkit-linear-gradient(to right, #B4AF91, #787746);
+				background-image: -ms-linear-gradient(to right, #B4AF91, #787746);
+				background-image: linear-gradient(to right, #B4AF91, #787746);
 				-moz-transition: max-width 0.2s ease;
 				-webkit-transition: max-width 0.2s ease;
 				-ms-transition: max-width 0.2s ease;
