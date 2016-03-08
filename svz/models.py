@@ -4,12 +4,13 @@ from django.db import models
 
 
 class Player(models.Model):
-    sciper = models.IntegerField(default=0, unique=True)
+    sciper = models.IntegerField(default=0, primary_key=True)
     name = models.TextField(max_length=200)
     contaminations = models.IntegerField(default=0)
     token_spent = models.IntegerField(default=0)
     zombie = models.BooleanField(default=False)
     revive_count = models.IntegerField(default=0)
+    email = models.EmailField(max_length=300, null=True)
 
     @classmethod
     def generate_sciper():

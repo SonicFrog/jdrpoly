@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage, send_mail
 from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils import timezone
@@ -75,7 +75,6 @@ class NewsletterForm(Form):
     member_only = NullBooleanField()
 
     def send_mail(self):
-        to = []
         member_only = self.cleaned_data['member_only']
 
         userset = (User.objects.filter(profile__until__gt=timezone.now())
@@ -84,11 +83,12 @@ class NewsletterForm(Form):
 
         userset = userset.filter(profile__wants_newsletter__exact=True)
 
-        to = [user.email for user in userset]
+        bcc = [user.email for user in userset]
         subject = self.cleaned_data['subject']
         content = self.cleaned_data['content']
-        send_mail(subject, content, settings.CONTACT_EMAIL, to)
-        return to
+        message = EmailMessage(subject=subject, body=content, bcc=bcc,
+                               to=[settings.DEFAULT_FROM_EMAIL])
+        message.send()
 
 
 class NewsletterSendView(LoginRequiredMixin, FormView):
