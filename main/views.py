@@ -34,12 +34,10 @@ class MainPageView(ListView):
     def get_context_data(self, *args, **kwargs):
         context = super(MainPageView, self).get_context_data(*args, **kwargs)
         evt_count = Event.objects.all().count() - 1
-        if evt_count is -1:
-            pk = 1
-        else:
-            pk = randint(1, evt_count)
-        rng = (pk, pk + 1)
-        context['notes'] = Event.objects.filter(pk__in=rng)
+        if evt_count is not -1:
+            pk = randint(0, evt_count)
+            rng = (pk, pk + 1)
+            context['notes'] = Event.objects.filter(pk__in=rng)
         context['latest_news'] = News.objects.order_by('-date')[:5]
         return context
 
