@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, DetailView, FormView, TemplateView
 
 from django.forms import (Form, CharField, EmailField, Textarea, TextInput,
-                          NullBooleanField)
+                          BooleanField)
 
 from random import randint
 from .models import News, MainPageSection, ComityMember
