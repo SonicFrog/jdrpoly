@@ -15,6 +15,5 @@ urlpatterns = [
     url(r'^json/contaminate$', ContaminateView.as_view(),
         name='svz-contaminate'),
     url(r'^json/token$', TokenView.as_view(), name='svz-token'),
-    url(r'^json/find/(?P<sciper>\d+)$',
-        PlayerFindView.as_view(), name='svz-find'),
+    url(r'^json/find/(?P<sciper>\d+)$', PlayerFindView.as_view(), name='svz-find'),
 ] + router.urls

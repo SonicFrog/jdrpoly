@@ -46,15 +46,31 @@ class PlayerSerializer(serializers.ModelSerializer):
         fields = ('sciper', 'name', 'contaminations', 'zombie', 'token_spent')
 
 
+class PlayerTokenSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        return Player(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.token_spent += validated_data.get('token_spent', 0)
+        instance.zombie = validated_data.get('zombify', instance.zombie)
+        instance.save()
+        return instance
+
+    class Meta:
+        model = Player
+        fields = ('sciper', 'token_spent', 'zombie')
+
+
 class PlayerCreateView(CreateAPIView):
     model = Player
     authentication_classes = (SessionAuthentication, )
+    permission_classes = (IsAdminUser, )
 
     def post(self, request, *args, **kwargs):
         try:
             return super(PlayerCreateView, self).post(request, *args, **kwargs)
         except IntegrityError:
-            content = {"detail": _("Cet sciper existe déjà !")}
+            content = {"detail": _("Ce sciper existe déjà !")}
             return Response(content, status=status.HTTP_409_CONFLICT)
 
 
