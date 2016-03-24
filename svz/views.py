@@ -92,41 +92,6 @@ class InfoView(TemplateView):
     template_name = 'svz/index.html'
 
 
-class ContaminateView(StaffRequiredMixin, views.APIView):
-    """
-    View used to contaminate a player and return Json values
-    """
-
-    authentication_classes = (SessionAuthentication, )
-    permission_classes = (IsAdminUser, )
-
-    def post(self, request, *args, **kwargs):
-        pk1 = request.POST.get('player')
-        pk2 = request.POST.get('target')
-        contaminator = get_player(pk1)
-        contaminated = get_player(pk2)
-
-        if not contaminator.has_contaminated(contaminated):
-            raise ValueError("")
-        return super(ContaminateView, self).post(request, *args, **kwargs)
-
-
-class TokenView(StaffRequiredMixin, UpdateAPIView):
-    """
-    View used with AJAX to spend token for a player
-    """
-    model = Player
-
-    authentication_classes = (SessionAuthentication, )
-    permission_classes = (IsAdminUser, )
-
-    def perform_update(self, serializer):
-        old_player = self.get_object()
-        new_player = serializer.save()
-        old_player.spend_token(new_player.token)
-        old_player.save()
-
-
 class PlayerFindView(MultipleFieldLookupMixin, RetrieveAPIView):
     model = Player
     lookup_fields = ('sciper', )
