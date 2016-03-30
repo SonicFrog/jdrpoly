@@ -1,4 +1,13 @@
+var current_player;
+
 $( document ).ready(function() {
+    $.ajaxSetup({
+        beforeSend: function(xhr, setting){
+            var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    });
+
     $( "#search-form" ).submit(function( event ) {
         var name = $("#search-form-name").val();
         var sciper = $("#search-form-sciper").val();
@@ -6,28 +15,39 @@ $( document ).ready(function() {
         fetch_player(sciper, update_form);
 
         event.preventDefault();
-
-        // $.get("/svz/json/find/"+sciper,
-        //        function (data) {
-        //            alert("" + data.name);
-        //        })
-        //     .fail( function () {
-        //         alert("Impossible de trouver le joueur " +
-        //               name + " " + sciper + ".");
-        //     });
-
     });
 
     $( "#update-form" ).submit(function( event ) {
-        alert("submit update form");
+        var p = read_current_player();
+
+        update_player(p.sciper, p.name, p.token_spent, p.zombie, p.contaminations);
+        update_form(p);
+
         event.preventDefault();
     });
 });
+
+
+function display_error(message) {
+    var err = $("#error-display");
+    err.html(message);
+    err.show();
+}
+
+function display_raw_error(response) {
+    display_error(response.detail);
+}
+
+function hide_error() {
+    $("#error-display").hide();
+}
 
 /**
  * Fills the given form with the given player info
  **/
 function update_form(player) {
+    current_player = player;
+
     $("#demo-name").val(player.name);
     $("#demo-sciper").val(player.sciper);
     $("#token-spent").html(player.token_spent);
@@ -41,17 +61,19 @@ function update_form(player) {
  * @param token The number of token spent
  * @param contaminate a boolean indicating zombie status
  **/
-function update_player(sciper, token, zombie, contaminations) {
+function update_player(sciper, name, token, zombie, contaminations) {
     //URL is hardcoded for now but will be generated using django templates
     var url = "/svz/json/players/" +sciper + "/";
 
     $.ajax({
         url: url,
+        succes: update_form,
         data: {
             "token_spent": token,
             "zombie": zombie,
             "contaminations": contaminations
         },
+        error: display_raw_error,
         method: "PATCH"
     });
 }
@@ -81,6 +103,32 @@ function find_player(sciper, name, callback, notfound, error) {
             404: notfound
         }
     });
+}
+
+function read_current_player() {
+    var sciper = $("#demo-sciper").val();
+    var name = $("#demo-name").val();
+    var tokens = parseInt($("#prefill-spenttoken").val());
+    var cont = parseInt($("#prefill-newcontamination").val());
+    var zombie = $("#zombie-status").prop('checked');
+
+    alert("adding " + tokens);
+
+    if (isNaN(cont))
+        cont = 0;
+    if (isNaN(tokens))
+        tokens = 0;
+
+    var new_cont = parseInt(current_player.contaminations) + cont;
+    var new_token = parseInt(current_player.token_spent) + tokens;
+
+    return {
+        "sciper": sciper,
+        "name": name,
+        "zombie": zombie,
+        "contaminations": new_cont,
+        "token_spent": new_token
+    };
 }
 
 /**

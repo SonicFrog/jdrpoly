@@ -19,6 +19,9 @@
   </head>
   <body>
 
+      {# Ensure csrf token is generated for this #}
+      {% csrf_token %}
+
     <!-- Header -->
     <header id="header">
       <a href="index.html" class="title">Administration SvZ</a>
@@ -37,57 +40,6 @@
       <section id="main" class="wrapper">
         <div class="inner">
           <h1 class="major">Administration</h1>
-
-          <!-- Table --
-               <section>
-                 <h2>Table</h2>
-
-                 <h3>Alternate</h3>
-                 <div class="table-wrapper">
-                   <table class="alt">
-                     <thead>
-                       <tr>
-                         <th>Name</th>
-                         <th>Description</th>
-                         <th>Price</th>
-                       </tr>
-                     </thead>
-                     <tbody>
-                       <tr>
-                         <td>Item One</td>
-                         <td>Ante turpis integer aliquet porttitor.</td>
-                         <td>29.99</td>
-                       </tr>
-                       <tr>
-                         <td>Item Two</td>
-                         <td>Vis ac commodo adipiscing arcu aliquet.</td>
-                         <td>19.99</td>
-                       </tr>
-                       <tr>
-                         <td>Item Three</td>
-                         <td> Morbi faucibus arcu accumsan lorem.</td>
-                         <td>29.99</td>
-                       </tr>
-                       <tr>
-                         <td>Item Four</td>
-                         <td>Vitae integer tempus condimentum.</td>
-                         <td>19.99</td>
-                       </tr>
-                       <tr>
-                         <td>Item Five</td>
-                         <td>Ante turpis integer aliquet porttitor.</td>
-                         <td>29.99</td>
-                       </tr>
-                     </tbody>
-                     <tfoot>
-                       <tr>
-                         <td colspan="2"></td>
-                         <td>100.00</td>
-                       </tr>
-                     </tfoot>
-                   </table>
-                 </div>
-               </section> -->
 
           <!-- Form -->
           <section>
@@ -111,6 +63,9 @@
             </form>
 
             <h2>Joueur</h2>
+            <div id="error-display" class="2u$ 12u$(small)">
+
+            </div>
             <form id="update-form" method="post" action="#">
               {% csrf_token %}
               <div class="row uniform">
@@ -179,6 +134,7 @@
 
         <!-- Scripts -->
         <script src="{% static 'svz/assets/js/jquery.min.js' %}"></script>
+        <script src="{% static 'svz/assets/js/js.cookie.js' %}"></script>
         <script src="{% static 'svz/assets/js/admin.js' %}"></script>
         <script src="{% static 'svz/assets/js/jquery.scrollex.min.js' %}"></script>
         <script src="{% static 'svz/assets/js/jquery.scrolly.min.js' %}"></script>
