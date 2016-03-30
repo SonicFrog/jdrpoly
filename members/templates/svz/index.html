@@ -127,44 +127,22 @@ collègues aux États-Unis, où le jeu est né. Les joueurs, initialement “Stu
                 </div>
             </section>
 
-            <!-- Three -->
+            <!-- Gazettes -->
             <section id="lore" class="wrapper style2 spotlights">
+                {% for gazette in gazettes %}
                 <section>
                     <div class="content">
                         <div class="inner">
-                            <h2>Sed ipsum dolor</h2>
-                            <p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
+                            <h2>SvZ daily #{{ gazette.number }}</h2>
+                            <p>{{ gazette.short_description }}</p>
                             <ul class="actions">
-                                <li><a href="#" class="button">Learn more</a></li>
+                                <li><a href="{{ gazette.pdf.url }}" class="button">Lire la suite</a></li>
                             </ul>
                         </div>
                     </div>
-                    <a href="#" class="image"><img src="images/pic01.jpg" alt="" data-position="center center" /></a>
+                    <a href="#" class="image"><img src="{{ gazette.preview.url }}" alt="" data-position="center center" /></a>
                 </section>
-                <section>
-                    <div class="content">
-                        <div class="inner">
-                            <h2>Feugiat consequat</h2>
-                            <p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
-                            <ul class="actions">
-                                <li><a href="#" class="button">Learn more</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <a href="#" class="image"><img src="images/pic02.jpg" alt="" data-position="top center" /></a>
-                </section>
-                <section>
-                    <div class="content">
-                        <div class="inner">
-                            <h2>Ultricies aliquam</h2>
-                            <p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
-                            <ul class="actions">
-                                <li><a href="#" class="button">Learn more</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <a href="#" class="image"><img src="images/pic03.jpg" alt="" data-position="25% 25%" /></a>
-                </section>
+                {% endfor %}
             </section>
 
             <!-- Four -->
@@ -195,18 +173,14 @@ collègues aux États-Unis, où le jeu est né. Les joueurs, initialement “Stu
 
                     <hr></hr>
 
-                    <h2>Prix et lots</h2>
+                    <h2>{{ reward.0.meta.verbose_name_plural }}</h2>
                     <section>
                         <ul class="contact">
+                            {% for reward in rewards %}
                             <li>
-                                <p>
-                                    Prix blabla<br/>
-                                    Prix blabla<br/>
-                                    Prix blabla<br/>
-                                    Prix blabla<br/>
-                                    Prix blabla
-                                </p>
+                                {{ reward.name }} offert par {{ reward.sponsor.name }}
                             </li>
+                            {% endfor %}
                         </ul>
                     </section>
 
