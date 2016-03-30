@@ -176,11 +176,15 @@ collègues aux États-Unis, où le jeu est né. Les joueurs, initialement “Stu
                     <h2>Prix et lots</h2>
                     <section>
                         <ul class="contact">
+                            {% if rewards %}
                             {% for reward in rewards %}
                             <li>
                                 {{ reward.name }} offert par <a href="{{ reward.sponsor.url }}">{{ reward.sponsor.name }}</a>
                             </li>
                             {% endfor %}
+                            {% else %}
+                            Aucun lot l'instant :'(
+                            {% endif %}
                         </ul>
                     </section>
 
