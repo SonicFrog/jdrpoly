@@ -77,6 +77,10 @@ class Player(models.Model):
         self.save()
         return self.token_spent
 
+    def __str__(self):
+        zombie = "Zombie" if self.zombie else "Humain"
+        return "%s %s" % (self.name, zombie)
+
     class Meta:
         verbose_name = _("Joueur")
         verbose_name_plural = _("Joueurs")
@@ -104,6 +108,9 @@ class Sponsor(models.Model):
     logo_height = models.IntegerField(default=125, verbose_name=_("Hauteur"))
     url = models.URLField(verbose_name=_("Lien externe"))
 
+    def __str__(self):
+        return "%s - sponsor %s" % (self.name, self.get_grade_display())
+
     class Meta:
         ordering = ('-grade', )
         verbose_name = _("Sponsor")
@@ -115,8 +122,22 @@ class Gazette(models.Model):
     pdf = models.FileField(upload_to="svz/gazette/%Y", verbose_name=_("PDF"))
     preview = models.ImageField(upload_to="svz/gazette/p/%Y",
                                 verbose_name=_("Aperçu"))
+    short_description = models.TextField(verbose_name=_("Description courte"))
 
     class Meta:
         ordering = ('number', )
         verbose_name = _("Gazette")
         verbose_name_plural = _("Gazettes")
+
+
+class Reward(models.Model):
+    name = models.CharField(max_length=100, verbose_name=_("Nom"))
+    sponsor = models.ForeignKey(Sponsor, verbose_name=_("Sponsor"))
+
+    def meta(self):
+        return self._meta
+
+    class Meta:
+        ordering = ('sponsor', 'name')
+        verbose_name = _("Lot")
+        verbose_name_plural = _("Lots")
