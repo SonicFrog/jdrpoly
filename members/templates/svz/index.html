@@ -42,7 +42,7 @@
                 <div class="inner">
                     <h1>Students vs Zombies</h1>
                     <h2>Rejoignez la horde!</h2>
-                    <p>L’idée derrière ce jeu du chat et de la souris nous vient de 
+                    <p>L’idée derrière ce jeu du chat et de la souris nous vient de
 collègues aux États-Unis, où le jeu est né. Les joueurs, initialement “Students” se verront infecter tout au long de l’événement par une horde grandissante de Zombies. Les joueurs sont identifiés par des bandanas portés soit au bras soit à la tête en fonction de leur camp.</p>
                     <center><iframe  style="margin: auto; width: 24em; height: 13.5em" src="https://www.youtube.com/embed/qjWG9_lwBGc" frameborder="0" allowfullscreen></iframe></center>
                     <p></p>
@@ -65,54 +65,23 @@ collègues aux États-Unis, où le jeu est né. Les joueurs, initialement “Stu
                         </div>
                     </div>
                 </section>
+
+                {% for sponsor in sponsors %}
                 <section>
-                    <a href="#" class="image"><img src="images/pic02.jpg" alt="" data-position="top center" /></a>
+                    <a href="{{ sponsor.url }}" class="image"><img src="{{ sponsor.logo.url }}" data-position="top center"/></a>
                     <div class="content">
                         <div class="inner">
-                            <h2>Feugiat consequat</h2>
-                            <p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
-                            <ul class="actions">
-                                <li><a href="#" class="button">Learn more</a></li>
-                            </ul>
+                            <h2>{{ sponsor.name }} - {{ sponsor.get_grade_display }}</h2>
+                            <p>
+                                {{ sponsor.description | linebreaksbr }}
+                            </p>
                         </div>
+                        <ul class="actions">
+                            <li><a class="button" href="{{ sponsor.url }}">En savoir plus</a></li>
+                        </ul>
                     </div>
                 </section>
-                <section>
-                    <a href="#" class="image"><img src="images/pic03.jpg" alt="" data-position="25% 25%" /></a>
-                    <div class="content">
-                        <div class="inner">
-                            <h2>Ultricies aliquam</h2>
-                            <p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
-                            <ul class="actions">
-                                <li><a href="#" class="button">Learn more</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    <a href="#" class="image"><img src="images/pic04.jpg" alt="" data-position="25% 25%" /></a>
-                    <div class="content">
-                        <div class="inner">
-                            <h2>Ultricies aliquam</h2>
-                            <p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
-                            <ul class="actions">
-                                <li><a href="#" class="button">Learn more</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    <a href="#" class="image"><img src="images/pic05.jpg" alt="" data-position="25% 25%" /></a>
-                    <div class="content">
-                        <div class="inner">
-                            <h2>Ultricies aliquam</h2>
-                            <p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus.</p>
-                            <ul class="actions">
-                                <li><a href="#" class="button">Learn more</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
+                {% endfor %}
             </section>
 
             <!-- rules -->
