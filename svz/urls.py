@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
-from .views import (InfoView, AdminView, PlayerFindView, PlayerViewSet)
+from .views import (InfoView, AdminView, PlayerViewSet,
+                    PlayerFilterListView)
 
 from rest_framework.routers import DefaultRouter
 
@@ -10,5 +11,6 @@ router.register(r'json/players', PlayerViewSet)
 urlpatterns = [
     url(r'^$', InfoView.as_view(), name='svz-main'),
     url(r'^admin$', AdminView.as_view(), name='svz-admin'),
-    url(r'^json/find/(?P<sciper>\d+)$', PlayerFindView.as_view(), name='svz-find'),
+    url(r'^json/find/(?P<name>[\w\s]+)$', PlayerFilterListView.as_view(),
+        name='svz-find'),
 ] + router.urls
