@@ -81,3 +81,42 @@ class Player(models.Model):
         verbose_name = _("Joueur")
         verbose_name_plural = _("Joueurs")
         ordering = ('contaminations',)
+
+
+class Sponsor(models.Model):
+    SPONSOR_GRADES = (
+        (1, 'Bronze'),
+        (2, 'Silver'),
+        (3, 'Gold'),
+        (4, 'Platinum'),
+    )
+
+    name = models.CharField(max_length=200, default=_("Nouveau sponsor"),
+                            verbose_name=_("Nom"))
+    description = models.TextField(default=_("Aucune description"),
+                                   verbose_name=_("Description"))
+    grade = models.IntegerField(choices=SPONSOR_GRADES,
+                                verbose_name=_("Grade"))
+    logo = models.ImageField(upload_to='svz/sponsors/%Y',
+                             height_field="logo_height",
+                             width_field="logo_width")
+    logo_width = models.IntegerField(default=125, verbose_name=_("Largeur"))
+    logo_height = models.IntegerField(default=125, verbose_name=_("Hauteur"))
+    url = models.URLField(verbose_name=_("Lien externe"))
+
+    class Meta:
+        ordering = ('-grade', )
+        verbose_name = _("Sponsor")
+        verbose_name_plural = _("Sponsors")
+
+
+class Gazette(models.Model):
+    number = models.IntegerField(default=0, verbose_name=_("Numéro"))
+    pdf = models.FileField(upload_to="svz/gazette/%Y", verbose_name=_("PDF"))
+    preview = models.ImageField(upload_to="svz/gazette/p/%Y",
+                                verbose_name=_("Aperçu"))
+
+    class Meta:
+        ordering = ('number', )
+        verbose_name = _("Gazette")
+        verbose_name_plural = _("Gazettes")
