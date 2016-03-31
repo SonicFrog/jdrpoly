@@ -1,5 +1,6 @@
 # coding: utf-8
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.db import IntegrityError
 from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
@@ -91,11 +92,14 @@ class PlayerFilterListView(ListAPIView):
         return Response(queryset)
 
 
-class AdminView(LoginRequiredMixin, TemplateView):
+class AdminView(TemplateView):
     """
     Main view displaying admin panel
     """
     template_name = 'svz/admin.html'
+
+    def dispatch(self, *args, **kwargs):
+        return super(AdminView, self).dispatch(*args, **kwargs)
 
 
 class InfoView(TemplateView):
