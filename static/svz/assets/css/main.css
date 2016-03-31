@@ -2819,12 +2819,13 @@
 
 		ul.contact {
 			list-style: none;
+                        list-style-type: circle;
 			padding: 0;
 		}
 
 			ul.contact > li {
 				padding: 0;
-				margin: 1.5em 0 0 0;
+				margin: 0.5em 0 0 0.5em;
 			}
 
 				ul.contact > li:first-child {
