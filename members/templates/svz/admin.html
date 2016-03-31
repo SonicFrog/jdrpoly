@@ -106,6 +106,10 @@
                 </thead>
                 <tbody>
                   <tr>
+                    <td>Est zombie</td>
+                    <td id="is-zombie">N/A</td>
+                  </tr>
+                  <tr>
                     <td>Jetons dépensés</td>
                     <td id="token-spent">N/A</td>
                   </tr>
@@ -113,13 +117,28 @@
                     <td>Joueurs contaminés</td>
                     <td id="contaminations">N/A</td>
                   </tr>
-                  <tr>
-                    <td>Récompenses de quête</td>
-                    <td id="quest">N/A</td>
-                  </tr>
                 </tbody>
               </table>
             </div>
+          </section>
+          <section id="add-player" class="wrapper">
+            <h2>Ajouter un joueur</h2>
+            <form id="add-form" method="post" action="#">
+              <div class="row uniform">
+                <div class="6u 12u$(xsmall)">
+                  <input type="text" name="add-name" id="add-form-name" value="" placeholder="Nom" />
+                </div>
+                <div class="6u$ 12u$(xsmall)">
+                  <input type="text" name="add-playerid" id="add-form-sciper" value="" placeholder="SCIPER" />
+                </div>
+                <div class="12u$">
+                  <ul class="actions">
+                    <li><input type="submit" value="Ajouter le joueur" class="special" /></li>
+                    <li><input type="reset" value="Reset" /></li>
+                  </ul>
+                </div>
+              </div>
+            </form>
           </section>
         </div>
 
