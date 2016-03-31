@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from members.views import LoginRequiredMixin
-from .models import Player, Sponsor, Gazette, Reward
+from .models import Player, Sponsor, Gazette, Reward, Rule
 
 from rest_framework import serializers, viewsets, status
 from rest_framework.authentication import SessionAuthentication
@@ -106,6 +106,7 @@ class InfoView(TemplateView):
         context['sponsors'] = Sponsor.objects.all()
         context['gazettes'] = Gazette.objects.all()
         context['rewards'] = Reward.objects.all()
+        context['rules'] = Rule.objects.all()
         return context
 
 

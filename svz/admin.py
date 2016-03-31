@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from svz.models import Player, Sponsor, Gazette, Reward
+from svz.models import Player, Sponsor, Gazette, Reward, Rule
 
 
 class PlayerAdmin(admin.ModelAdmin):
@@ -30,7 +30,14 @@ class RewardAdmin(admin.ModelAdmin):
     fields = ('name', 'sponsor')
     list_display = ('name', 'sponsor')
 
+
+class RuleAdmin(admin.ModelAdmin):
+    model = Rule
+    fields = ('name', 'text', 'icon', 'importance')
+    list_display = ('name', 'text', 'importance')
+
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Sponsor, SponsorAdmin)
 admin.site.register(Gazette, GazetteAdmin)
 admin.site.register(Reward, RewardAdmin)
+admin.site.register(Rule, RuleAdmin)

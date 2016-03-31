@@ -134,6 +134,9 @@ class Reward(models.Model):
     name = models.CharField(max_length=100, verbose_name=_("Nom"))
     sponsor = models.ForeignKey(Sponsor, verbose_name=_("Sponsor"))
 
+    def __str__(self):
+        return "%s offert par %s" % (self.name, self.sponsor)
+
     def meta(self):
         return self._meta
 
@@ -141,3 +144,40 @@ class Reward(models.Model):
         ordering = ('sponsor', 'name')
         verbose_name = _("Lot")
         verbose_name_plural = _("Lots")
+
+
+class Rule(models.Model):
+    IMPORTANCE_CHOICES = (
+        (1, "Haute"),
+        (2, "Moyenne"),
+        (3, "Faible"),
+    )
+
+    ICON_CHOICES = (
+        ('fa-lock', 'Cadenas'),
+        ('fa-cog', 'Rouage'),
+        ('fa-user', 'Personne'),
+        ('fa-male', 'Homme'),
+        ('fa-female', 'Femme'),
+        ('fa-server', 'Serveur'),
+        ('fa-crosshair', 'Viseur'),
+        ('fa-check', 'Check'),
+        ('fa-ticket', 'Ticket'),
+        ('fa-heartbeat', 'Coeur'),
+        ('fa-medkit', 'Medkit'),
+        ('fa-trophy', 'Trophé'),
+    )
+    name = models.CharField(max_length=100, verbose_name=_("Nom"))
+    text = models.TextField(max_length=500, verbose_name=_("Contenu"))
+    icon = models.CharField(max_length=20, verbose_name=_("Icone"),
+                            choices=ICON_CHOICES)
+    importance = models.IntegerField(choices=IMPORTANCE_CHOICES, default=1,
+                                     verbose_name=_("Importance"))
+
+    def __str__(self):
+        return "%s - %s" % (self.name, self.get_importance_display())
+
+    class Meta:
+        ordering = ('importance', )
+        verbose_name = _("Règle")
+        verbose_name_plural = _("Règles")
