@@ -8,7 +8,22 @@ $( document ).ready(function() {
         }
     });
 
-    $( "#search-form" ).submit(function( event ) {
+    $("#add-form").submit(function (event) {
+        var name = $("#add-form-name").val();
+        var sciper = parseInt($("#add-form-sciper").val());
+
+        if(isNaN(sciper) || name.length == 0) {
+            alert("Le nom ne doit pas être vide et le SCIPER doit être un numéro. Ajout annulé.");
+        } else {
+            create_player(sciper, name, function () {
+                alert("SCIPER déjà existant. (Ou c'est autre chose, on sait pas)");
+            });
+        }
+
+        event.preventDefault();
+    });
+
+    $( "#search-form" ).submit(function (event) {
         var name = $("#search-form-name").val();
         var sciper = $("#search-form-sciper").val();
 
@@ -17,7 +32,7 @@ $( document ).ready(function() {
         event.preventDefault();
     });
 
-    $( "#update-form" ).submit(function( event ) {
+    $( "#update-form" ).submit(function (event) {
         var p = read_current_player();
 
         update_player(p.sciper, p.name, p.token_spent, p.zombie, p.contaminations);
@@ -53,6 +68,7 @@ function update_form(player) {
     $("#token-spent").html(player.token_spent);
     $("#contaminations").html(player.contaminations);
     $("#zombie-status").prop('checked', player.zombie);
+    $("#is-zombie").html(player.zombie?"Oui":"Non");
 }
 
 /**
@@ -111,8 +127,6 @@ function read_current_player() {
     var tokens = parseInt($("#prefill-spenttoken").val());
     var cont = parseInt($("#prefill-newcontamination").val());
     var zombie = $("#zombie-status").prop('checked');
-
-    alert("adding " + tokens);
 
     if (isNaN(cont))
         cont = 0;
