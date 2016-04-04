@@ -125,7 +125,7 @@ class Gazette(models.Model):
     short_description = models.TextField(verbose_name=_("Description courte"))
 
     class Meta:
-        ordering = ('number', )
+        ordering = ('-number', )
         verbose_name = _("Gazette")
         verbose_name_plural = _("Gazettes")
 
