@@ -148,6 +148,7 @@ class Reward(models.Model):
 
 class Rule(models.Model):
     IMPORTANCE_CHOICES = (
+        (0, 'Extrême'),
         (1, "Haute"),
         (2, "Moyenne"),
         (3, "Faible"),
