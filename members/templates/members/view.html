@@ -7,26 +7,26 @@
 {% load staticfiles %}
 
 {% block title %}
-    {{ user.profile }}
+    Profile utilisateur de {{ member.user.username }}
 {% endblock %}
 
 {% block content %}
     {% if member %}
         <div class="row">
             <header>
-                <h2>{{ member.profile }}</h2>
+                <h2>Profile de {{ member.user.username }}</h2>
             </header>
             <div class="6u 12u(mobile)">
                 <span class="image row 50%">
                     <img src="{% static 'images/default.jpg' %}" height="200" />
                 </span>
                 <div class="class 6u 12u(mobile)">
-                    <strong>Nom d'utilisateur :</strong> {{ member.username }}
+                    <strong>Nom d'utilisateur :</strong> {{ member.user.username }}
                 </div>
                 <div class="class 6u 12u(mobile)">
                     <strong>Addresse mail :</strong>
-                    {% if member.email %}
-                        {{ member.email }}
+                    {% if member.user.email %}
+                        {{ member.user.email }}
                     {% else %}
                         Non spécifiée
                     {% endif %}
@@ -48,7 +48,7 @@
                     {% endif %}
                 </div>
                 <div class="6u 12u(mobile)">
-                    <strong>Membre jusqu'au</strong> {{ member.profile.until }}
+                    <strong>Membre jusqu'au</strong> {{ member.until }}
                 </div>
             </div>
             {% if request.user == member %}

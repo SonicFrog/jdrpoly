@@ -5,9 +5,9 @@ from django.contrib.auth.views import (password_change, password_change_done,
                                        password_reset_complete,
                                        password_reset_done,
                                        password_reset_confirm)
-from .views import (UserProfileView, SelfProfileView,
-                    UserCreateView, PasswordChangeView, CodeUseView,
-                    UserUpdateView, MainMemberView, CodeCreateView)
+from .views import (SelfProfileView, BugFreeProfileView,
+                    UserCreateView, CodeUseView, UserUpdateView,
+                    MainMemberView, CodeCreateView)
 
 urlpatterns = [
     url(r'^$', MainMemberView.as_view(), name='user-main'),
@@ -22,6 +22,8 @@ urlpatterns = [
         password_reset_confirm, name='password_reset_confirm'),
     url(r'^password_reset_done/$', password_reset_done,
         name='password_reset_done'),
+    url(r'^password_reset_complete/$', password_reset_complete,
+        name='password_reset_complete'),
     url(r'^password/$', password_change, name='user-password',
         kwargs={'template_name': 'members/password_change.html',
                 'post_change_redirect': reverse_lazy('user-password-ok')}),
@@ -29,7 +31,7 @@ urlpatterns = [
         kwargs={'template_name': 'members/password_change_ok.html'}),
     url(r'^logout$', logout, name='logout',
         kwargs={'next_page': reverse_lazy('login')}),
-    url(r'^(?P<pk>\d+)$', UserProfileView.as_view(),
+    url(r'^view/(?P<slug>[-\w]+)$', BugFreeProfileView.as_view(),
         name='other-user-profile'),
     url(r'^code$', CodeUseView.as_view(), name='use-code'),
     url(r'^code-gen/$', CodeCreateView.as_view(), name='create-code'),

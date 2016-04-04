@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from __future__ import unicode_literals
+
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
@@ -7,6 +9,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
 import datetime as dt
@@ -44,9 +47,11 @@ class Member(models.Model):
 
     wants_newsletter = models.BooleanField(default=True,
                                            verbose_name=_("Newsletter"))
+    slug = models.SlugField(max_length=30)
 
     def get_absolute_url(self):
-        return reverse('other-user-profile', kwargs={'pk': self.pk})
+        return reverse('other-user-profile',
+                       kwargs={'slug': self.user.username})
 
     def is_member(self):
         return self.until > timezone.now().date()
@@ -67,7 +72,7 @@ class Member(models.Model):
 def create_member_for_new_user(sender, created, instance, **kwargs):
     if created:
         member = Member(user=instance, image=None, location=None,
-                        until=timezone.now())
+                        until=timezone.now(), slug=slugify(instance.username))
         member.save()
 
 

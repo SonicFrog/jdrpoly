@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from __future__ import unicode_literals
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic import (DetailView, CreateView, FormView,
                                   View, UpdateView, TemplateView)
@@ -60,21 +62,24 @@ class PasswordChangeOkView(LoginRequiredMixin, View):
     template_name = 'members/password_change_ok.html'
 
 
-class UserProfileView(LoginRequiredMixin, DetailView):
-    """
-    View pour voir le profil d'un utilisateur arbitraire
-    """
-    model = User
+class BugFreeProfileView(TemplateView):
     template_name = 'members/view.html'
-    context_object_name = 'member'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(TemplateView, self).get_context_data()
+        context['member'] = Member.objects.get(slug=kwargs['slug'])
+        return context
 
 
-class SelfProfileView(UserProfileView):
+class SelfProfileView(BugFreeProfileView):
     """
     View pour voir son propre profil utilisateur
     """
-    def get_object(self):
-        return self.request.user
+    def get_context_data(self, *args, **kwargs):
+        context = super(BugFreeProfileView, self).get_context_data(*args,
+                                                                   **kwargs)
+        context['member'] = self.request.user.profile
+        return context
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
