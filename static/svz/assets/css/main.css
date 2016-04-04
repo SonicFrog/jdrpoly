@@ -3039,7 +3039,7 @@
 				-webkit-transition: opacity 1s ease;
 				-ms-transition: opacity 1s ease;
 				transition: opacity 1s ease;
-				background: rgba(192, 48, 0, 0.5); /* image bg color */
+				background: rgba(62, 68, 7, 0.5); /* image bg color */
 				content: '';
 				display: block;
 				height: 100%;
