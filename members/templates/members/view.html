@@ -7,14 +7,14 @@
 {% load staticfiles %}
 
 {% block title %}
-    Profile utilisateur de {{ member.user.username }}
+    Profil utilisateur de {{ member.user.username }}
 {% endblock %}
 
 {% block content %}
     {% if member %}
         <div class="row">
             <header>
-                <h2>Profile de {{ member.user.username }}</h2>
+                <h2>Profil de {{ member.user.username }}</h2>
             </header>
             <div class="6u 12u(mobile)">
                 <span class="image row 50%">
@@ -33,16 +33,16 @@
                 </div>
                 <div class="6u 12u(mobile)">
                     <strong>Nom:</strong>
-                    {% if member.last_name %}
-                        {{ member.last_name }}
+                    {% if member.user.last_name %}
+                        {{ member.user.last_name }}
                     {% else %}
                         Non spécifié
                     {% endif %}
                 </div>
                 <div class="6u 12u(mobile)">
                     <strong>Prénom:</strong>
-                    {% if member.first_name %}
-                        {{ member.first_name }}
+                    {% if member.user.first_name %}
+                        {{ member.user.first_name }}
                     {% else %}
                         Non spécifié
                     {% endif %}
