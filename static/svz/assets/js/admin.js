@@ -40,6 +40,16 @@ $( document ).ready(function() {
 
         event.preventDefault();
     });
+
+    $( "#mail-form" ).submit(function (event) {
+        var subject = $("#mail_title").val();
+        var body = $("#mail_content").val();
+        var zombie = $("#mail_target").val();
+
+        send_mail(subject, body, zombie);
+
+        event.preventDefault();
+    });
 });
 
 
@@ -169,4 +179,35 @@ function create_player(sciper, name, error) {
             "name": name
         }
     });
+}
+
+function send_mail(subject, body, zombie) {
+    
+    var url = "/svz/json/mail";
+
+    var to;
+
+    switch (zombie) {
+    case "True":
+        to = true;
+        break;
+    case "False":
+        to = false;
+        break;
+    case "":
+        to = null;
+        break;
+    default:
+        alert("le champ to doit être True ou False.");
+    }
+
+    $.ajax(
+        url,
+        {
+            "subject": subject,
+            "body": body,
+            "zombie" : to
+        },
+        function () {alert("Message envoyé avec succès!");}
+    );
 }
