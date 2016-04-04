@@ -1,12 +1,14 @@
 # coding: utf-8
 
-from django.contrib.admin.views.decorators import staff_member_required
+from django.conf import settings
+from django.core.mail import send_mass_mail
 from django.db import IntegrityError
-from django.views.generic import TemplateView
+from django.forms import (Form, CharField, TextInput, Textarea, BooleanField,
+                          Select, ChoiceField)
+from django.views.generic import TemplateView, FormView
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
-from members.views import LoginRequiredMixin
 from .models import Player, Sponsor, Gazette, Reward, Rule
 
 from rest_framework import serializers, viewsets, status
@@ -17,8 +19,38 @@ from rest_framework.generics import (RetrieveAPIView, CreateAPIView,
                                      ListAPIView)
 
 
-def get_player(pk):
-    return Player.objects().get(pk=pk)
+class MailForm(Form):
+    CHOICES = ((True, 'Zombies'), (False, 'Humains'), (None, 'Tous'))
+
+    title = CharField(max_length=100, widget=TextInput(
+        attrs={'placeholder': _("Titre"), 'id': 'mail_title'}))
+
+    content = CharField(max_length=10000,
+                        widget=Textarea(attrs={'placeholder': _("Contenu"),
+                                               'id': 'mail_content'}))
+    target = ChoiceField(widget=Select(attrs={'id': 'mail_target'}),
+                         choices=CHOICES)
+
+    def send_mail(self):
+        zombie = self.cleaned_data['target']
+        users = (Player.objects.filter(zombie=zombie).filter(email__isnull=False)
+                 if zombie is not None else Player.objects.all())
+        bcc = [user.email for user in users]
+        content = self.cleaned_data['content']
+        title = self.cleaned_data['title']
+        messages = []
+        for mail in bcc:
+            message = (title, content, settings.DEFAULT_FROM_EMAIL, [mail])
+            messages.append(message)
+        send_mass_mail(message)
+
+
+class MailFormHandleView(FormView):
+    form_class = MailForm
+
+    def form_valid(self, form):
+        form.send_mail()
+        return super(FormView, self).form_valid(form)
 
 
 class POSTMultipleFieldLookupMixin(object):
@@ -92,14 +124,13 @@ class PlayerFilterListView(ListAPIView):
         return Response(queryset)
 
 
-class AdminView(TemplateView):
+class AdminView(FormView):
     """
     Main view displaying admin panel
     """
     template_name = 'svz/admin.html'
-
-    def dispatch(self, *args, **kwargs):
-        return super(AdminView, self).dispatch(*args, **kwargs)
+    form_class = MailForm
+    context_object_name = 'mail_form'
 
 
 class InfoView(TemplateView):

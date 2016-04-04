@@ -137,6 +137,35 @@
               </div>
             </form>
           </section>
+
+          <section id="send-mail" class="wrapper">
+              <h2>Envoyer un mail</h2>
+              <form id="mail-form" method="post" action="#">
+                  <div class="row uniform">
+                      <div class="6u$ 12u$(xsmall)">
+                          {{ form.title }}
+                      </div>
+                  </div>
+                  <div class="row uniform">
+                      <div class="12u$ 24u$(xsmall)">
+                          {{ form.content }}
+                      </div>
+                  </div>
+                  <div class="row uniform">
+                      <div class="12u$ 24$(xsmall)">
+                          {{ form.target }}
+                      </div>
+                  </div>
+                  <div class="row uniform">
+                      <div class="12u$">
+                          <ul class="actions">
+                              <li><input type="submit" value="Envoyer" class="special" /></li>
+                              <li><input type="reset" value="Reset" /></li>
+                          </ul>
+                      </div>
+                  </div>
+              </form>
+          </section>
         </div>
 
         <!-- Footer -->
