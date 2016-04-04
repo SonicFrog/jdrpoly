@@ -25,10 +25,10 @@
                 <nav>
                     <ul>
                         <li><a href="#intro">SvZ</a></li>
-                        <li><a href="#sponsors">Sponsors</a></li>
                         <li><a href="#rules">Règles</a></li>
                         <li><a href="#lore">Histoire</a></li>
                         <li><a href="#info">Infos pratiques</a></li>
+                        <li><a href="#sponsors">Sponsors</a></li>
                     </ul>
                 </nav>
             </div>
@@ -55,35 +55,6 @@
 
             </section>
 
-            <!-- Sponsors -->
-            <section id="sponsors" class="wrapper style2 spotlights">
-                <section>
-                    <div class="content">
-                        <div class="inner">
-                            <h2>Sponsors de l'événement</h2>
-                            <p>Ce sont les gens qui nous permettent de vous proposer des
-<a href="#prix">prix</a> aussi intéressants, merci à eux pour leur soutien.</p>
-                        </div>
-                    </div>
-                </section>
-
-                {% for sponsor in sponsors %}
-                <section>
-                    <a href="{{ sponsor.url }}" class="image"><img src="{{ sponsor.logo.url }}" data-position="top center" width="100%"/></a>
-                    <div class="content">
-                        <div class="inner">
-                            <h2>{{ sponsor.name }} - {{ sponsor.get_grade_display }}</h2>
-                            <p>
-                                {{ sponsor.description | linebreaksbr }}
-                            </p>
-                        </div>
-                        <ul class="actions">
-                            <li><a class="button" href="{{ sponsor.url }}">En savoir plus</a></li>
-                        </ul>
-                    </div>
-                </section>
-                {% endfor %}
-            </section>
 
             <!-- rules -->
             <section id="rules" class="wrapper style3 fade-up">
@@ -172,6 +143,35 @@
                 </div>
             </section>
 
+            <!-- Sponsors -->
+            <section id="sponsors" class="wrapper style2 spotlights">
+                <section>
+                    <div class="content">
+                        <div class="inner">
+                            <h2>Sponsors de l'événement</h2>
+                            <p>Ce sont les gens qui nous permettent de vous proposer des
+                                <a href="#prix">prix</a> aussi intéressants, merci à eux pour leur soutien.</p>
+                        </div>
+                    </div>
+                </section>
+
+                {% for sponsor in sponsors %}
+                <section>
+                    <a href="{{ sponsor.url }}" class="image"><img src="{{ sponsor.logo.url }}" data-position="top center" width="100%"/></a>
+                    <div class="content">
+                        <div class="inner">
+                            <h2>{{ sponsor.name }} - {{ sponsor.get_grade_display }}</h2>
+                            <p>
+                                {{ sponsor.description | linebreaksbr }}
+                            </p>
+                        </div>
+                        <ul class="actions">
+                            <li><a class="button" href="{{ sponsor.url }}">En savoir plus</a></li>
+                        </ul>
+                    </div>
+                </section>
+                {% endfor %}
+            </section>
         </div>
 
         <!-- Footer -->
