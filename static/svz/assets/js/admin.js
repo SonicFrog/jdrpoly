@@ -5,7 +5,8 @@ $( document ).ready(function() {
         beforeSend: function(xhr, setting){
             var csrftoken = $("[name=csrfmiddlewaretoken]").val();
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
+        },
+        cache: false
     });
 
     $("#add-form").submit(function (event) {
@@ -182,7 +183,7 @@ function create_player(sciper, name, error) {
 }
 
 function send_mail(subject, body, zombie) {
-    
+
     var url = "/svz/json/mail";
 
     var to;
