@@ -51,7 +51,7 @@ class Member(models.Model):
 
     def get_absolute_url(self):
         return reverse('other-user-profile',
-                       kwargs={'slug': self.user.username})
+                       kwargs={'slug': self.slug})
 
     def is_member(self):
         return self.until > timezone.now().date()

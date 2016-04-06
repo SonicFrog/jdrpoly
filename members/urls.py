@@ -31,7 +31,7 @@ urlpatterns = [
         kwargs={'template_name': 'members/password_change_ok.html'}),
     url(r'^logout$', logout, name='logout',
         kwargs={'next_page': reverse_lazy('login')}),
-    url(r'^view/(?P<slug>[-\w]+)$', BugFreeProfileView.as_view(),
+    url(r'^view/(?P<slug>[a-z0-9_-]+)$', BugFreeProfileView.as_view(),
         name='other-user-profile'),
     url(r'^code$', CodeUseView.as_view(), name='use-code'),
     url(r'^code-gen/$', CodeCreateView.as_view(), name='create-code'),
