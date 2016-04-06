@@ -47,7 +47,7 @@ class Member(models.Model):
 
     wants_newsletter = models.BooleanField(default=True,
                                            verbose_name=_("Newsletter"))
-    slug = models.SlugField(max_length=30)
+    slug = models.SlugField(max_length=30, unique=True)
 
     def get_absolute_url(self):
         return reverse('other-user-profile',
