@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import permission_required
 from django.conf.urls import url
 
 from .views import (InfoView, AdminView, PlayerViewSet,
-                    PlayerFilterListView)
+                    PlayerFilterListView, SendMailView)
 
 from rest_framework.routers import DefaultRouter
 
@@ -15,4 +15,7 @@ urlpatterns = [
         name='svz-admin'),
     url(r'^json/find/(?P<name>[\w\s]+)$', PlayerFilterListView.as_view(),
         name='svz-find'),
+    url(r'^json/mail$',
+        permission_required('is_superuser')(SendMailView.as_view()),
+        name='svz-mail'),
 ] + router.urls
