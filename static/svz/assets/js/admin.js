@@ -12,11 +12,12 @@ $( document ).ready(function() {
     $("#add-form").submit(function (event) {
         var name = $("#add-form-name").val();
         var sciper = parseInt($("#add-form-sciper").val());
+        var email = $("#add-form-email").val();
 
         if(isNaN(sciper) || name.length == 0) {
             alert("Le nom ne doit pas être vide et le SCIPER doit être un numéro. Ajout annulé.");
         } else {
-            create_player(sciper, name, function () {
+            create_player(sciper, name, email, function () {
                 alert("SCIPER déjà existant. (Ou c'est autre chose, on sait pas)");
             });
         }
@@ -80,6 +81,30 @@ function update_form(player) {
     $("#contaminations").html(player.contaminations);
     $("#zombie-status").prop('checked', player.zombie);
     $("#is-zombie").html(player.zombie?"Oui":"Non");
+
+    reset_input();
+}
+
+
+/**
+ * Resets the input field for editing player
+ **/
+function reset_input() {
+    var fields = ["#prefill-spenttoken", "prefill-newcontamination",
+                  "#add-form-name", "#add-form-sciper", "#add-form-email",
+                  "#mail-title", "#mail-content"];
+
+    for (field of fields) {
+        reset_field(field);
+    }
+}
+
+function reset_form(id) {
+    $(id).reset();
+}
+
+function reset_field(id) {
+    $(id).val("");
 }
 
 /**
@@ -162,7 +187,7 @@ function read_current_player() {
  * @param name Name for this player
  * @param error Callback to be called when creation fails
  **/
-function create_player(sciper, name, error) {
+function create_player(sciper, name, email, error) {
     //TODO: Fix hardcoded urls
     var url = "/svz/json/players/";
 
@@ -177,7 +202,8 @@ function create_player(sciper, name, error) {
         },
         data: {
             "sciper": sciper,
-            "name": name
+            "name": name,
+            "email": email
         }
     });
 }
