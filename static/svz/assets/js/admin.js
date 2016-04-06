@@ -214,6 +214,8 @@ function send_mail(subject, body, zombie) {
 
     var to;
 
+    // Dieu merci y'a plus besoin de ce truc cancéreux
+    /*
     switch (zombie) {
     case "True":
         to = true;
@@ -227,14 +229,12 @@ function send_mail(subject, body, zombie) {
     default:
         alert("le champ to doit être True ou False.");
     }
+     */
 
-    $.ajax(
-        url,
-        {
-            "subject": subject,
-            "body": body,
-            "zombie" : to
-        },
-        function () {alert("Message envoyé avec succès!");}
+    $.post(url, {
+        "title": subject,
+        "content": body,
+        "target" : zombie
+        }, function () {alert("Message envoyé avec succès!");}
     );
 }

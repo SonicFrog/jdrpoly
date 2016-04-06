@@ -3,8 +3,8 @@
 from django.conf import settings
 from django.core.mail import send_mass_mail
 from django.db import IntegrityError
-from django.forms import (Form, CharField, TextInput, Textarea, BooleanField,
-                          Select, ChoiceField)
+from django.forms import (Form, CharField, TextInput, Textarea, Select,
+                          ChoiceField)
 from django.views.generic import TemplateView, FormView
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
@@ -15,12 +15,23 @@ from rest_framework import serializers, viewsets, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.generics import (RetrieveAPIView, CreateAPIView,
-                                     ListAPIView)
+                                     ListAPIView, )
 
 
 class MailForm(Form):
-    CHOICES = ((True, 'Zombies'), (False, 'Humains'), (None, 'Tous'))
+    TO_BOOL = {
+        "1": None,
+        "2": True,
+        "3": False
+    }
+
+    DISPLAY_FORM = {
+        "1": "Tous",
+        "2": "Zombies",
+        "3": "Humains"
+    }
 
     title = CharField(max_length=100, widget=TextInput(
         attrs={'placeholder': _("Titre"), 'id': 'mail_title'}))
@@ -28,29 +39,47 @@ class MailForm(Form):
     content = CharField(max_length=10000,
                         widget=Textarea(attrs={'placeholder': _("Contenu"),
                                                'id': 'mail_content'}))
-    target = ChoiceField(widget=Select(attrs={'id': 'mail_target'}),
-                         choices=CHOICES)
+    target = ChoiceField(choices=DISPLAY_FORM.items(),
+                         widget=Select(attrs={'id': "mail_target"}))
 
     def send_mail(self):
-        zombie = self.cleaned_data['target']
+        zombie = self.TO_BOOL[self.cleaned_data['target']]
         users = (Player.objects.filter(zombie=zombie).filter(email__isnull=False)
                  if zombie is not None else Player.objects.all())
         bcc = [user.email for user in users]
         content = self.cleaned_data['content']
         title = self.cleaned_data['title']
+
+        if zombie is None:
+            print("Sending to ALL!")
+        elif zombie:
+            print("Sending to zombies!")
+        else:
+            print("Sending to humans")
+
         messages = []
         for mail in bcc:
             message = (title, content, settings.DEFAULT_FROM_EMAIL, [mail])
             messages.append(message)
-        send_mass_mail(message)
+        send_mass_mail(messages)
 
 
-class MailFormHandleView(FormView):
-    form_class = MailForm
+class SendMailView(APIView):
+    authentication_classes = (SessionAuthentication, )
+    permission_classes = (IsAdminUser, )
 
-    def form_valid(self, form):
-        form.send_mail()
-        return super(FormView, self).form_valid(form)
+    def post(self, request, format=None):
+        mail_form = MailForm({
+            'title': request.POST.get('title'),
+            'content': request.POST.get('content'),
+            'target': request.POST.get('target'),
+        })
+
+        if mail_form.is_valid():
+            mail_form.send_mail()
+            return Response({'detail': "Okay!"}, status=status.HTTP_200_OK)
+        return Response({'detail': mail_form.errors},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 class POSTMultipleFieldLookupMixin(object):
@@ -76,7 +105,8 @@ class MultipleFieldLookupMixin(object):
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ('sciper', 'name', 'contaminations', 'zombie', 'token_spent')
+        fields = ('sciper', 'name', 'email', 'contaminations', 'zombie',
+                  'token_spent')
 
 
 class PlayerTokenSerializer(serializers.ModelSerializer):
