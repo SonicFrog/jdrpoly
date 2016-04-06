@@ -170,7 +170,7 @@ class InfoView(TemplateView):
         context = super(InfoView, self).get_context_data()
         context['sponsors'] = Sponsor.objects.all()
         context['gazettes'] = Gazette.objects.all()
-        context['rewards'] = Reward.objects.all()
+        context['rewards'] = Reward.objects.all().order_by('?')
         context['rules'] = Rule.objects.all()
         return context
 
