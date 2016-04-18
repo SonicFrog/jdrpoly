@@ -186,3 +186,8 @@ class PlayerFindView(MultipleFieldLookupMixin, RetrieveAPIView):
 
     def get_queryset(self):
         return Player.objects.all()
+
+
+class RankingView(ListAPIView):
+    queryset = Player.objects.order_by('-contaminations', '-token_spent')[:10]
+    serializer_class = PlayerSerializer
