@@ -195,6 +195,9 @@ function create_player(sciper, name, email, error) {
         url: url,
         method: "POST",
         error: error,
+        success: function() {
+            alert("Joueur créé !");
+        },
         statusCode: {
             409: function() {
                 alert("Ce sciper existe déjà!");
