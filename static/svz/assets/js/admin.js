@@ -9,6 +9,12 @@ $( document ).ready(function() {
         cache: false
     });
 
+    update_rankings();
+
+    $("#refresh-rankings").click(function () {
+        update_rankings();
+    });
+
     $("#add-form").submit(function (event) {
         var name = $("#add-form-name").val();
         var sciper = parseInt($("#add-form-sciper").val());
@@ -85,6 +91,22 @@ function update_form(player) {
     reset_input();
 }
 
+/**
+ * Updates the rankings
+ **/
+function update_rankings () {
+    $.get("/svz/json/rankings", function(data) {
+        var list = $("#ranking-list");
+
+        list.empty();
+
+        for (player of data) {
+            var li = $("<li></li>");
+            li.html(player.name);
+            list.append(li);
+        }
+    });
+}
 
 /**
  * Resets the input field for editing player
