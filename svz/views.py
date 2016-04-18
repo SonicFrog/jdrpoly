@@ -188,6 +188,20 @@ class PlayerFindView(MultipleFieldLookupMixin, RetrieveAPIView):
         return Player.objects.all()
 
 
+def score(player):
+    A = 3
+    B = 1
+    return player.token_spent * B + player.contaminations * A
+
+
+def player_compare(x, y):
+    return score(x) - score(y)
+
+
 class RankingView(ListAPIView):
-    queryset = Player.objects.order_by('-contaminations', '-token_spent')[:10]
     serializer_class = PlayerSerializer
+
+    def get_queryset(self):
+        players = Player.objects.order_by('-contaminations', '-token_spent')
+        sorted(players, player_compare)
+        return players[:10]
