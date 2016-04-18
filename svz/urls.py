@@ -1,8 +1,10 @@
+# coding: utf-8
+
 from django.contrib.auth.decorators import permission_required
 from django.conf.urls import url
 
 from .views import (InfoView, AdminView, PlayerViewSet, RankingView,
-                    PlayerFilterListView, SendMailView)
+                    PlayerFilterListView, SendMailView, ProgressView)
 
 from rest_framework.routers import DefaultRouter
 
@@ -20,4 +22,6 @@ urlpatterns = [
         name='svz-mail'),
     url(r'^json/rankings$',
         permission_required('is_superuser')(RankingView.as_view()), name='svz-ranking'),
+    url(r'^json/status$',
+        permission_required('îs_superuser')(ProgressView.as_view()), name='svz-progress'),
 ] + router.urls

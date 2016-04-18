@@ -198,6 +198,13 @@ def player_compare(x, y):
     return score(x) - score(y)
 
 
+class ProgressView(APIView):
+    def get(self, request, *args, **kwargs):
+        percent = (float(Player.objects.filter(zombie=True).count()) /
+                   float(Player.objects.all().count())) * 100
+        return Response({"progress": percent})
+
+
 class RankingView(ListAPIView):
     serializer_class = PlayerSerializer
 
