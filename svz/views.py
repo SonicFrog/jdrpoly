@@ -209,6 +209,6 @@ class RankingView(ListAPIView):
     serializer_class = PlayerSerializer
 
     def get_queryset(self):
-        players = Player.objects.order_by('-contaminations', '-token_spent')
+        players = Player.objects.all()
         sorted(players, player_compare)
-        return players[:10]
+        return players.reverse()[:10]
