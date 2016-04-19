@@ -19,25 +19,7 @@ class Player(models.Model):
     email = models.EmailField(max_length=300, null=True, verbose_name=_("Email"))
 
     @classmethod
-    def generate_sciper():
-        exists = Player.objects().filter(sciper__lt=10000).count() < 0
-        new = None
-        if exists:
-            greatest = Player.objects().filter(sciper__lt=10000)[0]
-            new = greatest + 1
-        else:
-            new = 0
-        return new
-
-    @classmethod
-    def create(name, sciper=None):
-        if sciper is None:
-            sciper = Player.generate_sciper()
-        player = Player(sciper=sciper)
-        player.save()
-
-    @classmethod
-    def mail(title, content, zombies):
+    def mail(cls, title, content, zombies):
         mails = Player.objects.filter(zombies=zombies)
         mails = mails.exclude(email__isnull=True)
         mails = [user.email for user in mails]
@@ -84,7 +66,7 @@ class Player(models.Model):
     class Meta:
         verbose_name = _("Joueur")
         verbose_name_plural = _("Joueurs")
-        ordering = ('contaminations',)
+        ordering = ('contaminations', 'token_spent', )
 
 
 class Sponsor(models.Model):
@@ -136,9 +118,6 @@ class Reward(models.Model):
 
     def __str__(self):
         return "%s offert par %s" % (self.name, self.sponsor)
-
-    def meta(self):
-        return self._meta
 
     class Meta:
         ordering = ('sponsor', 'name')
