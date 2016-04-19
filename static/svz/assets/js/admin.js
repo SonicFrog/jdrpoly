@@ -112,7 +112,7 @@ function update_rankings () {
  * Resets the input field for editing player
  **/
 function reset_input() {
-    var fields = ["#prefill-spenttoken", "prefill-newcontamination",
+    var fields = ["#prefill-spenttoken", "#prefill-newcontamination",
                   "#add-form-name", "#add-form-sciper", "#add-form-email",
                   "#mail-title", "#mail-content"];
 
