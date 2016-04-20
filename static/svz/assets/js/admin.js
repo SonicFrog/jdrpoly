@@ -104,7 +104,8 @@ function update_rankings () {
 
         for (player of data) {
             var li = $("<li></li>");
-            li.html(player.name + " ("+ player_score(player) +" points)");
+            li.html(player.name + " ("+ player_score(player) +" points) " +
+                    (player.zombie) ? "Zombie" : "Humain");
             list.append(li);
         }
     });
