@@ -127,7 +127,11 @@ function reset_input() {
  * Computes player score
  **/
 function player_score(player) {
-    return player.contaminations * 3 + player.token_spent;
+    var contamination_value = 2.5;
+    var token_value = 1;
+
+    return player.contaminations * contamination_value +
+        player.token_spent * token_value;
 }
 
 /**
