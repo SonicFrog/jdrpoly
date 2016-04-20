@@ -104,7 +104,7 @@ function update_rankings () {
 
         for (player of data) {
             var li = $("<li></li>");
-            li.html(player.name + "("+ player_score(player) +" points)");
+            li.html(player.name + " ("+ player_score(player) +" points)");
             list.append(li);
         }
     });
@@ -123,18 +123,31 @@ function reset_input() {
     }
 }
 
+/**
+ * Computes player score
+ **/
 function player_score(player) {
     return player.contaminations * 3 + player.token_spent;
 }
 
+/**
+ * Comparison function to sort players
+ **/
 function sort_player(y, x) {
     return player_score(x) - player_score(y);
 }
 
+/**
+ * Resets the content of a form
+ **/
 function reset_form(id) {
     $(id).reset();
 }
 
+
+/**
+ * Resets the content of a form field
+ **/
 function reset_field(id) {
     $(id).val("");
 }
