@@ -104,7 +104,7 @@ function update_rankings () {
 
         for (player of data) {
             var li = $("<li></li>");
-            li.html(player.name);
+            li.html(player.name + "("+ player_score(player) +" points)");
             list.append(li);
         }
     });
@@ -123,8 +123,12 @@ function reset_input() {
     }
 }
 
+function player_score(player) {
+    return player.contaminations * 3 + player.token_spent;
+}
+
 function sort_player(y, x) {
-    return (x.contaminations * 3 + x.token_spent) - (y.contaminations * 3 - y.token_spent);
+    return player_score(x) - player_score(y);
 }
 
 function reset_form(id) {
