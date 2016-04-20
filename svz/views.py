@@ -195,7 +195,7 @@ def score(player):
 
 
 def player_compare(x, y):
-    return score(x) - score(y)
+    return score(y) - score(x)
 
 
 class ProgressView(APIView):
@@ -209,6 +209,7 @@ class RankingView(ListAPIView):
     serializer_class = PlayerSerializer
 
     def get_queryset(self):
-        players = Player.objects.all()
+        players = list(Player.objects.all())
         sorted(players, player_compare)
-        return players.reverse()[:10]
+        players.reverse()
+        return players[:10]
