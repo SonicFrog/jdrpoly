@@ -95,10 +95,12 @@ function update_form(player) {
  * Updates the rankings
  **/
 function update_rankings () {
-    $.get("/svz/json/rankings", function(data) {
+    $.get("/svz/json/players", function(data) {
         var list = $("#ranking-list");
 
         list.empty();
+
+        data.sort(sort_player);
 
         for (player of data) {
             var li = $("<li></li>");
@@ -119,6 +121,10 @@ function reset_input() {
     for (field of fields) {
         reset_field(field);
     }
+}
+
+function sort_player(y, x) {
+    return (x.contaminations * 3 + x.token_spent) - (y.contaminations * 3 - y.token_spent);
 }
 
 function reset_form(id) {
