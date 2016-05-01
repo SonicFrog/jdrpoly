@@ -9,12 +9,17 @@
 {% block content %}
     <article class="box post">
         <header>
-            <h2>Voici les campagnes en cours qui acceptent encore de nouveaux joueurs</h2>
+            <h2>{% if title %}
+                {{ title }}
+                {% else %}
+                Voici les campagnes en cours qui acceptent encore de nouveaux joueurs
+                {% endif %}
+            </h2>
         </header>
         <div class="row 100%">
             <article>
                 <a href="{% url 'propose-campaign' %}">Nouvelle campagne</a>
-                <a href="{% url 'my-campaigns' %}}">Mes campagnes</a>
+                <a href="{% url 'my-campaigns' %}">Mes campagnes</a>
             </article>
             <ul>
                 {% for campaign in campaign_list %}

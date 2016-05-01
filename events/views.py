@@ -9,6 +9,7 @@ from django.shortcuts import HttpResponseRedirect, Http404
 from django.views.generic import (DetailView, ListView, UpdateView, FormView,
                                   CreateView, DeleteView, UpdateView)
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 import datetime
 
@@ -64,11 +65,17 @@ class CampaignPropositionView(MembershipRequiredMixin, CreateView):
 class MyCampaignView(MembershipRequiredMixin, ListView):
     model = Campaign
     template_name = 'events/campaign_list.html'
+    context_object_name = 'campaign_list'
+
+    def get_context_data(self):
+        context = super(MyCampaignView, self).get_context_data()
+        context['title'] = _("Mes campagnes")
+        return context
 
     def get_queryset(self):
         user = self.request.user
         all_runs = Campaign.objects.filter(running=True)
-        participating = all_runs.filter(participants__contains=user)
+        participating = all_runs.filter(participants__in=[user.pk])
         organising = all_runs.filter(owner=user)
         return participating | organising
 
