@@ -51,7 +51,7 @@
                     <strong>Membre jusqu'au</strong> {{ member.until }}
                 </div>
             </div>
-            {% if request.user == member %}
+            {% if member.user == request.user %}
                 <a href="{% url 'user-profile-edit' %}" class="button icon fa-file">Modifier mon profil</a>
             {% endif %}
         </div>
