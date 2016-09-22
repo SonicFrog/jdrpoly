@@ -1,0 +1,35 @@
+{# -*- engine:django -*- #}
+
+{% extends "base.html" %}
+
+{% block title %}
+Les campagnes
+{% endblock %}
+
+{% block content %}
+<article class="box post">
+    <header>
+        <h2>{% if title %}
+        {{ title }}
+        {% else %}
+        Voici les campagnes en cours qui acceptent encore de nouveaux joueurs
+        {% endif %}
+        </h2>
+    </header>
+    <div class="row 100%">
+        <article>
+            <div class="row 100%">
+                <a href="{% url 'propose-campaign' %}">Nouvelle campagne</a>
+            </div>
+            <div class="row 100%">
+                <a href="{% url 'my-campaigns' %}">Mes campagnes</a>
+            </div>
+        </article>
+        <ul>
+            {% for campaign in campaign_list %}
+            <li><a href="{{ campaign.get_absolute_url }}">{{ campaign.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</article>
+{% endblock %}

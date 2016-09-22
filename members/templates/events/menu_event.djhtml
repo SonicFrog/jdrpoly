@@ -2,5 +2,5 @@
 
 {# Display dynamic event menu on whole site  #}
 {% for event in event_list %}
-    <li><a href="{{ event.get_absolute_url }}">{{ event.name }}</a></li>
+<li><a href="{{ event.get_absolute_url }}">{{ event.name }}</a></li>
 {% endfor %}

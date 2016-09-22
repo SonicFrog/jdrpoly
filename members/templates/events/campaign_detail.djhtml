@@ -38,14 +38,15 @@
                             Vous ne participez pas à cet événement. <br />
                         </span>
                     {% endif %}
-                    <div class="row 100%">
-                        <span><a class="button" href="{% url 'campaign-enroll' campaign.pk %}">
-                            {% if request.user in campaign.participants.all %}
-                                Ne plus participer
-                            {% else %}
-                                Participer
-                            {% endif %}
-                        </a></span>
+                        <div class="row 100%">
+                            <form action="{% url 'campaign-enroll ' campaign.pk %}"">
+                                <input type="submit"
+                                       value="{% if request.user in campaign.participants.all %}
+                                              Ne plus participer
+                                              {% else %}
+                                              Participer
+                                              {% endif %}" />
+                            </form>
                         {% if request.user == campaign.owner %}
                             <span><a href="{% url 'campaign-delete' campaign.pk %}" class="button">
                                 Supprimer cette campagne ?

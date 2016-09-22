@@ -5,36 +5,36 @@
 {% block sidebar %}no-sidebar{% endblock %}
 
 {% block content %}
-    <div class="row 100%">
-        <div class="12u 24u(mobile)">
-            <section>
-                <header>
-                    <h2>Nous contacter :</h2>
-                </header>
-                <form method="post" action="">
-                    {% csrf_token %}
-                    {{ form.errors.as_p }}
-                    <div class="row 100%">
-                        <div class="6u 12u(mobile)">
-                            {{ form.name }}
-                        </div>
-                        <div class="6u 12u(mobile)">
-                            {{ form.email }}
-                        </div>
+<div class="row 100%">
+    <div class="12u 24u(mobile)">
+        <section>
+            <header>
+                <h2>Nous contacter :</h2>
+            </header>
+            <form method="post" action="">
+                {% csrf_token %}
+                {{ form.errors.as_p }}
+                <div class="row 100%">
+                    <div class="6u 12u(mobile)">
+                        {{ form.name }}
                     </div>
-                    <div class="row 100%">
-                        <div class="12u">
-                            {{ form.message }}
-                        </div>
+                    <div class="6u 12u(mobile)">
+                        {{ form.email }}
                     </div>
-                    <div class="row 100%">
-                        <center>
+                </div>
+                <div class="row 100%">
+                    <div class="12u">
+                        {{ form.message }}
+                    </div>
+                </div>
+                <div class="row 100%">
+                    <center>
                         <input class="icon fa-envelope"
                                type="submit" value="Envoyer le message" />
-                        </center>
-                    </div>
-                </form>
-            </section>
-        </div>
+                    </center>
+                </div>
+            </form>
+        </section>
     </div>
+</div>
 {% endblock %}

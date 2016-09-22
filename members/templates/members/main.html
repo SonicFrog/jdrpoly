@@ -10,19 +10,28 @@
         <div class="6u 12u(mobile)">
             {% if user.is_authenticated %}
                 <p>
-                    Ici vous pouvez profiter de toutes les fonctionnalités réservés aux membres JDRPoly.
+                    Ici vous pouvez profiter de toutes les fonctionnalités
+                    réservés aux membres JDRPoly.
                 </p>
                 <p>
                     <ul>
-                        <li><a href="{% url 'propose-theme' %}">Proposer une animation pour les soirées membres</a></li>
-                        <li><a href="{% url 'propose-campaign' %}">Proposer une campagne pour les soirées membres</a></li>
-                        <li><a href="{% url 'use-code' %}">Prolonger votre période membre en utilisant un code</a></li>
+                        <li><a href="{% url 'campaign-list' %}">
+                            Voir les campagnes en cours
+                        </a></li>
+                        <li><a href="{% url 'propose-campaign' %}">
+                            Proposer une campagne pour les soirées membres
+                        </a></li>
+                        <li><a href="{% url 'use-code' %}">
+                            Prolonger votre période membre en utilisant un code
+                        </a></li>
                     </ul>
                 </p>
             {% elif user.is_authenticated and not user.profile.is_member %}
-                Vous devez être un membre actif de JDRPoly pour bénéficier de toutes les fonctionnalités réservés aux membres.
+                Vous devez être un membre actif de JDRPoly pour bénéficier de
+                toutes les fonctionnalités réservés aux membres.
             {% else %}
-                Vous devez vous <a href="{% url 'login' %}">connecter</a> pour accéder à l'espace membre.
+                Vous devez vous <a href="{% url 'login' %}">connecter</a> pour
+                accéder à l'espace membre.
             {% endif %}
         </div>
     </article>
