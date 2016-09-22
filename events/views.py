@@ -5,8 +5,10 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.core.mail import send_mail
+from django.contrib.messages.views import SuccessMessageMixin
+import django.contrib.messages as messages
 from django.shortcuts import HttpResponseRedirect, Http404
-from django.views.generic import (DetailView, ListView, UpdateView, FormView,
+from django.views.generic import (DetailView, ListView, FormView,
                                   CreateView, DeleteView, UpdateView)
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -35,15 +37,19 @@ class CampaignToggleEnrollView(LoginRequiredMixin, UpdateView):
         camp = self.get_object()
         if request.user.profile.is_enrolled_in(camp):
             camp.unregister_user(request.user)
+            messages.success(self.request, _("Inscrit avec succès !"))
         else:
+            messages.success(self.request, _("Désinscrit avec succès !"))
             camp.register_user(request.user)
         return redirect_to_campaign(camp.pk)
 
 
-class CampaignDeleteView(MembershipRequiredMixin, DeleteView):
+class CampaignDeleteView(SuccessMessageMixin, MembershipRequiredMixin,
+                         DeleteView):
     model = Campaign
-    template_name = 'events/campaign_delete.html'
+    template_name = 'events/campaign_delete.djhtml'
     success_url = reverse_lazy('campaign-list')
+    success_message = _("Campagne %(name)s supprimée avec succès !")
 
     def form_valid(self, form):
         if self.get_object().owner is self.request.user:
@@ -54,7 +60,7 @@ class CampaignDeleteView(MembershipRequiredMixin, DeleteView):
 
 class CampaignPropositionView(MembershipRequiredMixin, CreateView):
     model = Campaign
-    template_name = 'events/new_campaign.html'
+    template_name = 'events/new_campaign.djhtml'
     form_class = CampaignCreateForm
 
     def form_valid(self, form):
@@ -64,7 +70,7 @@ class CampaignPropositionView(MembershipRequiredMixin, CreateView):
 
 class MyCampaignView(MembershipRequiredMixin, ListView):
     model = Campaign
-    template_name = 'events/campaign_list.html'
+    template_name = 'events/campaign_list.d.djhtml'
     context_object_name = 'campaign_list'
 
     def get_context_data(self):
@@ -80,9 +86,11 @@ class MyCampaignView(MembershipRequiredMixin, ListView):
         return participating | organising
 
 
-class CampaignUpdateView(MembershipRequiredMixin, UpdateView):
+class CampaignUpdateView(SuccessMessageMixin, MembershipRequiredMixin,
+                         UpdateView):
     model = Campaign
-    template_name = 'events/campaign_edit.html'
+    template_name = 'events/campaign_edit.djhtml'
+    success_message = _("Campagne modifiée avec succès !")
 
     def post(self, request, *args, **kwargs):
         if request.user == self.get_object().owner:
@@ -95,13 +103,13 @@ class CampaignUpdateView(MembershipRequiredMixin, UpdateView):
 
 class CampaignDetailView(MembershipRequiredMixin, DetailView):
     model = Campaign
-    template_name = 'events/campaign_detail.html'
+    template_name = 'events/campaign_detail.djhtml'
     context_object_name = 'campaign'
 
 
 class CampaignListView(MembershipRequiredMixin, ListView):
     model = Campaign
-    template_name = 'events/campaign_list.html'
+    template_name = 'events/campaign_list.djhtml'
     context_object_name = 'campaign_list'
 
     def get_queryset(self):
@@ -111,7 +119,7 @@ class CampaignListView(MembershipRequiredMixin, ListView):
 
 class EventPropositionView(FormView, LoginRequiredMixin):
     form_class = EventPropositionForm
-    template_name = 'events/propose.html'
+    template_name = 'events/propose.djhtml'
 
     def get_form(self):
         return EventPropositionForm(self.request.user)
@@ -142,7 +150,7 @@ class UnregisterEditionView(LoginRequiredMixin, UpdateView):
 
 
 class EventListView(ListView):
-    template_name = 'events/list.html'
+    template_name = 'events/list.djhtml'
     name = 'event-list'
     context_object_name = 'event_list'
     model = Event
@@ -150,7 +158,7 @@ class EventListView(ListView):
 
 class EventDetailView(DetailView):
     model = Event
-    template_name = 'events/view.html'
+    template_name = 'events/view.djhtml'
     context_object_name = 'event'
 
     def get_context_data(self, *args, **kwargs):
@@ -164,7 +172,7 @@ class EventDetailView(DetailView):
 
 
 class AttendingView(LoginRequiredMixin, ListView):
-    template_name = 'events/attending.html'
+    template_name = 'events/attending.djhtml'
     context_object_name = 'events'
 
     def get_queryset(self):
@@ -173,7 +181,7 @@ class AttendingView(LoginRequiredMixin, ListView):
 
 class EditionDetailView(DetailView):
     model = Edition
-    template_name = 'events/edition_view.html'
+    template_name = 'events/edition_view.djhtml'
     context_object_name = 'edition'
 
     def get_context_data(self, *args, **kwargs):
@@ -186,13 +194,13 @@ class EditionDetailView(DetailView):
 
 class RegisterParticipationView(LoginRequiredMixin, UpdateView):
     model = Event
-    template_name = 'events/register.html'
+    template_name = 'events/register.djhtml'
 
 
-class HtmlEventList(ListView):
+class.djhtmlEventList(ListView):
     """
     View for dynamic event menu generation
     """
     model = Event
-    template_name = 'events/menu_event.html'
+    template_name = 'events/menu_event.djhtml'
     context_object_name = 'event_list'
