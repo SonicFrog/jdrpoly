@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from __future__ import unicode_literals
+
 from django.conf import settings
 from django.core.mail import send_mass_mail
 from django.db import IntegrityError
@@ -28,9 +30,9 @@ class MailForm(Form):
     }
 
     DISPLAY_FORM = {
-        "1": "Tous",
-        "2": "Zombies",
-        "3": "Humains"
+        "1": _("Tous"),
+        "2": _("Zombies"),
+        "3": _("Humains")
     }
 
     title = CharField(max_length=100, widget=TextInput(
@@ -49,13 +51,6 @@ class MailForm(Form):
         bcc = [user.email for user in users]
         content = self.cleaned_data['content']
         title = self.cleaned_data['title']
-
-        if zombie is None:
-            print("Sending to ALL!")
-        elif zombie:
-            print("Sending to zombies!")
-        else:
-            print("Sending to humans")
 
         messages = []
         for mail in bcc:
