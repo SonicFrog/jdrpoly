@@ -54,6 +54,9 @@ class Edition(models.Model):
 
     registration_start = models.DateField(verbose_name=_("Début des inscriptions"))
 
+    accepts_campaign = models.BooleanField(verbose_name=_("Accepte les campagnes"),
+                                           default=False)
+
     def __unicode__(self):
         return "%s du %s" % (self.event.name, self.date.__format__("%d/%m/%y"))
 
@@ -67,8 +70,7 @@ class Edition(models.Model):
         if timezone.now().date() < self.registration_start:
             return False
         if self.event.member_only:
-            allowed = user.profile.is_member()
-            if not allowed:
+            if not user.profile.is_member():
                 return False
         self.participants.add(user)
         self.save()
