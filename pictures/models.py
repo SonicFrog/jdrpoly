@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class Gallery(models.Model):
     """
-    Modèle pour une gallerie de photos
+    Modèle pour une galerie de photos
     """
     name = models.CharField(default=_("Nouvelle galerie"), max_length=50,
                             verbose_name=_("Nom"))
@@ -23,8 +23,8 @@ class Gallery(models.Model):
         return ""
 
     class Meta:
-        verbose_name = _("Gallerie")
-        verbose_name_plural = _("Galleries")
+        verbose_name = _("Galerie")
+        verbose_name_plural = _("Galeries")
         ordering = ('-date',)
 
     def get_absolute_url(self):
@@ -33,7 +33,7 @@ class Gallery(models.Model):
 
 class Picture(models.Model):
     """
-    Image appartenant à une gallerie
+    Image appartenant à une galerie
     """
     image = models.ImageField(default=None, upload_to="svz/pictures/%Y-%m-%d",
                               verbose_name=_("Image"))
@@ -41,7 +41,7 @@ class Picture(models.Model):
                                max_length=100)
     owner = models.ForeignKey(User, related_name='pictures',
                               verbose_name=_("Uploadeur"))
-    gallery = models.ForeignKey(Gallery, verbose_name=_("Gallerie"),
+    gallery = models.ForeignKey(Gallery, verbose_name=_("Galerie"),
                                 related_name='pictures')
     date = models.DateTimeField(default=timezone.now,
                                 verbose_name=_("Mise en ligne"))
