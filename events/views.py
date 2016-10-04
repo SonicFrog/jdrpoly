@@ -70,7 +70,7 @@ class CampaignPropositionView(MembershipRequiredMixin, CreateView):
 
 class MyCampaignView(MembershipRequiredMixin, ListView):
     model = Campaign
-    template_name = 'events/campaign_list.d.djhtml'
+    template_name = 'events/campaign_list.djhtml'
     context_object_name = 'campaign_list'
 
     def get_context_data(self):
