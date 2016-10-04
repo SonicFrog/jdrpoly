@@ -197,7 +197,7 @@ class RegisterParticipationView(LoginRequiredMixin, UpdateView):
     template_name = 'events/register.djhtml'
 
 
-class.djhtmlEventList(ListView):
+class HtmlEventList(ListView):
     """
     View for dynamic event menu generation
     """
