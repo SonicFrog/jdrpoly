@@ -39,7 +39,7 @@
                         </span>
                     {% endif %}
                         <div class="row 100%">
-                            <form action="{% url 'campaign-enroll ' campaign.pk %}"">
+                            <form action="{% url 'campaign-enroll' campaign.pk %}"">
                                 <input type="submit"
                                        value="{% if request.user in campaign.participants.all %}
                                               Ne plus participer
