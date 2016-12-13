@@ -46,6 +46,20 @@ class MainPageSection(models.Model):
         ordering = ('order', '-pk')
 
 
+class Contest(models.Model):
+    name = models.CharField(max_length=100, verbose_name=_("Nom"))
+    description = models.CharField(max_length=100)
+    date = models.DateField(verbose_name=_("Date limite"))
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name =_("Concours")
+        verbose_name_plural =_("Concours")
+        ordering = ('pk',)
+
+
 class ComityMember(models.Model):
     """
     Modèle pour un membre du comité

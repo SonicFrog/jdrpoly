@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^newsletter/success$', NewsletterSuccessView.as_view(),
         name='newsletter-success'),
     url(r'^comity/$', ComityListView.as_view(), name='comity-list'),
+
+    url(r'^contest/$', ContestView.as_view(), name='contest'),
 ]

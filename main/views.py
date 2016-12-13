@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
-from django.core.mail import send_mass_mail, send_mail
+from django.core.mail import send_mass_mail, send_mail, EmailMultiAlternatives
 from django.core.urlresolvers import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils import timezone
@@ -14,7 +14,7 @@ from django.forms import (Form, CharField, EmailField, Textarea, TextInput,
                           BooleanField)
 
 from random import randint
-from .models import News, MainPageSection, ComityMember
+from .models import News, MainPageSection, ComityMember, Contest
 from members.views import LoginRequiredMixin
 from events.models import Event
 
@@ -109,6 +109,22 @@ class NewsletterSendView(LoginRequiredMixin, FormView):
 class NewsletterSuccessView(LoginRequiredMixin, TemplateView):
     template_name = 'news/letter_ok.html'
 
+class ContestView(TemplateView):
+    template_name = "concours.djhtml"
+    context_object_name = "model"
+
+    def get_context_data(self):
+        ctx = super(TemplateView, self).get_context_data()
+
+        qs = self.get_queryset()
+
+        if len(qs) > 0:
+            ctx['model'] = sq[0]
+
+        return ctx
+
+    def get_queryset(self):
+         return Contest.objects.filter(date__lte=timezone.now())[:1]
 
 class ContactFormHandleView(FormView):
     """

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load bbcode  %}
+
+{% block title %}{{ model.name }}{% endblock %}
+
+{% block content %}
+    <div id="content">
+        {% if model %}
+            <article class="box post">
+                <header>
+                    <h2>{{ model.name }}</h2>
+                </header>
+
+                <div class="8u 12u(mobile)">
+                    {% bbcode model.description %}
+                </div>
+                <br />
+                <div class="8u 12u(mobile) important(mobile)">
+                    Date limite le <strong>{{ model.date }}</strong>
+                </div>
+            </article>
+        {% else  %}
+            <h2>Aucun concours pour le moment!</h2>
+        {% endif %}
+    </div>
+{% endblock %}

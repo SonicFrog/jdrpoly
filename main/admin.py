@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import News, MainPageSection, ComityMember
+from .models import News, MainPageSection, ComityMember, Contest
 
 
 class NewsAdmin(admin.ModelAdmin):
@@ -20,3 +20,4 @@ class ComityMemberAdmin(admin.ModelAdmin):
 admin.site.register(ComityMember, ComityMemberAdmin)
 admin.site.register(News, NewsAdmin)
 admin.site.register(MainPageSection, SectionAdmin)
+admin.site.register(Contest)
