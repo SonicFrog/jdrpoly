@@ -3,8 +3,9 @@ from django.contrib import admin
 from svz.models import Player, Sponsor, Gazette, Reward, Rule, SvZ
 
 
-class InfoAdmin(admin.ModelAdmin):
+class SvZAdmin(admin.ModelAdmin):
     model = SvZ
+    list_display = ('descritiption', 'start')
 
 
 class PlayerAdmin(admin.ModelAdmin):
@@ -40,9 +41,9 @@ class RuleAdmin(admin.ModelAdmin):
     fields = ('name', 'text', 'icon', 'importance')
     list_display = ('name', 'text', 'importance')
 
+admin.site.register(SvZ)
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Sponsor, SponsorAdmin)
 admin.site.register(Gazette, GazetteAdmin)
 admin.site.register(Reward, RewardAdmin)
 admin.site.register(Rule, RuleAdmin)
-admin.site.register(SvZ, InfoAdmin)
