@@ -1,6 +1,7 @@
 {# -*- engine:django -*- #}
 
 {% load staticfiles %}
+{% load bbcode %}
 <!DOCTYPE HTML>
 <!--
      Hyperspace by HTML5 UP
@@ -42,17 +43,13 @@
                 <div class="inner">
                     <h1>Students vs Zombies</h1>
                     <h2>Rejoignez la horde!</h2>
-                    <p>L’idée derrière ce jeu du chat et de la souris nous vient de
-                        collègues aux États-Unis, où le jeu est né. Les joueurs, initialement “Students” se verront infecter tout au long de l’événement par une horde grandissante de Zombies. Les joueurs sont identifiés par des bandanas portés soit au bras soit à la tête en fonction de leur camp.</p>
-                    <center><iframe  style="margin: auto; width: 24em; height: 13.5em" src="https://www.youtube.com/embed/4ZqDHptzYfg" frameborder="0" allowfullscreen></iframe></center>
+                    <p>{% bbcode misc.description %}</p>
+                    <center><iframe  style="margin: auto; width: 24em; height: 13.5em" src="https://www.youtube.com/embed/{{ misc.pres_vid }}" frameborder="0" allowfullscreen></iframe></center>
                     <p></p>
                     <ul class="actions">
                         <li><a href="#rules" class="button scrolly">Découvrez les règles</a></li>
                     </ul>
-
-
                 </div>
-
             </section>
 
 
@@ -60,7 +57,7 @@
             <section id="rules" class="wrapper style3 fade-up">
                 <div class="inner">
                     <h2>Règles</h2>
-                    <center><iframe style="width: 24em; height: 13.5em" src="https://www.youtube.com/embed/uFuwTfcK7Zc" frameborder="0" allowfullscreen></iframe></center>
+                    <center><iframe style="width: 24em; height: 13.5em" src="https://www.youtube.com/embed/{{ misc.rules_vid }}" frameborder="0" allowfullscreen></iframe></center>
                     <div class="features">
                         {% for rule in rules %}
                         <section>
@@ -103,21 +100,21 @@
                         <ul class="contact">
                             <li>
                                 <h3>Dates</h3>
-                                <span>Du 18 au 20 avril<br/>
-                                    Tous les jours de 10h à 19h</span>
+                                <span>Du {{ misc.start | date : "d" }} au {{ misc.end | date : "d F"}}<br/>
+                                    Tous les jours de {{ hour_start }}h à {{ hour_end }}h</span>
                             </li>
                             <li>
                                 <h3>Lieu</h3>
-                                <span>Campus EPFL</span>
+                                <span>{% bbcode misc.place %}</span>
                             </li>
                             <li>
                                 <h3>Inscription</h3>
-                                <span>  Payante : 5.- à la <b>boutique AGEPoly</b> ou à notre <b>stand</b> sur l'esplanade une semaine avant l'événement</span><br />
+                                <span>{% bbcode misc.inscription %}</span><br />
                                 <span>Le matériel de jeu, à savoir un bandana et une carte de joueur, sont à venir récupérer sur le stand SvZ le lundi 18 avril dès 10h. Le premier événement aura lieu ce même jour à 12h.</span>
                             </li>
                             <li>
                                 <h3>Événements</h3>
-                                <span>De nombreux événements et missions seront proposés tout au long des trois jours</span>
+                                <span>{% bbcode misc.events %}</span>
                             </li>
                         </ul>
                     </section>

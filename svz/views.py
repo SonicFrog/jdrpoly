@@ -1,4 +1,4 @@
-# coding: utf-8
+# coding: iso-8859-1
 
 from __future__ import unicode_literals
 
@@ -11,7 +11,7 @@ from django.views.generic import TemplateView, FormView
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Player, Sponsor, Gazette, Reward, Rule
+from .models import Player, Sponsor, Gazette, Reward, Rule, SvZ
 
 from rest_framework import serializers, viewsets, status
 from rest_framework.authentication import SessionAuthentication
@@ -167,6 +167,7 @@ class InfoView(TemplateView):
         context['gazettes'] = Gazette.objects.all()
         context['rewards'] = Reward.objects.all().order_by('?')
         context['rules'] = Rule.objects.all()
+        context['misc'] = SvZ.objects.all().order_by('-pk')
         return context
 
 

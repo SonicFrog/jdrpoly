@@ -1,9 +1,12 @@
-# coding: utf-8
+# coding: iso-8859-1
 
 from __future__ import unicode_literals
 
+from django.conf import settings
+
 from django.db import models
 from django.core.mail import EmailMessage
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -123,6 +126,32 @@ class Reward(models.Model):
         ordering = ('sponsor', 'name')
         verbose_name = _("Lot")
         verbose_name_plural = _("Lots")
+
+
+class SvZ(models.Model):
+    description = models.CharField(max_length=2000, verbose_name=_("Description"))
+    start = models.DateField(default=timezone.now, verbose_name=_("Date de début"))
+    end = models.DateField(default=timezone.now, verbose_name=_("Date de fin"))
+    hour_start = models.IntegerField(default=10, verbose_name=_("Heure de d�but"))
+    hour_end = models.IntegerField(default=19, verbose_name=_("Heure de fin"))
+    inscription = models.CharField(default="Entrez les détails", max_length=5000)
+    events = models.CharField(default="Entrez un descriptif des évenements", max_length=500)
+    place = models.CharField(default="Entrez le lieu", max_length=200)
+    rules_vid = models.URLField(default="Entrez l'url youtube de la vidéo des règles")
+    pres_vid = models.URLField(default="Entrez l'url youtube de la vidéo de présentation")
+
+    def save(self, force_insert=False, force_update=False,
+             using=settings.DEFAULT_DB_ALIAS, update_fields=None):
+        for field in update_fields:
+            if field == 'rules_vid':
+                self.rules_vid = self.rules_vid.split('=')[1]
+            elif field == 'pres_vid':
+                self.pres_vid = self.pres_vid.split('=')[1]
+        return super(self, SvZ).save(force_insert, force_update,using,
+                                     update_fields)
+
+    class Meta:
+        verbose_name = _("Détails SvZ")
 
 
 class Rule(models.Model):
