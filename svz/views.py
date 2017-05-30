@@ -1,4 +1,4 @@
-# coding: iso-8859-1
+# coding: utf-8
 
 from __future__ import unicode_literals
 
@@ -101,7 +101,7 @@ class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = ('sciper', 'name', 'email', 'contaminations', 'zombie',
-                  'token_spent')
+                  'token_spent', 'faction', 'weapon', 'classe', )
 
 
 class PlayerTokenSerializer(serializers.ModelSerializer):
@@ -167,7 +167,8 @@ class InfoView(TemplateView):
         context['gazettes'] = Gazette.objects.all()
         context['rewards'] = Reward.objects.all().order_by('?')
         context['rules'] = Rule.objects.all()
-        context['misc'] = SvZ.objects.all().order_by('-pk')
+        context['misc'] = SvZ.objects.all().order_by('-pk')[0]
+
         return context
 
 

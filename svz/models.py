@@ -18,8 +18,11 @@ class Player(models.Model):
                                          verbose_name=_("Contaminations"))
     token_spent = models.IntegerField(default=0,
                                       verbose_name=_("Token dÃ©pensÃ©s"))
+    faction = models.BooleanField(default=False, verbose_name=_("Troisième faction?"))
     zombie = models.BooleanField(default=False, verbose_name=_("Zombie ?"))
     email = models.EmailField(max_length=300, null=True, verbose_name=_("Email"))
+    classe = models.CharField(max_length=100, null=True, verbose_name=_("Classe"))
+    weapon = models.CharField(max_length=100, null=True, verbose_name=_("Arme"))
 
     @classmethod
     def mail(cls, title, content, zombies):
@@ -129,29 +132,22 @@ class Reward(models.Model):
 
 
 class SvZ(models.Model):
-    description = models.CharField(max_length=2000, verbose_name=_("Description"))
-    start = models.DateField(default=timezone.now, verbose_name=_("Date de dÃ©but"))
+    description = models.TextField(max_length=2000, verbose_name=_("Description"))
+    start = models.DateField(default=timezone.now, verbose_name=_("Date de début"))
     end = models.DateField(default=timezone.now, verbose_name=_("Date de fin"))
     hour_start = models.IntegerField(default=10, verbose_name=_("Heure de début"))
     hour_end = models.IntegerField(default=19, verbose_name=_("Heure de fin"))
-    inscription = models.CharField(default="Entrez les dÃ©tails", max_length=5000)
-    events = models.CharField(default="Entrez un descriptif des Ã©venements", max_length=500)
-    place = models.CharField(default="Entrez le lieu", max_length=200)
-    rules_vid = models.URLField(default="Entrez l'url youtube de la vidÃ©o des rÃ¨gles")
-    pres_vid = models.URLField(default="Entrez l'url youtube de la vidÃ©o de prÃ©sentation")
-
-    def save(self, force_insert=False, force_update=False,
-             using=settings.DEFAULT_DB_ALIAS, update_fields=None):
-        for field in update_fields:
-            if field == 'rules_vid':
-                self.rules_vid = self.rules_vid.split('=')[1]
-            elif field == 'pres_vid':
-                self.pres_vid = self.pres_vid.split('=')[1]
-        return super(self, SvZ).save(force_insert, force_update,using,
-                                     update_fields)
+    inscription = models.TextField(default="Entrez les détails", max_length=5000)
+    events = models.TextField(default="Entrez un descriptif des évènements", max_length=500)
+    place = models.TextField(default="Entrez le lieu", max_length=200)
+    rules_vid = models.CharField(default="Entrez l'url youtube de la vidéo des règles",
+                                 verbose_name=_("Vidéo de règles Youtube"), max_length=50)
+    pres_vid = models.CharField(default="Entrez l'url youtube de la vidéo de présentation",
+                                verbose_name=_("Vidéo de présentation Youtube"), max_length=50)
 
     class Meta:
-        verbose_name = _("DÃ©tails SvZ")
+        verbose_name = _("Détails SvZ")
+        verbose_name_plural = _("Détails SvZ")
 
 
 class Rule(models.Model):
