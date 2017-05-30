@@ -3,199 +3,220 @@
 {% load staticfiles %}
 <!DOCTYPE HTML>
 <!--
-    Hyperspace by HTML5 UP
-    html5up.net | @n33co
-    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-  -->
+     Hyperspace by HTML5 UP
+     html5up.net | @n33co
+     Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+   -->
 <html>
-  <head>
-    <title>SvZ 16 - Admin</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!--[if lte IE 8]><script src="{% static 'svz/assets/js/ie/html5shiv.js' %}"></script><![endif]-->
-    <link rel="stylesheet" href="{% static 'svz/assets/css/main.css' %}" />
-    <!--[if lte IE 9]><link rel="stylesheet" href="{% static 'svz/assets/css/ie9.css' %}" /><![endif]-->
-    <!--[if lte IE 8]><link rel="stylesheet" href="{% static 'svz/assets/css/ie8.css' %}" /><![endif]-->
-  </head>
-  <body>
+    <head>
+        <title>SvZ 16 - Admin</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!--[if lte IE 8]><script src="{% static 'svz/assets/js/ie/html5shiv.js' %}"></script><![endif]-->
+        <link rel="stylesheet" href="{% static 'svz/assets/css/main.css' %}" />
+        <!--[if lte IE 9]><link rel="stylesheet" href="{% static 'svz/assets/css/ie9.css' %}" /><![endif]-->
+        <!--[if lte IE 8]><link rel="stylesheet" href="{% static 'svz/assets/css/ie8.css' %}" /><![endif]-->
+    </head>
+    <body>
 
-      {# Ensure csrf token is generated for this #}
-      {% csrf_token %}
+        {# Ensure csrf token is generated for this #}
+        {% csrf_token %}
 
-    <!-- Header -->
-    <header id="header">
-      <a href="{% url 'svz-admin' %}" class="title">Administration SvZ</a>
-      <nav>
-        <ul>
-          <li><a href="{% url 'svz-main' %}">Page principale</a></li>
-          <li><a href="{% url 'mainpage' %}">Site web JDR-Poly</a></li>
-        </ul>
-      </nav>
-    </header>
+        <!-- Header -->
+        <header id="header">
+            <a href="{% url 'svz-admin' %}" class="title">Administration SvZ</a>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'svz-main' %}">Page principale</a></li>
+                    <li><a href="{% url 'mainpage' %}">Site web JDR-Poly</a></li>
+                </ul>
+            </nav>
+        </header>
 
-    <!-- Wrapper -->
-    <div id="wrapper">
+        <!-- Wrapper -->
+        <div id="wrapper">
 
-      <!-- Main -->
-      <section id="main" class="wrapper">
-        <div class="inner">
-          <h1 class="major">Administration</h1>
+            <!-- Main -->
+            <section id="main" class="wrapper">
+                <div class="inner">
+                    <h1 class="major">Administration</h1>
 
-          <!-- Form -->
-          <section>
-            <h2>Trouver un joueur</h2>
-            <form id="search-form" method="post" action="#">
-              {% csrf_token %}
-              <div class="row uniform">
-                <div class="6u 12u$(xsmall)">
-                  <input type="text" name="demo-name" id="search-form-name" value="" placeholder="Nom" />
-                </div>
-                <div class="6u$ 12u$(xsmall)">
-                  <input type="text" name="playerid" id="search-form-sciper" value="" placeholder="SCIPER" />
-                </div>
-                <div class="12u$">
-                  <ul class="actions">
-                    <li><input type="submit" value="Trouver le joueur" class="special" /></li>
-                    <li><input type="reset" value="Reset" /></li>
-                  </ul>
-                </div>
-              </div>
-            </form>
+                    <!-- Form -->
+                    <section>
+                        <h2>Trouver un joueur</h2>
+                        <form id="search-form" method="post" action="#">
+                            {% csrf_token %}
+                            <div class="row uniform">
+                                <div class="6u 12u$(xsmall)">
+                                    <input type="text" name="demo-name" id="search-form-name" value="" placeholder="Nom" />
+                                </div>
+                                <div class="6u$ 12u$(xsmall)">
+                                    <input type="text" name="playerid" id="search-form-sciper" value="" placeholder="SCIPER" />
+                                </div>
+                                <div class="12u$">
+                                    <ul class="actions">
+                                        <li><input type="submit" value="Trouver le joueur" class="special" /></li>
+                                        <li><input type="reset" value="Reset" /></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
 
-            <h2>Joueur</h2>
-            <div id="error-display" class="2u$ 12u$(small)">
+                        <h2>Joueur</h2>
+                        <div id="error-display" class="2u$ 12u$(small)">
 
-            </div>
-            <form id="update-form" method="post" action="#">
-              {% csrf_token %}
-              <div class="row uniform">
-                <div class="5u 12u$(xsmall)">
-                  <input type="text" name="demo-name" id="demo-name" value="" placeholder="Nom" readonly />
-                </div>
-                <div class="3u 12u$(xsmall)">
-                  <input type="text" name="playerid" id="demo-sciper" value="" placeholder="SCIPER" readonly />
-                </div>
-                <div class="2u$ 12u$(small)">
-                  <input type="checkbox" id="zombie-status" name="prefill-iscontaminated" checked>
-                  <label for="zombie-status">Est contaminé</label>
-                </div>
-                <div class="4u 12u$(small)">
-                  <input type="text" name="playerid" id="prefill-spenttoken" value="" placeholder="Nouveaux jetons dépensés" />
-                </div>
-                <div class="4u$ 12u$(small)">
-                  <input type="text" name="playerid" id="prefill-newcontamination" value="" placeholder="Nouvelles contaminations" />
-                </div>
-                <div class="12u$">
-                  <ul class="actions">
-                    <li><input type="submit" value="Enregistrer" class="special" /></li>
-                  </ul>
-                </div>
-              </div>
-            </form>
-            <div class="table-wrapper">
-              <h2>Détails</h2>
-              <table class="alt">
-                <thead>
-                  <tr>
-                    <th>Quoi</th>
-                    <th>Combien</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Est zombie</td>
-                    <td id="is-zombie">N/A</td>
-                  </tr>
-                  <tr>
-                    <td>Jetons dépensés</td>
-                    <td id="token-spent">N/A</td>
-                  </tr>
-                  <tr>
-                    <td>Joueurs contaminés</td>
-                    <td id="contaminations">N/A</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-          <section id="add-player" class="wrapper">
-            <h2>Ajouter un joueur</h2>
-            <form id="add-form" method="post" action="#">
-              <div class="row uniform">
-                <div class="6u 12u$(xsmall)">
-                  <input type="text" name="add-name" id="add-form-name" value="" placeholder="Nom" />
-                </div>
-                <div class="6u$ 12u$(xsmall)">
-                  <input type="text" name="add-playerid" id="add-form-sciper" value="" placeholder="SCIPER" />
-                </div>
-                <div class="12u$ 24u$(xsmall)">
-                    <input type="text" name="add-playermail" id="add-form-email" value="" placeholder="Email" />
-                </div>
-                <div class="12u$">
-                  <ul class="actions">
-                    <li><input type="submit" value="Ajouter le joueur" class="special" /></li>
-                    <li><input type="reset" value="Reset" /></li>
-                  </ul>
-                </div>
-              </div>
-            </form>
-          </section>
+                        </div>
+                        <form id="update-form" method="post" action="#">
+                            {% csrf_token %}
+                            <div class="row uniform">
+                                <div class="5u 12u$(xsmall)">
+                                    <input type="text" name="demo-name" id="demo-name" value="" placeholder="Nom" readonly />
+                                </div>
+                                <div class="3u 12u$(xsmall)">
+                                    <input type="text" name="playerid" id="demo-sciper" value="" placeholder="SCIPER" readonly />
+                                </div>
+                                <div class="2u$ 12u$(xsmall)">
+                                    <input type="checkbox" id="zombie-status" name="prefill-iscontaminated" checked>
+                                    <label for="zombie-status">Est contaminé</label>
+                                </div>
+                                öö                <div class="4u 12u$(small)">
+                                    <input type="text" name="playerid" id="prefill-spenttoken" value="" placeholder="Nouveaux jetons dépensés" />
+                                </div>
+                                <div class="4u$ 12u$(small)">
+                                    <input type="text" name="playerid" id="prefill-newcontamination" value="" placeholder="Nouvelles contaminations" />
+                                </div>
+                                <div class="2u$ 12u$(xsmall)">
+                                    <input type="text" name="playerclass" id="prefill-class" value="" placeholder="Classe" />
+                                </div>
+                                <div class="2u$ 12u$(xsmall)">
+                                    <input type="text" name="playerweapon" id="prefill-weapon" value="" placeholder="Arme" />
+                                </div>
+                                <div class="2u$ 12u$(xsmall)">
+                                    <input type="checkbox" id="prefill-faction" name="playerfaction" />
+                                    <label for="prefill-faction">Troisième faction</label>
+                                </div>
+                                <div class="12u$">
+                                    <ul class="actions">
+                                        <li><input type="submit" value="Enregistrer" class="special" /></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="table-wrapper">
+                            <h2>Détails</h2>
+                            <table class="alt">
+                                <thead>
+                                    <tr>
+                                        <th>Quoi</th>
+                                        <th>Combien</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Est zombie</td>
+                                        <td id="is-zombie">N/A</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jetons dépensés</td>
+                                        <td id="token-spent">N/A</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Joueurs contaminés</td>
+                                        <td id="contaminations">N/A</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Classe</td>
+                                        <td id="class-show">N/A</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Arme</td>
+                                        <td id="weapon-show">N/A</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    <section id="add-player" class="wrapper">
+                        <h2>Ajouter un joueur</h2>
+                        <form id="add-form" method="post" action="#">
+                            <div class="row uniform">
+                                <div class="6u 12u$(xsmall)">
+                                    <input type="text" name="add-name" id="add-form-name" value="" placeholder="Nom" />
+                                </div>
+                                <div class="6u$ 12u$(xsmall)">
+                                    <input type="text" name="add-playerid" id="add-form-sciper" value="" placeholder="SCIPER" />
+                                </div>
+                                <div class="12u$ 24u$(xsmall)">
+                                    <input type="text" name="add-playermail" id="add-form-email" value="" placeholder="Email" />
+                                </div>
+                                <div class="2u$ 12u$(small)">
+                                    <input type="checkbox" id="add-form-faction" name="input-prefill-faction" checked>
+                                    <label for="add-form-faction">Troisième faction</label>
+                                </div>
+                                <div class="12u$">
+                                    <ul class="actions">
+                                        <li><input type="submit" value="Ajouter le joueur" class="special" /></li>
+                                        <li><input type="reset" value="Reset" /></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
 
-          <section id="send-mail" class="wrapper">
-              <h2>Envoyer un mail</h2>
-              <form id="mail-form" method="post" action="#">
-                  <div class="row uniform">
-                      <div class="6u$ 12u$(xsmall)">
-                          {{ form.title }}
-                      </div>
-                  </div>
-                  <div class="row uniform">
-                      <div class="12u$ 24u$(xsmall)">
-                          {{ form.content }}
-                      </div>
-                  </div>
-                  <div class="row uniform">
-                      <div class="12u$ 24$(xsmall)">
-                          {{ form.target }}
-                      </div>
-                  </div>
-                  <div class="row uniform">
-                      <div class="12u$">
-                          <ul class="actions">
-                              <li><input type="submit" value="Envoyer" class="special" /></li>
-                              <li><input type="reset" value="Reset" /></li>
-                          </ul>
-                      </div>
-                  </div>
-              </form>
-          </section>
+                    <section id="send-mail" class="wrapper">
+                        <h2>Envoyer un mail</h2>
+                        <form id="mail-form" method="post" action="#">
+                            <div class="row uniform">
+                                <div class="6u$ 12u$(xsmall)">
+                                    {{ form.title }}
+                                </div>
+                            </div>
+                            <div class="row uniform">
+                                <div class="12u$ 24u$(xsmall)">
+                                    {{ form.content }}
+                                </div>
+                            </div>
+                            <div class="row uniform">
+                                <div class="12u$ 24$(xsmall)">
+                                    {{ form.target }}
+                                </div>
+                            </div>
+                            <div class="row uniform">
+                                <div class="12u$">
+                                    <ul class="actions">
+                                        <li><input type="submit" value="Envoyer" class="special" /></li>
+                                        <li><input type="reset" value="Reset" /></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
 
-          <section id="rankings" class="wrapper">
-              <h2>Classement</h2>
-              </script>
-              <ol id="ranking-list">
-              </ol>
-              <a id="refresh-rankings" class="button">Rafraîchir</a>
-          </section>
-        </div>
+                    <section id="rankings" class="wrapper">
+                        <h2>Classement</h2>
+                        <ol id="ranking-list">
+                        </ol>
+                        <a id="refresh-rankings" class="button">Rafraîchir</a>
+                    </section>
+                </div>
 
-        <!-- Footer -->
-        <footer id="footer" class="wrapper alt">
-          <div class="inner">
-            <ul class="menu">
-              <li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-            </ul>
-          </div>
-        </footer>
+                <!-- Footer -->
+                <footer id="footer" class="wrapper alt">
+                    <div class="inner">
+                        <ul class="menu">
+                            <li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+                        </ul>
+                    </div>
+                </footer>
 
-        <!-- Scripts -->
-        <script src="{% static 'svz/assets/js/jquery.min.js' %}"></script>
-        <script src="{% static 'svz/assets/js/admin.js' %}"></script>
-        <script src="{% static 'svz/assets/js/jquery.scrollex.min.js' %}"></script>
-        <script src="{% static 'svz/assets/js/jquery.scrolly.min.js' %}"></script>
-        <script src="{% static 'svz/assets/js/skel.min.js' %}"></script>
-        <script src="{% static 'svz/assets/js/util.js' %}"></script>
-        <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+                <!-- Scripts -->
+                <script src="{% static 'svz/assets/js/jquery.min.js' %}"></script>
+                <script src="{% static 'svz/assets/js/admin.js' %}"></script>
+                <script src="{% static 'svz/assets/js/jquery.scrollex.min.js' %}"></script>
+                <script src="{% static 'svz/assets/js/jquery.scrolly.min.js' %}"></script>
+                <script src="{% static 'svz/assets/js/skel.min.js' %}"></script>
+                <script src="{% static 'svz/assets/js/util.js' %}"></script>
+                <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 
-  </body>
+    </body>
 </html>

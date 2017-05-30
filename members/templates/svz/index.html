@@ -26,9 +26,9 @@
                 <nav>
                     <ul>
                         <li><a href="#intro">SvZ</a></li>
+                        <li><a href="#info">Infos pratiques</a></li>
                         <li><a href="#rules">Règles</a></li>
                         <li><a href="#lore">Histoire</a></li>
-                        <li><a href="#info">Infos pratiques</a></li>
                         <li><a href="#sponsors">Sponsors</a></li>
                     </ul>
                 </nav>
@@ -52,56 +52,15 @@
                 </div>
             </section>
 
-
-            <!-- rules -->
-            <section id="rules" class="wrapper style3 fade-up">
-                <div class="inner">
-                    <h2>Règles</h2>
-                    <center><iframe style="width: 24em; height: 13.5em" src="https://www.youtube.com/embed/{{ misc.rules_vid }}" frameborder="0" allowfullscreen></iframe></center>
-                    <div class="features">
-                        {% for rule in rules %}
-                        <section>
-                            <span class="icon major {{ rule.icon }}"></span>
-                                <h3>{{ rule.name }}</h3>
-                                <p>{{ rule.text | linebreaksbr }}</p>
-                            </span>
-                        </section>
-                        {% endfor %}
-                    </div>
-                    <ul class="actions">
-                        <li><a href="/media/svz/rules.pdf" class="button">Les règles officielles</a></li>
-                    </ul>
-                </div>
-            </section>
-
-            <!-- Gazettes -->
-            <section id="lore" class="wrapper style2 spotlights">
-                {% for gazette in gazettes %}
-                <section>
-                    <div class="content">
-                        <div class="inner">
-                            <h2>Le dé pipé n°{{ gazette.number }}</h2>
-                            <p>{{ gazette.short_description }}</p>
-                            <ul class="actions">
-                                <li><a href="{{ gazette.pdf.url }}" class="button">Lire la suite</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <a href="#" class="image"><img src="{{ gazette.preview.url }}" alt="" data-position="center center" /></a>
-                </section>
-                {% endfor %}
-            </section>
-
-            <!-- Four -->
-            <section id="info" class="wrapper style2-alt fullscreen fade-up">
+            <section id="info" class="wrapper style2 fullscreen fade-up">
                 <div class="inner">
                     <h2>Infos pratiques</h2>
                     <section>
                         <ul class="contact">
                             <li>
                                 <h3>Dates</h3>
-                                <span>Du {{ misc.start | date : "d" }} au {{ misc.end | date : "d F"}}<br/>
-                                    Tous les jours de {{ hour_start }}h à {{ hour_end }}h</span>
+                                <span>Du {{ misc.start | date:"d" }} au {{ misc.end | date:"d F Y"}}<br/>
+                                    Tous les jours de {{ misc.hour_start }}h à {{ misc.hour_end }}h</span>
                             </li>
                             <li>
                                 <h3>Lieu</h3>
@@ -110,7 +69,6 @@
                             <li>
                                 <h3>Inscription</h3>
                                 <span>{% bbcode misc.inscription %}</span><br />
-                                <span>Le matériel de jeu, à savoir un bandana et une carte de joueur, sont à venir récupérer sur le stand SvZ le lundi 18 avril dès 10h. Le premier événement aura lieu ce même jour à 12h.</span>
                             </li>
                             <li>
                                 <h3>Événements</h3>
@@ -131,13 +89,53 @@
                             </li>
                             {% endfor %}
                             {% else %}
-                            Aucun lot pour l'instant :'(
+                            La liste des lots viendra bientôt {% bbcode ";-)" %}
                             {% endif %}
                         </ul>
                     </section>
 
                     <hr></hr>
                 </div>
+            </section>
+
+
+            <!-- rules -->
+            <section id="rules" class="wrapper style3 fade-up">
+                <div class="inner">
+                    <h2>Règles</h2>
+                    <center><iframe style="width: 24em; height: 13.5em" src="https://www.youtube.com/embed/{{ misc.rules_vid }}" frameborder="0" allowfullscreen></iframe></center>
+                    <div class="features">
+                        {% for rule in rules %}
+                        <section>
+                            <span class="icon major {{ rule.icon }}"></span>
+                            <h3>{{ rule.name }}</h3>
+                            <p>{{ rule.text | linebreaksbr }}</p>
+                                </span>
+                        </section>
+                        {% endfor %}
+                    </div>
+                    <ul class="actions">
+                        <li><a href="/media/svz/rules.pdf" class="button">Les règles officielles</a></li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Gazettes -->
+            <section id="lore" class="wrapper style2-alt spotlights">
+                {% for gazette in gazettes %}
+                <section>
+                    <div class="content">
+                        <div class="inner">
+                            <h2>Le dé pipé n°{{ gazette.number }}</h2>
+                            <p>{{ gazette.short_description }}</p>
+                            <ul class="actions">
+                                <li><a href="{{ gazette.pdf.url }}" class="button">Lire la suite</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="#" class="image"><img src="{{ gazette.preview.url }}" alt="" data-position="center center" /></a>
+                </section>
+                {% endfor %}
             </section>
 
             <!-- Sponsors -->
@@ -175,7 +173,7 @@
         <footer id="footer" class="wrapper style1-alt">
             <div class="inner">
                 <ul class="menu">
-                    <li>&copy; JDR-Poly. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li><li><a href="{% url 'svz-admin' %}">Admin</a></li>
+                    <li>&copy; JDR-Poly 2015-{% now "Y" %}. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li><li><a href="{% url 'svz-admin' %}">Admin</a></li>
                 </ul>
             </div>
         </footer>
