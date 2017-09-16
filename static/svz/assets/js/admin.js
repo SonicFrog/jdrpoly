@@ -19,11 +19,12 @@ $( document ).ready(function() {
         var name = $("#add-form-name").val();
         var sciper = parseInt($("#add-form-sciper").val());
         var email = $("#add-form-email").val();
+	var faction = $("#add-form-3rd").val();
 
         if(isNaN(sciper) || name.length == 0) {
             alert("Le nom ne doit pas être vide et le SCIPER doit être un numéro. Ajout annulé.");
         } else {
-            create_player(sciper, name, email, function () {
+            create_player(sciper, name, email, faction, function () {
                 alert("SCIPER déjà existant. (Ou c'est autre chose, on sait pas)");
             });
         }
@@ -43,7 +44,8 @@ $( document ).ready(function() {
     $( "#update-form" ).submit(function (event) {
         var p = read_current_player();
 
-        update_player(p.sciper, p.name, p.token_spent, p.zombie, p.contaminations);
+        update_player(p.sciper, p.name, p.token_spent, p.zombie, 
+		      p.contaminations, p.faction, p.weapon, p.classe);
         update_form(p);
 
         event.preventDefault();
@@ -87,6 +89,14 @@ function update_form(player) {
     $("#contaminations").html(player.contaminations);
     $("#zombie-status").prop('checked', player.zombie);
     $("#is-zombie").html(player.zombie?"Oui":"Non");
+    $("#third-faction").html(player.faction?"Oui":"Non");
+    $("#prefill-faction").prop('checked', player.faction);
+    $("#prefill-class").val(player.classe);
+    $("#prefill-weapon").val(player.weapon);
+    $("#weapon-show").html(player.weapon);
+    $("#class-show").html(player.classe);
+
+    console.log(player);
 
     reset_input();
 }
@@ -116,7 +126,7 @@ function update_rankings () {
 function reset_input() {
     var fields = ["#prefill-spenttoken", "#prefill-newcontamination",
                   "#add-form-name", "#add-form-sciper", "#add-form-email",
-                  "#mail-title", "#mail-content"];
+                  "#mail-title", "#mail-content", "#add-form-faction" ];
 
     for (field of fields) {
         reset_field(field);
@@ -162,7 +172,8 @@ function reset_field(id) {
  * @param token The number of token spent
  * @param contaminate a boolean indicating zombie status
  **/
-function update_player(sciper, name, token, zombie, contaminations) {
+function update_player(sciper, name, token, zombie, contaminations, faction, 
+		       weapon, classe) {
     //URL is hardcoded for now but will be generated using django templates
     var url = "/svz/json/players/" +sciper + "/";
 
@@ -172,7 +183,10 @@ function update_player(sciper, name, token, zombie, contaminations) {
         data: {
             "token_spent": token,
             "zombie": zombie,
-            "contaminations": contaminations
+            "contaminations": contaminations,
+	    "faction": faction,
+	    "weapon": weapon,
+	    "classe": classe
         },
         error: display_raw_error,
         method: "PATCH"
@@ -212,6 +226,9 @@ function read_current_player() {
     var tokens = parseInt($("#prefill-spenttoken").val());
     var cont = parseInt($("#prefill-newcontamination").val());
     var zombie = $("#zombie-status").prop('checked');
+    var faction = $("#prefill-faction").prop('checked');
+    var classe = $("#prefill-class").val();
+    var weapon = $("#prefill-weapon").val();
 
     if (isNaN(cont))
         cont = 0;
@@ -226,7 +243,10 @@ function read_current_player() {
         "name": name,
         "zombie": zombie,
         "contaminations": new_cont,
-        "token_spent": new_token
+        "token_spent": new_token,
+	"faction": faction,
+	"weapon": weapon,
+	"classe": classe
     };
 }
 
@@ -236,7 +256,7 @@ function read_current_player() {
  * @param name Name for this player
  * @param error Callback to be called when creation fails
  **/
-function create_player(sciper, name, email, error) {
+function create_player(sciper, name, email, faction, error) {
     //TODO: Fix hardcoded urls
     var url = "/svz/json/players/";
 
@@ -255,7 +275,8 @@ function create_player(sciper, name, email, error) {
         data: {
             "sciper": sciper,
             "name": name,
-            "email": email
+            "email": email,
+	    "faction": faction
         }
     });
 }
